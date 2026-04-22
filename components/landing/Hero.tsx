@@ -51,6 +51,26 @@ export default function Hero() {
         <div className="mt-6 text-[15px] md:text-base text-[#868685]">
           It&rsquo;s free and takes less than a minute
         </div>
+
+        {/* Payment rails — trust row */}
+        <div className="mt-14 md:mt-16 flex flex-col items-center gap-5">
+          <span className="text-[11px] font-semibold tracking-[0.22em] uppercase text-[#868685]">
+            Works with
+          </span>
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-5 md:gap-x-10">
+            {/* eslint-disable @next/next/no-img-element */}
+            <img src="/logos/bkash.svg" alt="bKash" className="h-8 md:h-10 w-auto" />
+            <span className="w-1 h-1 rounded-full bg-[#c8c8c7]" aria-hidden />
+            <img src="/logos/nagad.svg" alt="Nagad" className="h-7 md:h-9 w-auto" />
+            <span className="w-1 h-1 rounded-full bg-[#c8c8c7]" aria-hidden />
+            <img src="/logos/rocket.svg" alt="Rocket" className="h-11 md:h-12 w-auto" />
+            <span className="w-1 h-1 rounded-full bg-[#c8c8c7]" aria-hidden />
+            <img src="/logos/visa.svg" alt="Visa" className="h-6 md:h-7 w-auto" />
+            <span className="w-1 h-1 rounded-full bg-[#c8c8c7]" aria-hidden />
+            <img src="/logos/mastercard.svg" alt="Mastercard" className="h-11 md:h-12 w-auto" />
+            {/* eslint-enable @next/next/no-img-element */}
+          </div>
+        </div>
       </div>
     </section>
   );

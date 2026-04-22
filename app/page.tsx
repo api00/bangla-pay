@@ -4,6 +4,7 @@ import HowItWorks from "@/components/landing/HowItWorks";
 import CreatorShowcase from "@/components/landing/CreatorShowcase";
 import Mission from "@/components/landing/Mission";
 import FAQ from "@/components/landing/FAQ";
+import CTA from "@/components/landing/CTA";
 import Footer from "@/components/landing/Footer";
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
         <HowItWorks />
         <CreatorShowcase />
         <Mission />
+        <CTA />
         <FAQ />
       </main>
       <Footer />
