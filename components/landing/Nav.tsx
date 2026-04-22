@@ -19,13 +19,25 @@ export default function Nav() {
             aria-label="Main"
           >
             <a
-              href="#how"
+              href="/#how"
               className="text-[15px] font-semibold hover:opacity-60 transition-opacity"
             >
               How it works
             </a>
             <a
-              href="#faq"
+              href="/#shop"
+              className="text-[15px] font-semibold hover:opacity-60 transition-opacity"
+            >
+              Shop
+            </a>
+            <a
+              href="/#creators"
+              className="text-[15px] font-semibold hover:opacity-60 transition-opacity"
+            >
+              Creators
+            </a>
+            <a
+              href="/#faq"
               className="text-[15px] font-semibold hover:opacity-60 transition-opacity"
             >
               FAQ
@@ -33,10 +45,10 @@ export default function Nav() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="md" href="#">
+            <Button variant="ghost" size="md" href="/login">
               Log in
             </Button>
-            <Button variant="primary" size="md" href="#">
+            <Button variant="primary" size="md" href="/signup">
               Start my page
             </Button>
           </div>
