@@ -13,31 +13,33 @@ export default function Nav() {
           <span className="w-1.5 h-1.5 rounded-full bg-[#9fe870]" aria-hidden />
         </a>
 
-        <nav
-          className="hidden md:flex items-center gap-10"
-          aria-label="Main"
-        >
-          <a
-            href="#how"
-            className="text-[15px] font-semibold hover:opacity-60 transition-opacity"
+        <div className="flex items-center gap-6 md:gap-8">
+          <nav
+            className="hidden md:flex items-center gap-7"
+            aria-label="Main"
           >
-            How it works
-          </a>
-          <a
-            href="#faq"
-            className="text-[15px] font-semibold hover:opacity-60 transition-opacity"
-          >
-            FAQ
-          </a>
-        </nav>
+            <a
+              href="#how"
+              className="text-[15px] font-semibold hover:opacity-60 transition-opacity"
+            >
+              How it works
+            </a>
+            <a
+              href="#faq"
+              className="text-[15px] font-semibold hover:opacity-60 transition-opacity"
+            >
+              FAQ
+            </a>
+          </nav>
 
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="md" href="#">
-            Log in
-          </Button>
-          <Button variant="primary" size="md" href="#">
-            Start my page
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="md" href="#">
+              Log in
+            </Button>
+            <Button variant="primary" size="md" href="#">
+              Start my page
+            </Button>
+          </div>
         </div>
       </div>
     </header>

@@ -1,6 +1,7 @@
 import Nav from "@/components/landing/Nav";
 import Hero from "@/components/landing/Hero";
 import HowItWorks from "@/components/landing/HowItWorks";
+import Shop from "@/components/landing/Shop";
 import CreatorShowcase from "@/components/landing/CreatorShowcase";
 import Mission from "@/components/landing/Mission";
 import FAQ from "@/components/landing/FAQ";
@@ -14,6 +15,7 @@ export default function Home() {
       <main>
         <Hero />
         <HowItWorks />
+        <Shop />
         <CreatorShowcase />
         <Mission />
         <CTA />
