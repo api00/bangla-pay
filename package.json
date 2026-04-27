@@ -6,10 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:generate": "node --env-file=.env.local node_modules/drizzle-kit/bin.cjs generate",
+    "db:push": "node --env-file=.env.local node_modules/drizzle-kit/bin.cjs push",
+    "db:studio": "node --env-file=.env.local node_modules/drizzle-kit/bin.cjs studio",
+    "db:check": "node --env-file=.env.local node_modules/drizzle-kit/bin.cjs check",
+    "db:apply": "node --env-file=.env.local scripts/apply-sql.mjs",
+    "db:storage": "node --env-file=.env.local scripts/ensure-storage.mjs"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.104.0",
+    "drizzle-orm": "^0.45.2",
     "next": "16.2.4",
+    "postgres": "^3.4.9",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
@@ -18,6 +28,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",

@@ -31,8 +31,9 @@ const overview: Item[] = [
 ];
 
 const earn: Item[] = [
-  { label: "Tips", href: "#", icon: <HeartIcon /> },
-  { label: "Shop", href: "#", icon: <ShopIcon /> },
+  { label: "Tips", href: "/dashboard/tips", icon: <HeartIcon /> },
+  { label: "Shop", href: "/dashboard/shop", icon: <ShopIcon /> },
+  { label: "Orders", href: "/dashboard/orders", icon: <ShopIcon /> },
   { label: "Memberships", href: "#", icon: <LockIcon /> },
 ];
 
@@ -41,6 +42,12 @@ const settings: Item[] = [
   { label: "Payouts", href: "#", icon: <WalletIcon /> },
   { label: "Integrations", href: "#", icon: <BoltIcon /> },
 ];
+
+export interface SidebarUser {
+  email: string;
+  displayName: string;
+  initials: string;
+}
 
 function NavLink({ item }: { item: Item }) {
   return (
@@ -97,7 +104,7 @@ function Section({
   );
 }
 
-export default function Sidebar() {
+export default function Sidebar({ user }: { user: SidebarUser }) {
   return (
     <aside className="hidden lg:flex w-[240px] shrink-0 flex-col border-r border-[rgba(14,15,12,0.06)] bg-white">
       {/* Logo */}
@@ -117,24 +124,31 @@ export default function Sidebar() {
         <Section title="Settings" items={settings} />
       </div>
 
-      {/* Footer — user card */}
-      <div className="border-t border-[rgba(14,15,12,0.06)] p-3">
-        <button
-          type="button"
-          className="w-full flex items-center gap-3 px-2 py-2 rounded-xl hover:bg-[#f7f9f5] transition-colors"
-        >
+      {/* Footer — user card + sign out */}
+      <div className="border-t border-[rgba(14,15,12,0.06)] p-3 space-y-1">
+        <div className="flex items-center gap-3 px-2 py-2 rounded-xl">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#9fe870] to-[#cdffad] flex items-center justify-center shrink-0">
-            <span className="bangla-display text-[13px] text-[#163300]">তা</span>
+            <span className="text-[12px] font-semibold text-[#163300] uppercase tabular-nums">
+              {user.initials}
+            </span>
           </div>
           <div className="min-w-0 text-left flex-1">
             <div className="text-[13px] font-semibold text-[#0e0f0c] truncate">
-              Tahsina R.
+              {user.displayName}
             </div>
             <div className="text-[11px] text-[#868685] truncate">
-              tahsina@banglapay.com
+              {user.email}
             </div>
           </div>
-        </button>
+        </div>
+        <form action="/auth/signout" method="post">
+          <button
+            type="submit"
+            className="w-full px-2 py-2 rounded-xl text-[13px] font-semibold text-[#454745] hover:bg-[#f7f9f5] hover:text-[#da291c] transition-colors text-left"
+          >
+            Sign out
+          </button>
+        </form>
       </div>
     </aside>
   );

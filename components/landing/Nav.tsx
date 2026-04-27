@@ -48,7 +48,7 @@ export default function Nav() {
             <Button variant="ghost" size="md" href="/login">
               Log in
             </Button>
-            <Button variant="primary" size="md" href="/signup">
+            <Button variant="primary" size="md" href="/login">
               Start my page
             </Button>
           </div>

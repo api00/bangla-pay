@@ -1,26 +1,28 @@
-import Link from "next/link";
 import AuthLayout from "@/components/auth/AuthLayout";
 import AuthForm from "@/components/auth/AuthForm";
 
 export const metadata = {
-  title: "Sign in · BanglaPay",
-  description: "Sign in to your BanglaPay creator dashboard.",
+  title: "Sign in or sign up · BanglaPay",
+  description:
+    "One page for sign in and sign up. Enter your email — we'll send a 6-digit code.",
 };
 
 export default function LoginPage() {
   return (
     <AuthLayout
-      title="Welcome back."
-      subtitle="Sign in to your dashboard and see what your supporters are up to."
+      title={
+        <>
+          Sign in or start your page.{" "}
+          <span aria-hidden className="inline-block align-middle text-[1.4em] leading-none">
+            ☕
+          </span>
+        </>
+      }
+      subtitle="Enter your email — we'll send a 6-digit code. New here? We'll set up your page automatically."
       footer={
-        <p className="text-[14px] text-[#454745]">
-          New to BanglaPay?{" "}
-          <Link
-            href="/signup"
-            className="font-semibold text-[#0e0f0c] underline underline-offset-4 decoration-[#9fe870] decoration-[3px] hover:decoration-[#cdffad]"
-          >
-            Create an account
-          </Link>
+        <p className="text-[13px] text-[#868685] leading-[1.55]">
+          By continuing, you agree to BanglaPay&rsquo;s Terms and Privacy
+          Policy.
         </p>
       }
     >

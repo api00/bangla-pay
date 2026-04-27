@@ -1,18 +1,44 @@
-type Stat = {
+import { formatTaka } from "@/lib/money";
+
+interface StatsGridProps {
+  supporterCount: number;
+  pendingTipCount: number;
+  averageTipPaisa: number;
+}
+
+interface Stat {
   label: string;
   value: string;
-  trend?: string;
   sub?: string;
-};
+}
 
-const stats: Stat[] = [
-  { label: "Supporters", value: "142", trend: "+12 this week" },
-  { label: "Page views", value: "1,284", trend: "+8% vs last week" },
-  { label: "Shop sales", value: "38", sub: "3 pending delivery" },
-  { label: "Avg. tip", value: "৳172", sub: "Up from ৳150" },
-];
-
-export default function StatsGrid() {
+export default function StatsGrid({
+  supporterCount,
+  pendingTipCount,
+  averageTipPaisa,
+}: StatsGridProps) {
+  const stats: Stat[] = [
+    {
+      label: "Supporters",
+      value: String(supporterCount),
+      sub: supporterCount > 0 ? "Distinct supporters" : "Share your page to begin",
+    },
+    {
+      label: "Pending tips",
+      value: String(pendingTipCount),
+      sub: pendingTipCount > 0 ? "Awaiting payment" : "All caught up",
+    },
+    {
+      label: "Avg. tip",
+      value: averageTipPaisa > 0 ? formatTaka(averageTipPaisa) : "—",
+      sub: averageTipPaisa > 0 ? "Across all paid tips" : "No tips yet",
+    },
+    {
+      label: "Shop sales",
+      value: "—",
+      sub: "Launching with your shop",
+    },
+  ];
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {stats.map((s) => (
@@ -29,10 +55,8 @@ export default function StatsGrid() {
           >
             {s.value}
           </div>
-          {(s.trend || s.sub) && (
-            <div className="mt-2 text-[12px] text-[#454745]">
-              {s.trend ?? s.sub}
-            </div>
+          {s.sub && (
+            <div className="mt-2 text-[12px] text-[#454745]">{s.sub}</div>
           )}
         </div>
       ))}
