@@ -1,8 +1,12 @@
 "use client"; // Error boundaries must be Client Components
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
+import {
+  looksLikeDeploymentSkew,
+  tryAutoRecover,
+} from "@/lib/error-recovery";
 import { SUPPORT_EMAIL } from "@/lib/site";
 
 interface ErrorPageProps {
@@ -11,11 +15,19 @@ interface ErrorPageProps {
 }
 
 export default function RootError({ error, unstable_retry }: ErrorPageProps) {
+  const [recovering, setRecovering] = useState(false);
+
   useEffect(() => {
     if (process.env.NODE_ENV === "development") {
       console.error("[root error boundary]", error);
     }
+    if (looksLikeDeploymentSkew(error)) {
+      const triggered = tryAutoRecover();
+      if (triggered) setRecovering(true);
+    }
   }, [error]);
+
+  if (recovering) return null;
 
   return (
     <main className="min-h-screen bg-[#f7f9f5] flex items-center justify-center px-6">

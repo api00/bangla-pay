@@ -1,5 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
+import {
+  looksLikeDeploymentSkew,
+  tryAutoRecover,
+} from "@/lib/error-recovery";
+
 interface OnboardingErrorProps {
   error: Error & { digest?: string };
   unstable_retry: () => void;
@@ -9,6 +16,17 @@ export default function OnboardingError({
   error,
   unstable_retry,
 }: OnboardingErrorProps) {
+  const [recovering, setRecovering] = useState(false);
+
+  useEffect(() => {
+    if (looksLikeDeploymentSkew(error)) {
+      const triggered = tryAutoRecover();
+      if (triggered) setRecovering(true);
+    }
+  }, [error]);
+
+  if (recovering) return null;
+
   return (
     <main className="min-h-screen bg-[#f7f9f5] flex items-center justify-center px-6">
       <div className="max-w-[480px] w-full text-center space-y-5">
