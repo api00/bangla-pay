@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import CoverImageUploader from "@/components/shop/CoverImageUploader";
 import DeleteProductButton from "@/components/shop/DeleteProductButton";
 import EditProductForm from "@/components/shop/EditProductForm";
 import FileUploader from "@/components/shop/FileUploader";
+import ProductImagesUploader from "@/components/shop/ProductImagesUploader";
 import PublishToggle from "@/components/shop/PublishToggle";
 import { getProductById, getProductFiles } from "@/db/queries/products";
 import { requireCreator } from "@/lib/auth";
@@ -53,10 +53,13 @@ export default async function DashboardEditProductPage({ params }: PageProps) {
         <EditProductForm product={product} />
       </section>
 
-      <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6 md:p-7">
-        <CoverImageUploader
+      <section
+        id="images"
+        className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6 md:p-7"
+      >
+        <ProductImagesUploader
           productId={product.id}
-          initialUrl={product.coverUrl}
+          initialUrls={product.galleryUrls ?? []}
         />
       </section>
 

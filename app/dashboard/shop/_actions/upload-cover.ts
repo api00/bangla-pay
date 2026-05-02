@@ -2,7 +2,7 @@
 
 import { randomUUID } from "node:crypto";
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
@@ -25,6 +25,9 @@ const ALLOWED_MIME = new Set([
   "image/avif",
 ]);
 const MAX_FILENAME = 200;
+const MAX_GALLERY = 8;
+
+// ---------- Sign upload ----------
 
 export interface SignCoverUploadInput {
   productId: string;
@@ -46,6 +49,13 @@ export async function signCoverUpload(
   const creator = await requireCreator();
   const product = await getProductById(input.productId, creator.id);
   if (!product) return { ok: false, error: "Product not found." };
+
+  if ((product.galleryUrls?.length ?? 0) >= MAX_GALLERY) {
+    return {
+      ok: false,
+      error: `Up to ${MAX_GALLERY} images per product.`,
+    };
+  }
 
   if (typeof input.filename !== "string" || !input.filename.trim()) {
     return { ok: false, error: "Filename is required." };
@@ -77,6 +87,8 @@ export async function signCoverUpload(
   }
 }
 
+// ---------- Commit upload (append to gallery) ----------
+
 export interface CommitCoverInput {
   productId: string;
   storagePath: string;
@@ -85,12 +97,10 @@ export interface CommitCoverInput {
 export interface CommitCoverResult {
   ok: boolean;
   publicUrl?: string;
+  galleryUrls?: string[];
   error?: string;
 }
 
-/** Step 2: client confirms the upload finished. We swap the stored public URL
- *  and clean up the previous cover (best-effort) so abandoned files don't
- *  pile up in the bucket. */
 export async function commitCoverUpload(
   input: CommitCoverInput,
 ): Promise<CommitCoverResult> {
@@ -106,12 +116,17 @@ export async function commitCoverUpload(
   }
 
   const newUrl = publicAssetUrl(input.storagePath);
-  const previousUrl = product.coverUrl;
+  const nextGallery = [...(product.galleryUrls ?? []), newUrl];
+  const nextCover = product.coverUrl ?? newUrl; // first image becomes cover
 
   try {
     await db
       .update(products)
-      .set({ coverUrl: newUrl, updatedAt: new Date() })
+      .set({
+        galleryUrls: nextGallery,
+        coverUrl: nextCover,
+        updatedAt: new Date(),
+      })
       .where(
         and(
           eq(products.id, product.id),
@@ -119,37 +134,115 @@ export async function commitCoverUpload(
         ),
       );
   } catch {
-    return { ok: false, error: "Couldn't save the cover image." };
+    return { ok: false, error: "Couldn't save the image." };
   }
 
-  // Best-effort: delete the previous cover if it lived in the public bucket.
-  if (previousUrl) {
-    const prevPath = pathFromPublicUrl(previousUrl);
-    if (prevPath) {
-      removePublicAsset(prevPath).catch(() => {
-        /* ignore — cleanup is non-critical */
-      });
-    }
-  }
-
-  revalidatePath(`/dashboard/shop/${product.id}/edit`);
-  revalidatePath(`/${creator.handle}/shop`);
-  revalidatePath(`/${creator.handle}/shop/${product.slug}`);
-  revalidatePath(`/${creator.handle}`);
-  return { ok: true, publicUrl: newUrl };
+  revalidateAll(creator.handle, product.id, product.slug);
+  return { ok: true, publicUrl: newUrl, galleryUrls: nextGallery };
 }
+
+// ---------- Remove a gallery image ----------
+
+export interface RemoveImageInput {
+  productId: string;
+  url: string;
+}
+
+export async function removeGalleryImage(
+  input: RemoveImageInput,
+): Promise<CommitCoverResult> {
+  const creator = await requireCreator();
+  const product = await getProductById(input.productId, creator.id);
+  if (!product) return { ok: false, error: "Product not found." };
+
+  const next = (product.galleryUrls ?? []).filter((u) => u !== input.url);
+  const nextCover =
+    product.coverUrl === input.url ? next[0] ?? null : product.coverUrl;
+
+  try {
+    await db
+      .update(products)
+      .set({
+        galleryUrls: next,
+        coverUrl: nextCover,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(products.id, product.id),
+          eq(products.creatorId, creator.id),
+        ),
+      );
+  } catch {
+    return { ok: false, error: "Couldn't remove the image." };
+  }
+
+  // Best-effort: delete the underlying object from storage.
+  const path = pathFromPublicUrl(input.url);
+  if (path) removePublicAsset(path).catch(() => undefined);
+
+  revalidateAll(creator.handle, product.id, product.slug);
+  return { ok: true, galleryUrls: next };
+}
+
+// ---------- Make an image the primary cover ----------
+
+export async function setPrimaryImage(
+  input: RemoveImageInput,
+): Promise<CommitCoverResult> {
+  const creator = await requireCreator();
+  const product = await getProductById(input.productId, creator.id);
+  if (!product) return { ok: false, error: "Product not found." };
+
+  const gallery = product.galleryUrls ?? [];
+  if (!gallery.includes(input.url)) {
+    return { ok: false, error: "That image isn't in the gallery." };
+  }
+
+  const reordered = [
+    input.url,
+    ...gallery.filter((u) => u !== input.url),
+  ];
+
+  try {
+    await db
+      .update(products)
+      .set({
+        galleryUrls: reordered,
+        coverUrl: input.url,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(products.id, product.id),
+          eq(products.creatorId, creator.id),
+        ),
+      );
+  } catch {
+    return { ok: false, error: "Couldn't update the cover." };
+  }
+
+  revalidateAll(creator.handle, product.id, product.slug);
+  return { ok: true, galleryUrls: reordered };
+}
+
+// ---------- Clear everything ----------
 
 export async function clearCover(productId: string): Promise<CommitCoverResult> {
   const creator = await requireCreator();
   const product = await getProductById(productId, creator.id);
   if (!product) return { ok: false, error: "Product not found." };
 
-  const previousUrl = product.coverUrl;
+  const previous = product.galleryUrls ?? [];
 
   try {
     await db
       .update(products)
-      .set({ coverUrl: null, updatedAt: new Date() })
+      .set({
+        galleryUrls: sql`'{}'::text[]`,
+        coverUrl: null,
+        updatedAt: new Date(),
+      })
       .where(
         and(
           eq(products.id, product.id),
@@ -157,26 +250,28 @@ export async function clearCover(productId: string): Promise<CommitCoverResult> 
         ),
       );
   } catch {
-    return { ok: false, error: "Couldn't remove the cover image." };
+    return { ok: false, error: "Couldn't clear images." };
   }
 
-  if (previousUrl) {
-    const prevPath = pathFromPublicUrl(previousUrl);
-    if (prevPath) {
-      removePublicAsset(prevPath).catch(() => {
-        /* ignore */
-      });
-    }
+  for (const url of previous) {
+    const path = pathFromPublicUrl(url);
+    if (path) removePublicAsset(path).catch(() => undefined);
   }
 
-  revalidatePath(`/dashboard/shop/${product.id}/edit`);
-  revalidatePath(`/${creator.handle}/shop`);
-  revalidatePath(`/${creator.handle}/shop/${product.slug}`);
-  revalidatePath(`/${creator.handle}`);
-  return { ok: true };
+  revalidateAll(creator.handle, product.id, product.slug);
+  return { ok: true, galleryUrls: [] };
 }
 
-/** Extract the `creators/.../cover-...` path from a Supabase public URL. */
+// ---------- Helpers ----------
+
+function revalidateAll(handle: string, productId: string, slug: string) {
+  revalidatePath(`/dashboard/shop/${productId}/edit`);
+  revalidatePath(`/dashboard/shop`);
+  revalidatePath(`/${handle}/shop`);
+  revalidatePath(`/${handle}/shop/${slug}`);
+  revalidatePath(`/${handle}`);
+}
+
 function pathFromPublicUrl(url: string): string | null {
   const marker = "/storage/v1/object/public/public-assets/";
   const idx = url.indexOf(marker);

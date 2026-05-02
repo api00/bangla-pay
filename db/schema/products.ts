@@ -30,6 +30,10 @@ export const products = pgTable(
     subtitle: text("subtitle"),
     descriptionMd: text("description_md"),
     coverUrl: text("cover_url"),
+    galleryUrls: text("gallery_urls")
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
     productType: productType("product_type")
       .notNull()
       .default("digital_download"),

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import CreatorPageFooter from "@/components/creator-page/CreatorPageFooter";
+import ProductGallery from "@/components/shop/ProductGallery";
 import PublicBuyForm from "@/components/shop/PublicBuyForm";
 import { db } from "@/db";
 import { getCreatorByHandle } from "@/db/queries/creators";
@@ -55,13 +56,20 @@ export default async function PublicProductPage({ params }: PageProps) {
 
         <div className="grid mt-6 gap-8 md:grid-cols-[1.4fr_1fr]">
           <article>
-            {product.coverUrl && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={product.coverUrl}
-                alt=""
-                className="w-full aspect-[16/9] object-cover rounded-[24px] mb-6 bg-[#f2f6ec] border border-[rgba(14,15,12,0.06)]"
+            {(product.galleryUrls?.length ?? 0) > 0 ? (
+              <ProductGallery
+                images={product.galleryUrls ?? []}
+                alt={product.title}
               />
+            ) : (
+              product.coverUrl && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={product.coverUrl}
+                  alt=""
+                  className="w-full aspect-[16/9] object-cover rounded-[24px] mb-6 bg-[#f2f6ec] border border-[rgba(14,15,12,0.06)]"
+                />
+              )
             )}
             <h1
               className="display text-[32px] sm:text-[40px] text-[#0e0f0c]"
