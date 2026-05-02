@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import CreatorPageFooter from "@/components/creator-page/CreatorPageFooter";
+import ProductFilesPreview from "@/components/shop/ProductFilesPreview";
 import ProductGallery from "@/components/shop/ProductGallery";
 import PublicBuyForm from "@/components/shop/PublicBuyForm";
 import { db } from "@/db";
@@ -89,24 +90,7 @@ export default async function PublicProductPage({ params }: PageProps) {
               </div>
             )}
 
-            {files.length > 0 && (
-              <div className="mt-8 rounded-2xl border border-[rgba(14,15,12,0.06)] bg-white px-5 py-4">
-                <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#868685] mb-2">
-                  What you get
-                </p>
-                <ul className="space-y-1.5">
-                  {files.map((file) => (
-                    <li
-                      key={file.id}
-                      className="text-[14px] text-[#0e0f0c] flex items-center gap-2"
-                    >
-                      <span aria-hidden>•</span>
-                      <span className="truncate">{file.filename}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            <ProductFilesPreview files={files} />
           </article>
 
           <aside className="md:sticky md:top-8 md:self-start">
