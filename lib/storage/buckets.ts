@@ -36,3 +36,20 @@ export function productCoverPath(
     .toLowerCase();
   return `creators/${creatorId}/products/${productId}/cover-${imageId}-${safeFilename}`;
 }
+
+/**
+ * Build the storage path for a creator-level public image (avatar or cover).
+ * Same `public-assets` bucket as product covers.
+ */
+export function creatorImagePath(
+  creatorId: string,
+  kind: "avatar" | "cover",
+  imageId: string,
+  filename: string,
+): string {
+  const safeFilename = filename
+    .replace(/[\\/]/g, "_")
+    .replace(/[\x00-\x1f]/g, "")
+    .toLowerCase();
+  return `creators/${creatorId}/profile/${kind}-${imageId}-${safeFilename}`;
+}

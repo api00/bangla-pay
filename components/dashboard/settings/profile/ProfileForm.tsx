@@ -100,35 +100,6 @@ export default function ProfileForm({ creator, page }: ProfileFormProps) {
             </Field>
           </div>
 
-          <Field
-            label="Avatar URL"
-            htmlFor="avatar_url"
-            hint="A square image works best."
-          >
-            <input
-              id="avatar_url"
-              name="avatar_url"
-              type="url"
-              defaultValue={page.avatarUrl ?? ""}
-              placeholder="https://"
-              className={inputClass}
-            />
-          </Field>
-
-          <Field
-            label="Cover URL"
-            htmlFor="cover_url"
-            hint="Wide image, 1200×400 recommended."
-          >
-            <input
-              id="cover_url"
-              name="cover_url"
-              type="url"
-              defaultValue={page.coverUrl ?? ""}
-              placeholder="https://"
-              className={inputClass}
-            />
-          </Field>
         </div>
       </Card>
 

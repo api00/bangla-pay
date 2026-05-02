@@ -1,8 +1,10 @@
 import { redirect } from "next/navigation";
 
 import PageHeader from "@/components/dashboard/PageHeader";
-import ProfileForm from "@/components/dashboard/settings/profile/ProfileForm";
+import Card from "@/components/dashboard/settings/Card";
+import CreatorImageUploader from "@/components/dashboard/settings/profile/CreatorImageUploader";
 import PresetsForm from "@/components/dashboard/settings/profile/PresetsForm";
+import ProfileForm from "@/components/dashboard/settings/profile/ProfileForm";
 import { getCreatorPage, getTipPresetsForCreator } from "@/db/queries/page";
 import { requireCreator } from "@/lib/auth";
 
@@ -18,7 +20,6 @@ export default async function ProfileSettingsPage() {
   ]);
 
   if (!page) {
-    // Should be created by onboarding. If not, redirect back.
     redirect("/onboarding/handle");
   }
 
@@ -38,6 +39,28 @@ export default async function ProfileSettingsPage() {
           </a>
         }
       />
+
+      <Card
+        title="Profile picture & cover"
+        description="Upload from your computer. Saves automatically."
+      >
+        <div className="grid gap-7 md:grid-cols-[auto_1fr] md:items-start">
+          <CreatorImageUploader
+            kind="avatar"
+            label="Profile picture"
+            hint="Square image works best. JPEG, PNG, WebP, GIF, AVIF — up to 5 MB."
+            shape="square"
+            initialUrl={page.avatarUrl}
+          />
+          <CreatorImageUploader
+            kind="cover"
+            label="Cover image"
+            hint="Wide image, 1200×400 looks great. Up to 5 MB."
+            shape="wide"
+            initialUrl={page.coverUrl}
+          />
+        </div>
+      </Card>
 
       <ProfileForm creator={creator} page={page} />
       <PresetsForm presets={presets} />

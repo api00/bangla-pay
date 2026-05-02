@@ -113,8 +113,8 @@ export async function updateProfile(
   const showTotalRaised = formData.get("show_total_raised") === "on";
   const bnNumerals = formData.get("bn_numerals") === "on";
 
-  const avatarUrl = maybeUrl(formData.get("avatar_url"));
-  const coverUrl = maybeUrl(formData.get("cover_url"));
+  // avatar/cover are owned by the dedicated upload flow in _image-actions.ts
+  // and are NOT touched by this form submission.
 
   const socialLinks = {
     twitter: maybeUrl(formData.get("social_twitter")) ?? undefined,
@@ -143,8 +143,6 @@ export async function updateProfile(
         .update(creatorPages)
         .set({
           bio,
-          avatarUrl,
-          coverUrl,
           themeColor,
           chaLabel,
           chaEmoji,
