@@ -99,5 +99,6 @@ export async function createProduct(
     return { ok: false, error: "Couldn't create product. Please try again." };
   }
 
-  redirect(`/dashboard/shop/${insertedId}/edit`);
+  // Land on the images section so creators can immediately upload photos.
+  redirect(`/dashboard/shop/${insertedId}/edit#images`);
 }
