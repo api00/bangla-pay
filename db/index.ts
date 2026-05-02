@@ -34,7 +34,22 @@ function getDb(): Db {
     );
   }
 
-  const sql = globalForDb._pg ?? postgres(databaseUrl, { prepare: false });
+  // Serverless connection-pool tuning for Supabase:
+  // - `max: 1` — each serverless invocation runs in its own process and
+  //   only ever needs one connection. Higher values just churn the pooler.
+  // - `prepare: false` — required by Supabase's transaction-mode pooler.
+  // - `idle_timeout: 20s` — return the socket to the pooler quickly.
+  // - `max_lifetime: 30m` — replace stale connections.
+  // - `connect_timeout: 10s` — fail fast on auth/network issues.
+  const sql =
+    globalForDb._pg ??
+    postgres(databaseUrl, {
+      prepare: false,
+      max: 1,
+      idle_timeout: 20,
+      max_lifetime: 60 * 30,
+      connect_timeout: 10,
+    });
   if (process.env.NODE_ENV !== "production") {
     globalForDb._pg = sql;
   }
