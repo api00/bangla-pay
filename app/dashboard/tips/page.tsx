@@ -1,13 +1,10 @@
-import { redirect } from "next/navigation";
-
 import TipsList from "@/components/dashboard/tips/TipsList";
-import { getCreatorByUserId } from "@/db/queries/creators";
 import {
   getCreatorTipStats,
   listTipsForCreator,
 } from "@/db/queries/tips";
+import { requireCreator } from "@/lib/auth";
 import { formatTaka } from "@/lib/money";
-import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -15,14 +12,7 @@ export const metadata = {
 };
 
 export default async function DashboardTipsPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
-
-  const creator = await getCreatorByUserId(user.id);
-  if (!creator) redirect("/onboarding/handle");
+  const { creator } = await requireCreator();
 
   const [stats, succeeded, pending, failed] = await Promise.all([
     getCreatorTipStats(creator.id),

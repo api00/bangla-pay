@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
+import { evaluateMilestonesForCreator } from "@/db/queries/milestone-eval";
 import { upsertSupporterByEmail } from "@/db/queries/supporters";
 import { creators, messages, tips } from "@/db/schema";
 
@@ -78,6 +79,8 @@ export async function markTipPaid({
     }
   });
 
+  await evaluateMilestonesForCreator(tip.creatorId);
+
   const [creator] = await db
     .select({ handle: creators.handle })
     .from(creators)
@@ -89,6 +92,8 @@ export async function markTipPaid({
   }
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/tips");
+  revalidatePath("/dashboard/supporters");
+  revalidatePath("/dashboard/messages");
 
   redirect(`/checkout/success?tip=${tip.id}`);
 }

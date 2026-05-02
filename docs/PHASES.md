@@ -12,9 +12,9 @@ Update the **Status** and **Done date** columns at the end of each phase.
 | 4 | Tips MVP (stub provider, receipts, dashboard tips inbox) | ✅ done | 2026-04-27 | E2E tip flow, stub checkout, real dashboard stats |
 | 5 | Real payment providers (bKash + SSLCOMMERZ) + webhooks | ⏭️ deferred | — | Skipped until provider accounts live; mock checkout reused everywhere |
 | 6 | Shop (digital products, file upload, signed downloads, orders) | ✅ done | 2026-04-27 | Storage buckets live (product-files private, public-assets public) |
-| 7 | Engagement & analytics (messages, milestones, daily rollup) | ⬜ pending | — | |
-| 8 | Payouts (method add/verify, request flow, audit trail) | ⬜ pending | — | |
-| 9 | Polish & launch (emails, OG, E2E, rate limits) | ⬜ pending | — | |
+| 7 | Engagement & analytics (messages, milestones, daily rollup) | ✅ done | 2026-05-02 | Supporters page, message inbox + reply, milestone auto-eval, sparkline |
+| 8 | Payouts (method add/verify, request flow, audit trail) | ✅ done | 2026-05-02 | bKash/Nagad/Rocket + bank, AES-256-GCM encrypted details, balance + history |
+| 9 | Polish & launch (emails, OG, E2E, rate limits) | 🟡 in progress | — | Active sidebar, real unread badges, share page; remaining: OG images, email receipts, Playwright, rate limits |
 
 Status legend: ⬜ pending · 🟡 in progress · ✅ done · ⏭️ deferred · ⛔ blocked
 

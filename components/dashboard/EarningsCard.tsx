@@ -1,17 +1,22 @@
 import Link from "next/link";
 
+import type { DailyActivity } from "@/db/queries/activity";
 import { formatTaka, formatTakaCompact } from "@/lib/money";
+
+import Sparkline from "./Sparkline";
 
 interface EarningsCardProps {
   totalRaisedPaisa: number;
   succeededTipCount: number;
   averageTipPaisa: number;
+  daily: DailyActivity[];
 }
 
 export default function EarningsCard({
   totalRaisedPaisa,
   succeededTipCount,
   averageTipPaisa,
+  daily,
 }: EarningsCardProps) {
   const display =
     totalRaisedPaisa >= 100_00_00
@@ -44,7 +49,11 @@ export default function EarningsCard({
         </div>
       </div>
 
-      <div className="mt-7 pt-5 border-t border-[rgba(14,15,12,0.06)] grid grid-cols-2 gap-4">
+      <div className="mt-5">
+        <Sparkline data={daily} />
+      </div>
+
+      <div className="mt-5 pt-5 border-t border-[rgba(14,15,12,0.06)] grid grid-cols-2 gap-4">
         <div>
           <div className="text-[12px] font-semibold text-[#868685] uppercase tracking-[0.14em]">
             Tips

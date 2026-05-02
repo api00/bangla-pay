@@ -1,10 +1,8 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
-import { getCreatorByUserId } from "@/db/queries/creators";
 import { listOrdersForCreator } from "@/db/queries/orders";
+import { requireCreator } from "@/lib/auth";
 import { formatTaka } from "@/lib/money";
-import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -27,15 +25,7 @@ const STATUS_STYLES: Record<
 };
 
 export default async function DashboardOrdersPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
-
-  const creator = await getCreatorByUserId(user.id);
-  if (!creator) redirect("/onboarding/handle");
-
+  const { creator } = await requireCreator();
   const orders = await listOrdersForCreator(creator.id, 100);
 
   return (

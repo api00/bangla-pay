@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import {
   HomeIcon,
@@ -6,65 +9,57 @@ import {
   ExternalIcon,
   HeartIcon,
   ShopIcon,
-  LockIcon,
   PeopleIcon,
   MessageIcon,
   UserIcon,
   WalletIcon,
-  BoltIcon,
 } from "./icons";
 
-type Item = {
+interface Item {
   label: string;
   href: string;
   icon: ReactNode;
   external?: boolean;
-  active?: boolean;
   badge?: string;
-};
-
-const overview: Item[] = [
-  { label: "Home", href: "/dashboard", icon: <HomeIcon />, active: true },
-  { label: "My page", href: "/tahsina", icon: <PageIcon />, external: true },
-  { label: "Supporters", href: "#", icon: <PeopleIcon /> },
-  { label: "Messages", href: "#", icon: <MessageIcon />, badge: "3" },
-];
-
-const earn: Item[] = [
-  { label: "Tips", href: "/dashboard/tips", icon: <HeartIcon /> },
-  { label: "Shop", href: "/dashboard/shop", icon: <ShopIcon /> },
-  { label: "Orders", href: "/dashboard/orders", icon: <ShopIcon /> },
-  { label: "Memberships", href: "#", icon: <LockIcon /> },
-];
-
-const settings: Item[] = [
-  { label: "Profile", href: "#", icon: <UserIcon /> },
-  { label: "Payouts", href: "#", icon: <WalletIcon /> },
-  { label: "Integrations", href: "#", icon: <BoltIcon /> },
-];
+}
 
 export interface SidebarUser {
   email: string;
   displayName: string;
   initials: string;
+  handle: string;
 }
 
-function NavLink({ item }: { item: Item }) {
+interface SidebarProps {
+  user: SidebarUser;
+  unreadMessages: number;
+}
+
+function isActive(pathname: string, href: string): boolean {
+  if (href === "/dashboard") return pathname === "/dashboard";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function NavLink({
+  item,
+  active,
+}: {
+  item: Item;
+  active: boolean;
+}) {
   return (
     <Link
       href={item.href}
       target={item.external ? "_blank" : undefined}
       rel={item.external ? "noreferrer" : undefined}
       className={`group flex items-center gap-3 px-3 py-2 rounded-xl text-[14px] font-semibold transition-colors ${
-        item.active
+        active
           ? "bg-[#f2f6ec] text-[#0e0f0c]"
           : "text-[#454745] hover:bg-[#f7f9f5] hover:text-[#0e0f0c]"
       }`}
     >
       <span
-        className={`${
-          item.active ? "text-[#163300]" : "text-[#454745]"
-        } shrink-0`}
+        className={`${active ? "text-[#163300]" : "text-[#454745]"} shrink-0`}
       >
         {item.icon}
       </span>
@@ -84,9 +79,11 @@ function NavLink({ item }: { item: Item }) {
 function Section({
   title,
   items,
+  pathname,
 }: {
   title?: string;
   items: Item[];
+  pathname: string;
 }) {
   return (
     <div>
@@ -97,19 +94,65 @@ function Section({
       )}
       <nav className="space-y-0.5">
         {items.map((item) => (
-          <NavLink key={item.label} item={item} />
+          <NavLink
+            key={item.label}
+            item={item}
+            active={item.external ? false : isActive(pathname, item.href)}
+          />
         ))}
       </nav>
     </div>
   );
 }
 
-export default function Sidebar({ user }: { user: SidebarUser }) {
+export default function Sidebar({ user, unreadMessages }: SidebarProps) {
+  const pathname = usePathname() ?? "/dashboard";
+
+  const overview: Item[] = [
+    { label: "Home", href: "/dashboard", icon: <HomeIcon /> },
+    {
+      label: "My page",
+      href: `/${user.handle}`,
+      icon: <PageIcon />,
+      external: true,
+    },
+    {
+      label: "Supporters",
+      href: "/dashboard/supporters",
+      icon: <PeopleIcon />,
+    },
+    {
+      label: "Messages",
+      href: "/dashboard/messages",
+      icon: <MessageIcon />,
+      badge: unreadMessages > 0 ? String(unreadMessages) : undefined,
+    },
+  ];
+
+  const earn: Item[] = [
+    { label: "Tips", href: "/dashboard/tips", icon: <HeartIcon /> },
+    { label: "Shop", href: "/dashboard/shop", icon: <ShopIcon /> },
+    { label: "Orders", href: "/dashboard/orders", icon: <ShopIcon /> },
+  ];
+
+  const settings: Item[] = [
+    {
+      label: "Profile",
+      href: "/dashboard/settings/profile",
+      icon: <UserIcon />,
+    },
+    {
+      label: "Payouts",
+      href: "/dashboard/settings/payouts",
+      icon: <WalletIcon />,
+    },
+  ];
+
   return (
     <aside className="hidden lg:flex w-[240px] shrink-0 flex-col border-r border-[rgba(14,15,12,0.06)] bg-white">
       {/* Logo */}
       <Link
-        href="/"
+        href="/dashboard"
         className="flex items-center gap-1.5 px-6 h-16 shrink-0"
         aria-label="BanglaPay home"
       >
@@ -119,9 +162,9 @@ export default function Sidebar({ user }: { user: SidebarUser }) {
 
       {/* Nav */}
       <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
-        <Section items={overview} />
-        <Section title="Earn" items={earn} />
-        <Section title="Settings" items={settings} />
+        <Section items={overview} pathname={pathname} />
+        <Section title="Earn" items={earn} pathname={pathname} />
+        <Section title="Settings" items={settings} pathname={pathname} />
       </div>
 
       {/* Footer — user card + sign out */}

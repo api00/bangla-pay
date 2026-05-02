@@ -4,6 +4,8 @@ interface StatsGridProps {
   supporterCount: number;
   pendingTipCount: number;
   averageTipPaisa: number;
+  paidOrderCount: number;
+  shopRevenuePaisa: number;
 }
 
 interface Stat {
@@ -16,12 +18,15 @@ export default function StatsGrid({
   supporterCount,
   pendingTipCount,
   averageTipPaisa,
+  paidOrderCount,
+  shopRevenuePaisa,
 }: StatsGridProps) {
   const stats: Stat[] = [
     {
       label: "Supporters",
       value: String(supporterCount),
-      sub: supporterCount > 0 ? "Distinct supporters" : "Share your page to begin",
+      sub:
+        supporterCount > 0 ? "Distinct supporters" : "Share your page to begin",
     },
     {
       label: "Pending tips",
@@ -35,10 +40,15 @@ export default function StatsGrid({
     },
     {
       label: "Shop sales",
-      value: "—",
-      sub: "Launching with your shop",
+      value:
+        paidOrderCount > 0 ? formatTaka(shopRevenuePaisa) : String(paidOrderCount || "—"),
+      sub:
+        paidOrderCount > 0
+          ? `${paidOrderCount} paid order${paidOrderCount > 1 ? "s" : ""}`
+          : "Add a product to start",
     },
   ];
+
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {stats.map((s) => (

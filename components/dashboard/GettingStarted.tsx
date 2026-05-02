@@ -1,42 +1,73 @@
+import Link from "next/link";
+
 import { CheckIcon } from "./icons";
 
-type Step = {
+interface GettingStartedProps {
+  handle: string;
+  hasBio: boolean;
+  hasAvatar: boolean;
+  hasPayoutMethod: boolean;
+  hasFirstTip: boolean;
+}
+
+interface Step {
   title: string;
   body: string;
   done: boolean;
   cta: string;
-};
+  href: string;
+}
 
-const steps: Step[] = [
-  {
-    title: "Claim your handle",
-    body: "Your page is live at banglapay.com/tahsina.",
-    done: true,
-    cta: "Done",
-  },
-  {
-    title: "Add a cover image",
-    body: "Pages with a cover get 3x more tips. Upload one now.",
-    done: false,
-    cta: "Upload",
-  },
-  {
-    title: "Connect a payout method",
-    body: "Link bKash, Nagad, or a Bangladeshi bank to receive your earnings.",
-    done: false,
-    cta: "Connect",
-  },
-  {
-    title: "Share your page",
-    body: "Post your link on Instagram, X, or send it to your group chat.",
-    done: false,
-    cta: "Share",
-  },
-];
+export default function GettingStarted({
+  handle,
+  hasBio,
+  hasAvatar,
+  hasPayoutMethod,
+  hasFirstTip,
+}: GettingStartedProps) {
+  const steps: Step[] = [
+    {
+      title: "Claim your handle",
+      body: `Your page is live at banglapay.com/${handle}.`,
+      done: true,
+      cta: "Done",
+      href: `/${handle}`,
+    },
+    {
+      title: "Add a profile picture",
+      body: "Pages with a profile photo get more tips. Add an avatar URL.",
+      done: hasAvatar,
+      cta: hasAvatar ? "Done" : "Add",
+      href: "/dashboard/settings/profile",
+    },
+    {
+      title: "Write a short bio",
+      body: "Tell supporters what you make. 280 characters max.",
+      done: hasBio,
+      cta: hasBio ? "Done" : "Write",
+      href: "/dashboard/settings/profile",
+    },
+    {
+      title: "Connect a payout method",
+      body: "Link bKash, Nagad, Rocket, or a Bangladeshi bank to receive your earnings.",
+      done: hasPayoutMethod,
+      cta: hasPayoutMethod ? "Done" : "Connect",
+      href: "/dashboard/settings/payouts",
+    },
+    {
+      title: "Share your page",
+      body: "Post your link on Instagram, X, or send it to your group chat.",
+      done: hasFirstTip,
+      cta: hasFirstTip ? "Done" : "Share",
+      href: "/dashboard/settings/page",
+    },
+  ];
 
-export default function GettingStarted() {
   const doneCount = steps.filter((s) => s.done).length;
   const pct = (doneCount / steps.length) * 100;
+
+  // Hide once everything is done.
+  if (doneCount === steps.length) return null;
 
   return (
     <div className="rounded-[28px] bg-white border border-[rgba(14,15,12,0.06)] p-6 md:p-7 shadow-[0_1px_0_0_rgba(14,15,12,0.03)]">
@@ -51,7 +82,7 @@ export default function GettingStarted() {
         </div>
         <div className="w-28 md:w-36 h-1.5 rounded-full bg-[#e8ebe6] overflow-hidden">
           <div
-            className="h-full bg-[#9fe870]"
+            className="h-full bg-[#9fe870] transition-[width] duration-500"
             style={{ width: `${pct}%` }}
             aria-hidden
           />
@@ -95,17 +126,17 @@ export default function GettingStarted() {
               <div className="text-[13px] text-[#868685] mt-0.5">{s.body}</div>
             </div>
 
-            <button
-              type="button"
-              disabled={s.done}
-              className={`shrink-0 h-9 px-4 rounded-full text-[13px] font-semibold transition-colors ${
+            <Link
+              href={s.href}
+              aria-disabled={s.done}
+              className={`shrink-0 h-9 px-4 rounded-full text-[13px] font-semibold inline-flex items-center justify-center transition-colors ${
                 s.done
-                  ? "bg-transparent text-[#868685] cursor-default"
+                  ? "bg-transparent text-[#868685] pointer-events-none"
                   : "bg-[#9fe870] text-[#163300] hover:bg-[#cdffad]"
               }`}
             >
               {s.cta}
-            </button>
+            </Link>
           </li>
         ))}
       </ol>

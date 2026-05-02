@@ -1,13 +1,12 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import DeleteProductButton from "@/components/shop/DeleteProductButton";
 import EditProductForm from "@/components/shop/EditProductForm";
 import FileUploader from "@/components/shop/FileUploader";
 import PublishToggle from "@/components/shop/PublishToggle";
-import { getCreatorByUserId } from "@/db/queries/creators";
 import { getProductById, getProductFiles } from "@/db/queries/products";
-import { createClient } from "@/utils/supabase/server";
+import { requireCreator } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -17,16 +16,7 @@ interface PageProps {
 
 export default async function DashboardEditProductPage({ params }: PageProps) {
   const { productId } = await params;
-
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
-
-  const creator = await getCreatorByUserId(user.id);
-  if (!creator) redirect("/onboarding/handle");
-
+  const { creator } = await requireCreator();
   const product = await getProductById(productId, creator.id);
   if (!product) notFound();
 

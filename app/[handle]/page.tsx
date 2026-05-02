@@ -4,9 +4,11 @@ import { notFound } from "next/navigation";
 import CreatorHeader from "@/components/creator-page/CreatorHeader";
 import CreatorPageFooter from "@/components/creator-page/CreatorPageFooter";
 import CreatorStats from "@/components/creator-page/CreatorStats";
+import MilestoneBadges from "@/components/creator-page/MilestoneBadges";
 import ShopPreview from "@/components/creator-page/ShopPreview";
 import SupporterWall from "@/components/creator-page/SupporterWall";
 import TipJar from "@/components/creator-page/TipJar";
+import { listPublicReachedMilestones } from "@/db/queries/milestones";
 import { listPublishedProducts } from "@/db/queries/products";
 import { getPublicProfile } from "@/db/queries/profile";
 import { normalizeHandle, RESERVED_HANDLES } from "@/lib/handle";
@@ -57,7 +59,10 @@ export default async function PublicCreatorPage({ params }: PageProps) {
   const { creator, page, presets, supporters, totalRaisedPaisa, supporterCount } =
     profile;
 
-  const allProducts = await listPublishedProducts(creator.id);
+  const [allProducts, milestones] = await Promise.all([
+    listPublishedProducts(creator.id),
+    listPublicReachedMilestones(creator.id),
+  ]);
   const previewProducts = allProducts.slice(0, 4);
 
   return (
@@ -79,6 +84,10 @@ export default async function PublicCreatorPage({ params }: PageProps) {
           chaEmoji={page.chaEmoji}
           bnNumerals={page.bnNumerals}
           presets={presets}
+        />
+        <MilestoneBadges
+          milestones={milestones}
+          bnNumerals={page.bnNumerals}
         />
         {page.showSupporters && (
           <SupporterWall

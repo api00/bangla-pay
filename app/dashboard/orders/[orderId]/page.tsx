@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
-import { getCreatorByUserId } from "@/db/queries/creators";
 import { getOrderForCreator } from "@/db/queries/orders";
+import { requireCreator } from "@/lib/auth";
 import { formatTaka } from "@/lib/money";
-import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -19,16 +18,7 @@ const DATE_FORMAT = new Intl.DateTimeFormat("en-BD", {
 
 export default async function DashboardOrderDetailPage({ params }: PageProps) {
   const { orderId } = await params;
-
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
-
-  const creator = await getCreatorByUserId(user.id);
-  if (!creator) redirect("/onboarding/handle");
-
+  const { creator } = await requireCreator();
   const detail = await getOrderForCreator(creator.id, orderId);
   if (!detail) notFound();
   const { order, items, downloads } = detail;

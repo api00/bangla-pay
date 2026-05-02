@@ -1,10 +1,8 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 import ProductCard from "@/components/shop/ProductCard";
-import { getCreatorByUserId } from "@/db/queries/creators";
 import { listProductsForCreator } from "@/db/queries/products";
-import { createClient } from "@/utils/supabase/server";
+import { requireCreator } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -12,15 +10,7 @@ export const metadata = {
 };
 
 export default async function DashboardShopPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
-
-  const creator = await getCreatorByUserId(user.id);
-  if (!creator) redirect("/onboarding/handle");
-
+  const { creator } = await requireCreator();
   const products = await listProductsForCreator(creator.id);
   const publishedCount = products.filter((p) => p.isPublished).length;
 
