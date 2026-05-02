@@ -15,6 +15,8 @@ import {
 import type { TipPreset } from "@/db/schema";
 import { formatTaka, parseTakaInput } from "@/lib/money";
 
+import ChaVisual from "./ChaVisual";
+
 const initialState: StartTipState = { ok: false };
 
 interface TipJarProps {
@@ -23,6 +25,8 @@ interface TipJarProps {
   themeColor: string;
   chaLabel: string;
   chaEmoji: string;
+  /** One cha = N paisa (default 5000 → ৳50). Drives the cup fill curve. */
+  chaUnitPaisa?: number;
   bnNumerals: boolean;
   presets: TipPreset[];
 }
@@ -39,6 +43,7 @@ export default function TipJar({
   themeColor,
   chaLabel,
   chaEmoji,
+  chaUnitPaisa = 5_000,
   bnNumerals,
   presets,
 }: TipJarProps) {
@@ -51,6 +56,7 @@ export default function TipJar({
     presetList[0]?.amountPaisa ?? 5_000,
   );
   const [customRaw, setCustomRaw] = useState("");
+  const [isInteracting, setIsInteracting] = useState(false);
 
   const customPaisa = useMemo(() => parseTakaInput(customRaw), [customRaw]);
   const isCustom = selectedPaisa === 0;
@@ -62,6 +68,7 @@ export default function TipJar({
 
   function pickPreset(amountPaisa: number) {
     setSelectedPaisa(amountPaisa);
+    flashInteraction();
   }
 
   function pickCustom() {
@@ -70,6 +77,12 @@ export default function TipJar({
 
   function onCustomChange(event: ChangeEvent<HTMLInputElement>) {
     setCustomRaw(event.target.value);
+    flashInteraction();
+  }
+
+  function flashInteraction() {
+    setIsInteracting(true);
+    window.setTimeout(() => setIsInteracting(false), 320);
   }
 
   const ctaLabel = effectivePaisa
@@ -84,18 +97,26 @@ export default function TipJar({
       <input type="hidden" name="handle" value={handle} />
       <input type="hidden" name="amount_paisa" value={selectedPaisa} />
 
-      <div className="flex items-center gap-2 mb-5">
-        <span
-          aria-hidden
-          className="text-[20px] inline-flex items-center justify-center w-9 h-9 rounded-full"
-          style={{ backgroundColor: themeColor }}
-        >
+      {/* Hero visual — fills, scales, steams as the supporter chooses more */}
+      <div className="-mt-2 mb-3 flex justify-center" aria-hidden>
+        <ChaVisual
+          amountPaisa={effectivePaisa}
+          chaUnitPaisa={chaUnitPaisa}
+          themeColor={themeColor}
+          bnNumerals={bnNumerals}
+          isInteracting={isInteracting}
+        />
+      </div>
+
+      <h2 className="text-center text-[18px] font-bold text-[#0e0f0c] mb-1 flex items-center justify-center gap-2">
+        <span aria-hidden className="text-[18px]">
           {chaEmoji}
         </span>
-        <h2 className="text-[16px] font-semibold text-[#0e0f0c]">
-          Buy {displayName} a {chaLabel}
-        </h2>
-      </div>
+        Buy {displayName} a {chaLabel}
+      </h2>
+      <p className="text-center text-[13px] text-[#868685] mb-5">
+        Pick an amount or write your own.
+      </p>
 
       {/* Preset grid */}
       <div
@@ -112,9 +133,9 @@ export default function TipJar({
               aria-pressed={isActive}
               onClick={() => pickPreset(preset.amountPaisa)}
               className={[
-                "h-14 rounded-2xl border-[1.5px] text-left px-3 transition-colors flex flex-col justify-center",
+                "h-14 rounded-2xl border-[1.5px] text-left px-3 transition-all flex flex-col justify-center",
                 isActive
-                  ? "border-[#0e0f0c] bg-[#f7f9f5]"
+                  ? "border-[#0e0f0c] bg-[#f7f9f5] shadow-[0_1px_0_0_rgba(14,15,12,0.06),0_8px_22px_-12px_rgba(14,15,12,0.18)]"
                   : "border-[rgba(14,15,12,0.10)] bg-white hover:border-[#454745]",
               ].join(" ")}
             >

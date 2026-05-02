@@ -83,6 +83,7 @@ export default async function PublicCreatorPage({ params }: PageProps) {
           themeColor={page.themeColor}
           chaLabel={page.chaLabel}
           chaEmoji={page.chaEmoji}
+          chaUnitPaisa={page.chaUnitPaisa}
           bnNumerals={page.bnNumerals}
           presets={presets}
         />
