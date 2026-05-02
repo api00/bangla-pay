@@ -55,6 +55,14 @@ export default async function PublicProductPage({ params }: PageProps) {
 
         <div className="grid mt-6 gap-8 md:grid-cols-[1.4fr_1fr]">
           <article>
+            {product.coverUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={product.coverUrl}
+                alt=""
+                className="w-full aspect-[16/9] object-cover rounded-[24px] mb-6 bg-[#f2f6ec] border border-[rgba(14,15,12,0.06)]"
+              />
+            )}
             <h1
               className="display text-[32px] sm:text-[40px] text-[#0e0f0c]"
               style={{ lineHeight: 1.1, fontWeight: 700 }}

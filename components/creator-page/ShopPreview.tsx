@@ -65,25 +65,50 @@ export default function ShopPreview({
           <li key={product.id}>
             <Link
               href={`/${handle}/shop/${product.slug}`}
-              className="block rounded-2xl border border-[rgba(14,15,12,0.06)] bg-white px-5 py-4 hover:border-[#0e0f0c] transition-colors h-full"
+              className="group flex gap-3 rounded-2xl border border-[rgba(14,15,12,0.06)] bg-white p-3 hover:border-[#0e0f0c] transition-colors h-full"
             >
-              <div className="flex items-baseline justify-between gap-3">
-                <p className="text-[14px] font-semibold text-[#0e0f0c] leading-[1.4] line-clamp-2">
-                  {product.title}
-                </p>
-                <span className="text-[13px] font-semibold tabular-nums text-[#163300] shrink-0">
+              <ProductThumb product={product} />
+              <div className="flex-1 min-w-0 flex flex-col justify-between py-1">
+                <div>
+                  <p className="text-[14px] font-semibold text-[#0e0f0c] leading-[1.4] line-clamp-2">
+                    {product.title}
+                  </p>
+                  {product.subtitle && (
+                    <p className="mt-1 text-[12px] text-[#454745] leading-[1.4] line-clamp-1">
+                      {product.subtitle}
+                    </p>
+                  )}
+                </div>
+                <span className="text-[13px] font-semibold tabular-nums text-[#163300]">
                   {priceLabel(product)}
                 </span>
               </div>
-              {product.subtitle && (
-                <p className="mt-1 text-[12px] text-[#454745] leading-[1.5] line-clamp-1">
-                  {product.subtitle}
-                </p>
-              )}
             </Link>
           </li>
         ))}
       </ul>
     </section>
+  );
+}
+
+function ProductThumb({ product }: { product: Product }) {
+  if (product.coverUrl) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={product.coverUrl}
+        alt=""
+        className="w-20 h-20 shrink-0 rounded-xl object-cover bg-[#f2f6ec] border border-[rgba(14,15,12,0.04)]"
+      />
+    );
+  }
+  const letter = product.title.trim()[0]?.toUpperCase() ?? "•";
+  return (
+    <div
+      aria-hidden
+      className="w-20 h-20 shrink-0 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#cdffad] to-[#e2f6d5] text-[#163300] text-[24px] font-bold"
+    >
+      {letter}
+    </div>
   );
 }
