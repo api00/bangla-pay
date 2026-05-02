@@ -34,7 +34,8 @@ export default async function PayoutsSettingsPage() {
         <BalanceTile
           label="Available"
           value={formatTaka(balance.availablePaisa)}
-          highlight
+          tone="primary"
+          sub="Ready to withdraw"
         />
         <BalanceTile
           label="In flight"
@@ -71,43 +72,34 @@ function BalanceTile({
   label,
   value,
   sub,
-  highlight,
+  tone = "default",
 }: {
   label: string;
   value: string;
   sub?: string;
-  highlight?: boolean;
+  tone?: "default" | "primary";
 }) {
+  const isPrimary = tone === "primary";
   return (
     <div
-      className={`rounded-2xl border px-5 py-4 ${
-        highlight
-          ? "bg-[#0e0f0c] border-[#0e0f0c] text-white"
+      className={`rounded-2xl border px-5 py-4 transition-colors ${
+        isPrimary
+          ? "bg-[#f2f6ec] border-[#9fe870]"
           : "bg-white border-[rgba(14,15,12,0.06)]"
       }`}
     >
-      <div
-        className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${
-          highlight ? "text-white/60" : "text-[#868685]"
-        }`}
-      >
+      <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#868685]">
         {label}
       </div>
       <div
         className={`mt-1 text-[24px] font-semibold tabular-nums ${
-          highlight ? "text-white" : "text-[#0e0f0c]"
+          isPrimary ? "text-[#163300]" : "text-[#0e0f0c]"
         }`}
       >
         {value}
       </div>
       {sub && (
-        <div
-          className={`text-[12px] mt-0.5 ${
-            highlight ? "text-white/60" : "text-[#868685]"
-          }`}
-        >
-          {sub}
-        </div>
+        <div className="text-[12px] mt-0.5 text-[#868685]">{sub}</div>
       )}
     </div>
   );
