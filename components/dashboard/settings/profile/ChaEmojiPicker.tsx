@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type ChangeEvent } from "react";
+import { useState, type ChangeEvent } from "react";
 
 interface ChaEmojiPickerProps {
   name: string;
@@ -42,6 +42,13 @@ const CATEGORIES: EmojiCategory[] = [
   },
 ];
 
+// Module-scope so the hooks below never see it in TDZ.
+const ALL_CURATED = new Set(CATEGORIES.flatMap((c) => c.emojis));
+
+function isCurated(emoji: string | undefined | null): boolean {
+  return Boolean(emoji && ALL_CURATED.has(emoji));
+}
+
 export default function ChaEmojiPicker({
   name,
   defaultValue,
@@ -49,12 +56,7 @@ export default function ChaEmojiPicker({
 }: ChaEmojiPickerProps) {
   const [value, setValue] = useState(defaultValue || "☕");
   const [custom, setCustom] = useState(
-    isCurated(defaultValue) ? "" : defaultValue ?? "",
-  );
-
-  const allCurated = useMemo(
-    () => CATEGORIES.flatMap((c) => c.emojis),
-    [],
+    isCurated(defaultValue) ? "" : (defaultValue ?? ""),
   );
 
   function pick(emoji: string) {
@@ -137,8 +139,4 @@ export default function ChaEmojiPicker({
       </div>
     </div>
   );
-
-  function isCurated(emoji: string): boolean {
-    return allCurated.includes(emoji);
-  }
 }
