@@ -21,10 +21,10 @@ export default function RootError({ error, unstable_retry }: ErrorPageProps) {
     if (process.env.NODE_ENV === "development") {
       console.error("[root error boundary]", error);
     }
-    if (looksLikeDeploymentSkew(error)) {
-      const triggered = tryAutoRecover();
-      if (triggered) setRecovering(true);
-    }
+    // Aggressive: any first error triggers a silent reload (30s cooldown).
+    const triggered = tryAutoRecover();
+    if (triggered) setRecovering(true);
+    void looksLikeDeploymentSkew;
   }, [error]);
 
   if (recovering) return null;

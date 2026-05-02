@@ -19,10 +19,9 @@ export default function OnboardingError({
   const [recovering, setRecovering] = useState(false);
 
   useEffect(() => {
-    if (looksLikeDeploymentSkew(error)) {
-      const triggered = tryAutoRecover();
-      if (triggered) setRecovering(true);
-    }
+    const triggered = tryAutoRecover();
+    if (triggered) setRecovering(true);
+    void looksLikeDeploymentSkew;
   }, [error]);
 
   if (recovering) return null;
