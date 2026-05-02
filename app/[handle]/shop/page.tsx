@@ -77,21 +77,40 @@ export default async function PublicShopPage({ params }: PageProps) {
               <li key={product.id}>
                 <Link
                   href={`/${handle}/shop/${product.slug}`}
-                  className="block rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-5 hover:border-[#0e0f0c] transition-colors h-full"
+                  className="block rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] hover:border-[#0e0f0c] transition-colors h-full overflow-hidden"
                 >
-                  <div className="flex items-baseline justify-between gap-3">
-                    <h3 className="text-[16px] font-semibold text-[#0e0f0c] leading-[1.3]">
-                      {product.title}
-                    </h3>
-                    <span className="text-[14px] font-semibold tabular-nums text-[#163300] shrink-0">
-                      {priceLabel(product)}
-                    </span>
-                  </div>
-                  {product.subtitle && (
-                    <p className="mt-2 text-[13px] text-[#454745] leading-[1.5] line-clamp-2">
-                      {product.subtitle}
-                    </p>
+                  {product.coverUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={product.coverUrl}
+                      alt=""
+                      className="w-full aspect-[16/10] object-cover bg-[#f2f6ec] border-b border-[rgba(14,15,12,0.04)]"
+                    />
+                  ) : (
+                    <div
+                      aria-hidden
+                      className="w-full aspect-[16/10] flex items-center justify-center bg-gradient-to-br from-[#cdffad] to-[#e2f6d5] border-b border-[rgba(14,15,12,0.04)]"
+                    >
+                      <span className="text-[40px] font-bold text-[#163300]">
+                        {product.title.trim()[0]?.toUpperCase() ?? "•"}
+                      </span>
+                    </div>
                   )}
+                  <div className="p-5">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <h3 className="text-[16px] font-semibold text-[#0e0f0c] leading-[1.3]">
+                        {product.title}
+                      </h3>
+                      <span className="text-[14px] font-semibold tabular-nums text-[#163300] shrink-0">
+                        {priceLabel(product)}
+                      </span>
+                    </div>
+                    {product.subtitle && (
+                      <p className="mt-2 text-[13px] text-[#454745] leading-[1.5] line-clamp-2">
+                        {product.subtitle}
+                      </p>
+                    )}
+                  </div>
                 </Link>
               </li>
             ))}
