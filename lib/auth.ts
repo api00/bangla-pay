@@ -50,18 +50,31 @@ export const requireCreator = cache(async (): Promise<AuthedSession> => {
 });
 
 /** Soft variant: returns null instead of redirecting. Use only for surfaces that
- *  render for both authed and unauthed users (e.g. a public page that adapts). */
+ *  render for both authed and unauthed users (e.g. a public page that adapts).
+ *
+ *  Defensive on purpose: a public page must never crash because the auth
+ *  layer hiccupped. Any error (missing Supabase env vars, transient DB
+ *  failure, etc.) resolves to "no session" and the caller renders the
+ *  unauthenticated UI. The hard `requireCreator()` path still surfaces real
+ *  errors loudly. */
 export const getAuthedSession = cache(
   async (): Promise<AuthedSession | null> => {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return null;
+    try {
+      const supabase = await createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return null;
 
-    const creator = await getCreatorByUserId(user.id);
-    if (!creator || creator.onboardingStep !== "done") return null;
-    return { user, creator };
+      const creator = await getCreatorByUserId(user.id);
+      if (!creator || creator.onboardingStep !== "done") return null;
+      return { user, creator };
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn("[getAuthedSession] falling back to null:", error);
+      }
+      return null;
+    }
   },
 );
 
