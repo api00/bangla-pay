@@ -1,6 +1,9 @@
 import Button from "@/components/ui/Button";
+import { getAuthedSession } from "@/lib/auth";
 
-export default function Nav() {
+export default async function Nav() {
+  const session = await getAuthedSession();
+
   return (
     <header className="sticky top-0 z-50 bg-white/85 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-5 lg:px-10 flex items-center justify-between h-16 md:h-20">
@@ -45,12 +48,29 @@ export default function Nav() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="md" href="/login">
-              Log in
-            </Button>
-            <Button variant="primary" size="md" href="/login">
-              Start my page
-            </Button>
+            {session ? (
+              <>
+                <Button
+                  variant="ghost"
+                  size="md"
+                  href={`/${session.creator.handle}`}
+                >
+                  My page
+                </Button>
+                <Button variant="primary" size="md" href="/dashboard">
+                  Dashboard
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" size="md" href="/login">
+                  Log in
+                </Button>
+                <Button variant="primary" size="md" href="/login">
+                  Start my page
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>

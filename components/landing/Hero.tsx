@@ -1,6 +1,14 @@
 import Button from "@/components/ui/Button";
+import { getAuthedSession } from "@/lib/auth";
 
-export default function Hero() {
+export default async function Hero() {
+  const session = await getAuthedSession();
+  const ctaHref = session ? "/dashboard" : "/login";
+  const ctaLabel = session ? "Go to dashboard" : "Start my page";
+  const ctaSubcopy = session
+    ? `Welcome back, ${session.creator.displayName.split(/\s+/)[0]}.`
+    : "It’s free and takes less than a minute";
+
   return (
     <section
       id="top"
@@ -37,8 +45,14 @@ export default function Hero() {
         </p>
 
         <div className="mt-12 md:mt-14 flex justify-center">
-          <Button variant="primary" size="xl" href="#" noHover className="shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-10px_rgba(159,232,112,0.7)]">
-            <span>Start my page</span>
+          <Button
+            variant="primary"
+            size="xl"
+            href={ctaHref}
+            noHover
+            className="shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-10px_rgba(159,232,112,0.7)]"
+          >
+            <span>{ctaLabel}</span>
             <span
               aria-hidden
               className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#163300] text-[#9fe870] text-sm -mr-2"
@@ -49,7 +63,7 @@ export default function Hero() {
         </div>
 
         <div className="mt-6 text-[15px] md:text-base text-[#868685]">
-          It&rsquo;s free and takes less than a minute
+          {ctaSubcopy}
         </div>
 
         {/* Payment rails — trust row */}
