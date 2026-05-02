@@ -1,5 +1,6 @@
 import HandleForm from "@/components/onboarding/HandleForm";
 import OnboardingLayout from "@/components/onboarding/OnboardingLayout";
+import { SITE_HOST } from "@/lib/site";
 
 export const metadata = {
   title: "Claim your handle · BanglaPay",
@@ -25,7 +26,7 @@ export default function OnboardingHandlePage() {
               <span aria-hidden className="text-[#163300]">✓</span>
               <span>
                 A clean public page at{" "}
-                <span className="font-semibold">banglapay.com/yourname</span>
+                <span className="font-semibold">{SITE_HOST}/yourname</span>
               </span>
             </li>
             <li className="flex gap-3">

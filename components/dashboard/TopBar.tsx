@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { creatorDisplayUrl } from "@/lib/site";
+
 import { BellIcon, ShareIcon } from "./icons";
 
 interface TopBarProps {
@@ -8,7 +10,7 @@ interface TopBarProps {
 }
 
 export default function TopBar({ handle, unreadMessages }: TopBarProps) {
-  const url = `banglapay.com/${handle}`;
+  const url = creatorDisplayUrl(handle);
   return (
     <header className="sticky top-0 z-30 bg-[#f7f9f5]/85 backdrop-blur-md border-b border-[rgba(14,15,12,0.06)]">
       <div className="flex items-center justify-between h-16 px-6 md:px-8 gap-4">

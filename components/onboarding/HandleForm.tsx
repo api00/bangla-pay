@@ -13,6 +13,7 @@ import {
   claimHandle,
   type ClaimHandleState,
 } from "@/app/onboarding/_actions/claim-handle";
+import { SITE_HOST } from "@/lib/site";
 import {
   checkHandle,
   type CheckHandleResult,
@@ -112,7 +113,7 @@ export default function HandleForm() {
         </label>
         <div className="flex items-stretch rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white focus-within:border-[#0e0f0c] transition-colors overflow-hidden">
           <span className="px-4 inline-flex items-center text-[15px] font-medium text-[#868685] bg-[#f7f9f5] border-r border-[rgba(14,15,12,0.08)] whitespace-nowrap">
-            banglapay.com/
+            {SITE_HOST}/
           </span>
           <input
             id="handle-input"
@@ -150,7 +151,7 @@ export default function HandleForm() {
           Preview
         </p>
         <p className="text-[15px] font-medium text-[#0e0f0c] tabular-nums">
-          banglapay.com/
+          {SITE_HOST}/
           <span className="text-[#163300]">{previewHandle}</span>
         </p>
       </div>

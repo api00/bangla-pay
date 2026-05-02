@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import Link from "next/link";
 
+import { SUPPORT_EMAIL } from "@/lib/site";
+
 interface ErrorPageProps {
   error: Error & { digest?: string };
   unstable_retry: () => void;
@@ -32,9 +34,9 @@ export default function RootError({ error, unstable_retry }: ErrorPageProps) {
           email{" "}
           <a
             className="font-semibold text-[#0e0f0c] underline underline-offset-4 decoration-[#9fe870] decoration-[2px]"
-            href="mailto:hello@banglapay.com"
+            href={`mailto:${SUPPORT_EMAIL}`}
           >
-            hello@banglapay.com
+            {SUPPORT_EMAIL}
           </a>{" "}
           and we&rsquo;ll dig in.
         </p>

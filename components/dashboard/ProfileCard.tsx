@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { creatorDisplayUrl } from "@/lib/site";
+
 import { ShareIcon } from "./icons";
 
 interface ProfileCardProps {
@@ -38,7 +40,7 @@ export default function ProfileCard({
               Hi, {firstName}
             </h1>
             <div className="mt-1 flex items-center gap-2 text-[13px] md:text-[14px] text-[#454745]">
-              <span className="tabular-nums">banglapay.com/{handle}</span>
+              <span className="tabular-nums">{creatorDisplayUrl(handle)}</span>
             </div>
           </div>
         </div>

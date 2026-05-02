@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { creatorDisplayUrl } from "@/lib/site";
+
 import { CheckIcon } from "./icons";
 
 interface GettingStartedProps {
@@ -28,7 +30,7 @@ export default function GettingStarted({
   const steps: Step[] = [
     {
       title: "Claim your handle",
-      body: `Your page is live at banglapay.com/${handle}.`,
+      body: `Your page is live at ${creatorDisplayUrl(handle)}.`,
       done: true,
       cta: "Done",
       href: `/${handle}`,

@@ -2,13 +2,14 @@ import PageHeader from "@/components/dashboard/PageHeader";
 import Card from "@/components/dashboard/settings/Card";
 import CopyLinkButton from "@/components/dashboard/settings/page/CopyLinkButton";
 import { requireCreator } from "@/lib/auth";
+import { creatorUrl } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Public page · Settings · BanglaPay" };
 
 export default async function PublicPageSettingsPage() {
   const { creator } = await requireCreator();
-  const url = `https://banglapay.com/${creator.handle}`;
+  const url = creatorUrl(creator.handle);
 
   return (
     <div className="space-y-6">

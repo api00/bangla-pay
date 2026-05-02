@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { SITE_HOST } from "@/lib/site";
+
 const avatars = [
   { initial: "তা", bg: "from-[#9fe870] to-[#cdffad]", fg: "#163300", bangla: true },
   { initial: "প", bg: "from-[#e2f6d5] to-[#9fe870]", fg: "#163300", bangla: true },
@@ -102,7 +104,7 @@ export default function CTA() {
             className="mt-12 md:mt-14 mx-auto flex items-center gap-2 w-full max-w-[580px] rounded-full bg-white border-[1.5px] border-[#0e0f0c] p-1.5 md:p-2 shadow-[0_1px_0_0_rgba(14,15,12,0.04),0_20px_50px_-24px_rgba(159,232,112,0.45)] focus-within:shadow-[0_1px_0_0_rgba(14,15,12,0.04),0_20px_60px_-20px_rgba(159,232,112,0.7)] transition-shadow"
           >
             <span className="pl-4 md:pl-5 text-[14px] md:text-[15px] font-semibold text-[#868685] whitespace-nowrap tabular-nums">
-              banglapay.com/
+              {SITE_HOST}/
             </span>
             <div className="relative flex-1 min-w-0">
               <input

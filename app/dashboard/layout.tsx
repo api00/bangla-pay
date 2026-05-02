@@ -46,7 +46,7 @@ export default async function DashboardLayout({
   const unreadMessages = await countUnreadMessages(creator.id);
 
   const sidebarUser = deriveSidebarUser(
-    user.email ?? "unknown@banglapay.com",
+    user.email ?? "unknown@example.com",
     creator.handle,
     user.user_metadata ?? {},
   );

@@ -12,6 +12,7 @@ import { listPublicReachedMilestones } from "@/db/queries/milestones";
 import { listPublishedProducts } from "@/db/queries/products";
 import { getPublicProfile } from "@/db/queries/profile";
 import { normalizeHandle, RESERVED_HANDLES } from "@/lib/handle";
+import { creatorUrl } from "@/lib/site";
 
 export const revalidate = 60;
 
@@ -39,7 +40,7 @@ export async function generateMetadata({
       title: `${creator.displayName} on BanglaPay`,
       description,
       type: "profile",
-      url: `https://banglapay.com/${creator.handle}`,
+      url: creatorUrl(creator.handle),
     },
   };
 }

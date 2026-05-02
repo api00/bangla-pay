@@ -6,6 +6,7 @@ import { getCreatorByUserId } from "@/db/queries/creators";
 import { creatorPages } from "@/db/schema";
 import OnboardingLayout from "@/components/onboarding/OnboardingLayout";
 import ProfileForm from "@/components/onboarding/ProfileForm";
+import { SITE_HOST } from "@/lib/site";
 import { createClient } from "@/utils/supabase/server";
 
 export const metadata = {
@@ -43,7 +44,7 @@ export default async function OnboardingProfilePage() {
             Your page so far
           </p>
           <div className="rounded-2xl border border-[rgba(14,15,12,0.08)] bg-white p-5">
-            <p className="text-[12px] text-[#868685]">banglapay.com</p>
+            <p className="text-[12px] text-[#868685]">{SITE_HOST}</p>
             <p className="text-[20px] font-semibold text-[#0e0f0c]">
               /{creator.handle}
             </p>
