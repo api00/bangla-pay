@@ -149,7 +149,7 @@ export default function Sidebar({ user, unreadMessages }: SidebarProps) {
   ];
 
   return (
-    <aside className="hidden lg:flex w-[240px] shrink-0 flex-col border-r border-[rgba(14,15,12,0.06)] bg-white">
+    <aside className="hidden lg:flex w-[240px] shrink-0 flex-col border-r border-[rgba(14,15,12,0.06)] bg-white sticky top-0 h-screen self-start">
       {/* Logo */}
       <Link
         href="/dashboard"
