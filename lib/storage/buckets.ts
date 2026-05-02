@@ -19,3 +19,20 @@ export function productFilePath(
   const safeFilename = filename.replace(/[\\/]/g, "_").replace(/[\x00-\x1f]/g, "");
   return `creators/${creatorId}/products/${productId}/${fileId}-${safeFilename}`;
 }
+
+/**
+ * Build the storage path for a public product cover image.
+ * Public bucket: anyone can fetch the resulting URL.
+ */
+export function productCoverPath(
+  creatorId: string,
+  productId: string,
+  imageId: string,
+  filename: string,
+): string {
+  const safeFilename = filename
+    .replace(/[\\/]/g, "_")
+    .replace(/[\x00-\x1f]/g, "")
+    .toLowerCase();
+  return `creators/${creatorId}/products/${productId}/cover-${imageId}-${safeFilename}`;
+}

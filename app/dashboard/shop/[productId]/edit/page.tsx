@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import CoverImageUploader from "@/components/shop/CoverImageUploader";
 import DeleteProductButton from "@/components/shop/DeleteProductButton";
 import EditProductForm from "@/components/shop/EditProductForm";
 import FileUploader from "@/components/shop/FileUploader";
@@ -50,6 +51,13 @@ export default async function DashboardEditProductPage({ params }: PageProps) {
 
       <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6 md:p-7 space-y-6">
         <EditProductForm product={product} />
+      </section>
+
+      <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6 md:p-7">
+        <CoverImageUploader
+          productId={product.id}
+          initialUrl={product.coverUrl}
+        />
       </section>
 
       <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6 md:p-7">

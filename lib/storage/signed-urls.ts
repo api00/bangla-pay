@@ -63,4 +63,42 @@ export async function removeStorageObject(storagePath: string): Promise<void> {
   await supabase.storage.from(BUCKETS.PRODUCT_FILES).remove([storagePath]);
 }
 
+/**
+ * Issue a signed upload URL for the PUBLIC bucket. After upload, callers
+ * get the permanent public URL via `publicAssetUrl(path)`.
+ */
+export async function signedPublicAssetUpload(
+  storagePath: string,
+): Promise<SignedUpload> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.storage
+    .from(BUCKETS.PUBLIC_ASSETS)
+    .createSignedUploadUrl(storagePath);
+  if (error || !data) {
+    throw new Error(
+      `Public storage upload URL failed: ${error?.message ?? "unknown error"}`,
+    );
+  }
+  return {
+    url: data.signedUrl,
+    path: storagePath,
+    token: data.token,
+  };
+}
+
+/** Resolve the permanent public URL for an object in the public bucket. */
+export function publicAssetUrl(storagePath: string): string {
+  const supabase = createAdminClient();
+  const { data } = supabase.storage
+    .from(BUCKETS.PUBLIC_ASSETS)
+    .getPublicUrl(storagePath);
+  return data.publicUrl;
+}
+
+/** Remove an object from the public bucket. Idempotent. */
+export async function removePublicAsset(storagePath: string): Promise<void> {
+  const supabase = createAdminClient();
+  await supabase.storage.from(BUCKETS.PUBLIC_ASSETS).remove([storagePath]);
+}
+
 export { UPLOAD_EXPIRES_IN_SECONDS, DOWNLOAD_EXPIRES_IN_SECONDS };

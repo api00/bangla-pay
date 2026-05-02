@@ -74,36 +74,6 @@ export default function EditProductForm({ product }: EditProductFormProps) {
 
       <div>
         <label
-          htmlFor="cover_url"
-          className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745] mb-2"
-        >
-          Cover image URL (optional)
-        </label>
-        <input
-          id="cover_url"
-          name="cover_url"
-          type="url"
-          maxLength={500}
-          defaultValue={product.coverUrl ?? ""}
-          placeholder="https://…"
-          className="w-full h-12 px-4 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white text-[14px] text-[#0e0f0c] placeholder:text-[#868685] outline-none focus:border-[#0e0f0c] transition-colors"
-        />
-        <p className="mt-2 text-[12px] text-[#868685] leading-[1.5]">
-          Paste a public image URL — square or 16:9 works best. Files you
-          upload below are private downloads, not preview images.
-        </p>
-        {product.coverUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={product.coverUrl}
-            alt=""
-            className="mt-3 w-full max-w-[280px] aspect-video rounded-xl object-cover border border-[rgba(14,15,12,0.06)]"
-          />
-        )}
-      </div>
-
-      <div>
-        <label
           htmlFor="description_md"
           className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745] mb-2"
         >

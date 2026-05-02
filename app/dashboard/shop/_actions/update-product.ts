@@ -13,7 +13,6 @@ import { requireCreator } from "./_helpers";
 const TITLE_MAX = 80;
 const SUBTITLE_MAX = 140;
 const DESCRIPTION_MAX = 4_000;
-const URL_MAX = 500;
 
 const VALID_PRICING = new Set(pricingModel.enumValues);
 
@@ -52,19 +51,6 @@ export async function updateProduct(
     typeof descriptionRaw === "string" && descriptionRaw.trim()
       ? descriptionRaw.trim().slice(0, DESCRIPTION_MAX)
       : null;
-
-  const coverUrlRaw = formData.get("cover_url");
-  let coverUrl: string | null = null;
-  if (typeof coverUrlRaw === "string" && coverUrlRaw.trim()) {
-    const candidate = coverUrlRaw.trim();
-    if (candidate.length > URL_MAX) {
-      return { ok: false, error: "Cover URL is too long." };
-    }
-    if (!/^https?:\/\//i.test(candidate)) {
-      return { ok: false, error: "Cover URL must start with https://." };
-    }
-    coverUrl = candidate;
-  }
 
   const pricingRaw = formData.get("pricing_model");
   const pricing =
@@ -111,7 +97,6 @@ export async function updateProduct(
         title,
         subtitle,
         descriptionMd,
-        coverUrl,
         pricingModel: pricing,
         basePricePaisa,
         minPricePaisa,
