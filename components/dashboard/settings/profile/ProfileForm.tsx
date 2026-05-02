@@ -16,6 +16,9 @@ import SaveBadge from "@/components/dashboard/settings/SaveBadge";
 import SubmitButton from "@/components/dashboard/settings/SubmitButton";
 import type { Creator, CreatorPage } from "@/db/schema";
 
+import ChaEmojiPicker from "./ChaEmojiPicker";
+import ThemeColorPicker from "./ThemeColorPicker";
+
 const initialState: UpdateProfileState = { ok: false };
 
 const CATEGORIES: Array<{ value: Creator["category"]; label: string }> = [
@@ -107,65 +110,62 @@ export default function ProfileForm({ creator, page }: ProfileFormProps) {
         title="Page styling"
         description="Make your page feel like yours."
       >
-        <div className="grid gap-5 md:grid-cols-3">
+        <div className="space-y-6">
+          {/* Theme color — picker + palette */}
           <Field
             label="Theme color"
             htmlFor="theme_color"
-            hint="Hex like #9fe870."
+            hint="Pick a swatch, click the circle to open your system color picker, or paste a hex."
             error={errors.theme_color}
           >
-            <div className="flex items-center gap-2">
-              <input
-                id="theme_color"
-                name="theme_color"
-                type="text"
-                defaultValue={page.themeColor}
-                maxLength={7}
-                className={inputClass}
-              />
-            </div>
-          </Field>
-
-          <Field
-            label='"Cha" label'
-            htmlFor="cha_label"
-            hint='Singular, e.g. "cha" or "coffee".'
-          >
-            <input
-              id="cha_label"
-              name="cha_label"
-              defaultValue={page.chaLabel}
-              maxLength={20}
-              className={inputClass}
+            <ThemeColorPicker
+              id="theme_color"
+              name="theme_color"
+              defaultValue={page.themeColor}
             />
           </Field>
 
-          <Field label="Cha emoji" htmlFor="cha_emoji">
-            <input
+          <div className="grid gap-5 md:grid-cols-2">
+            <Field
+              label='"Cha" label'
+              htmlFor="cha_label"
+              hint='Singular, e.g. "cha" or "coffee".'
+            >
+              <input
+                id="cha_label"
+                name="cha_label"
+                defaultValue={page.chaLabel}
+                maxLength={20}
+                className={inputClass}
+              />
+            </Field>
+
+            <Field
+              label="Cha unit (taka)"
+              htmlFor="cha_unit_taka"
+              hint="One cha = this many taka. ৳50 by default."
+              error={errors.cha_unit_taka}
+            >
+              <input
+                id="cha_unit_taka"
+                name="cha_unit_taka"
+                defaultValue={(page.chaUnitPaisa / 100).toString()}
+                inputMode="numeric"
+                className={inputClass}
+              />
+            </Field>
+          </div>
+
+          {/* Cha emoji — categorized picker */}
+          <Field label="Cha icon" htmlFor="cha_emoji">
+            <ChaEmojiPicker
               id="cha_emoji"
               name="cha_emoji"
               defaultValue={page.chaEmoji}
-              maxLength={4}
-              className={inputClass}
             />
           </Field>
 
-          <Field
-            label="Cha unit (taka)"
-            htmlFor="cha_unit_taka"
-            hint="One cha = this many taka. ৳50 by default."
-            error={errors.cha_unit_taka}
-          >
-            <input
-              id="cha_unit_taka"
-              name="cha_unit_taka"
-              defaultValue={(page.chaUnitPaisa / 100).toString()}
-              inputMode="numeric"
-              className={inputClass}
-            />
-          </Field>
-
-          <div className="md:col-span-2 grid gap-2 content-center">
+          <div className="grid gap-2">
             <Toggle
               name="show_supporters"
               defaultChecked={page.showSupporters}
