@@ -35,7 +35,7 @@ function ReplyButton() {
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex items-center justify-center h-10 px-5 rounded-full bg-[#0e0f0c] text-white text-[13px] font-semibold hover:bg-[#163300] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+      className="inline-flex items-center justify-center h-10 px-5 rounded-full bg-[#163300] text-white text-[13px] font-semibold hover:bg-[#054d28] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
     >
       {pending ? "Sending…" : "Send reply"}
     </button>

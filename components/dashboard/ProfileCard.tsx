@@ -49,7 +49,7 @@ export default function ProfileCard({
           href={`/${handle}`}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-full bg-[#0e0f0c] text-white text-[14px] font-semibold px-5 h-11 hover:bg-[#163300] transition-colors"
+          className="inline-flex items-center gap-2 rounded-full bg-[#163300] text-white text-[14px] font-semibold px-5 h-11 hover:bg-[#054d28] transition-colors"
         >
           <ShareIcon width={15} height={15} />
           View page

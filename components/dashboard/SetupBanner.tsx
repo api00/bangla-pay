@@ -32,7 +32,7 @@ export default function SetupBanner({
       </div>
       <Link
         href="/dashboard/settings/payouts"
-        className="shrink-0 inline-flex items-center gap-2 rounded-full bg-[#0e0f0c] text-white text-[13px] font-semibold px-4 h-9 hover:bg-[#163300] transition-colors"
+        className="shrink-0 inline-flex items-center gap-2 rounded-full bg-[#163300] text-white text-[13px] font-semibold px-4 h-9 hover:bg-[#054d28] transition-colors"
       >
         Connect now
         <span aria-hidden>→</span>

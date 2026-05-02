@@ -194,7 +194,7 @@ export default function ProductImagesUploader({
               className="w-full max-w-[480px] aspect-[16/10] rounded-2xl object-cover border border-[rgba(14,15,12,0.06)] bg-[#f2f6ec]"
             />
             <div className="mt-3 flex items-center gap-2 flex-wrap">
-              <label className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-[#0e0f0c] text-white text-[13px] font-semibold cursor-pointer hover:bg-[#163300] transition-colors">
+              <label className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-[#163300] text-white text-[13px] font-semibold cursor-pointer hover:bg-[#054d28] transition-colors">
                 Replace cover
                 <input
                   ref={coverInputRef}

@@ -95,7 +95,7 @@ export default function FileUploader({
           <div className="text-[13px] text-[#454745] leading-[1.5]">
             Add the files supporters get when they buy. Max ~50 MB per file.
           </div>
-          <label className="inline-flex items-center justify-center h-10 px-5 rounded-full bg-[#0e0f0c] text-white text-[13px] font-semibold cursor-pointer hover:bg-[#163300] transition-colors">
+          <label className="inline-flex items-center justify-center h-10 px-5 rounded-full bg-[#163300] text-white text-[13px] font-semibold cursor-pointer hover:bg-[#054d28] transition-colors">
             {uploading ? "Uploading…" : "Add file"}
             <input
               ref={fileInputRef}

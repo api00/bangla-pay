@@ -49,7 +49,7 @@ export default async function DashboardShopPage() {
           </p>
           <Link
             href="/dashboard/shop/new"
-            className="mt-5 inline-flex items-center justify-center h-11 px-5 rounded-full bg-[#0e0f0c] text-white font-semibold text-[14px]"
+            className="mt-5 inline-flex items-center justify-center h-11 px-5 rounded-full bg-[#163300] text-white font-semibold text-[14px]"
           >
             Add your first product
           </Link>

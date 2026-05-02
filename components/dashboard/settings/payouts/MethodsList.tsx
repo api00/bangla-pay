@@ -53,7 +53,7 @@ export default function MethodsList({ methods }: MethodsListProps) {
                     {badge.label}
                   </span>
                   {m.isDefault && (
-                    <span className="text-[10px] font-bold uppercase tracking-[0.14em] px-2 py-1 rounded-full bg-[#0e0f0c] text-white">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.14em] px-2 py-1 rounded-full bg-[#163300] text-white">
                       Default
                     </span>
                   )}

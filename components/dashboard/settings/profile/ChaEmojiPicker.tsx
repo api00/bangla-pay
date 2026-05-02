@@ -106,12 +106,12 @@ export default function ChaEmojiPicker({
         </div>
       </div>
 
-      {/* Category tabs */}
+      {/* Category tabs — Wise-green active state, on theme. */}
       <div
         id={id}
         role="tablist"
         aria-label="Emoji categories"
-        className="flex gap-1 px-3 pt-3 pb-2 overflow-x-auto"
+        className="flex gap-1.5 px-4 pt-4 pb-3 overflow-x-auto"
       >
         {CATEGORIES.map((cat, idx) => {
           const isActive = idx === activeCategory;
@@ -123,10 +123,10 @@ export default function ChaEmojiPicker({
               aria-selected={isActive}
               onClick={() => setActiveCategory(idx)}
               className={[
-                "shrink-0 h-8 px-3 rounded-full text-[12px] font-semibold transition-colors whitespace-nowrap",
+                "shrink-0 h-8 px-3.5 rounded-full text-[12px] font-semibold transition-colors whitespace-nowrap",
                 isActive
-                  ? "bg-[#0e0f0c] text-white"
-                  : "text-[#454745] hover:bg-[#f2f6ec] hover:text-[#0e0f0c]",
+                  ? "bg-[#9fe870] text-[#163300] shadow-[0_1px_0_0_rgba(22,51,0,0.12)]"
+                  : "text-[#454745] hover:bg-[#f2f6ec] hover:text-[#163300]",
               ].join(" ")}
             >
               {cat.label}
@@ -135,8 +135,11 @@ export default function ChaEmojiPicker({
         })}
       </div>
 
-      {/* Active category grid */}
-      <div className="grid grid-cols-8 gap-1.5 px-3 pb-3" role="tabpanel">
+      {/* Active category grid — wider gap so emojis breathe. */}
+      <div
+        className="grid grid-cols-8 gap-3 px-4 pb-4"
+        role="tabpanel"
+      >
         {category?.emojis.map((emoji) => {
           const isActive = emoji === value;
           return (

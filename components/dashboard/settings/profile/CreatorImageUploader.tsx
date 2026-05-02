@@ -112,7 +112,7 @@ export default function CreatorImageUploader({
             className={`w-full ${previewMaxWidth} ${aspect} ${rounded} object-cover border border-[rgba(14,15,12,0.06)] bg-[#f2f6ec]`}
           />
           <div className="flex items-center gap-2 flex-wrap">
-            <label className="inline-flex items-center justify-center h-9 px-4 rounded-full bg-[#0e0f0c] text-white text-[13px] font-semibold cursor-pointer hover:bg-[#163300] transition-colors">
+            <label className="inline-flex items-center justify-center h-9 px-4 rounded-full bg-[#163300] text-white text-[13px] font-semibold cursor-pointer hover:bg-[#054d28] transition-colors">
               {uploading ? "Uploading…" : "Replace"}
               <input
                 ref={inputRef}
@@ -139,7 +139,7 @@ export default function CreatorImageUploader({
       ) : (
         <div className="rounded-2xl border-[1.5px] border-dashed border-[rgba(14,15,12,0.14)] bg-white px-5 py-5 flex items-center justify-between gap-4 flex-wrap">
           <div className="text-[13px] text-[#454745] leading-[1.5]">{hint}</div>
-          <label className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-[#0e0f0c] text-white text-[13px] font-semibold cursor-pointer hover:bg-[#163300] transition-colors">
+          <label className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-[#163300] text-white text-[13px] font-semibold cursor-pointer hover:bg-[#054d28] transition-colors">
             {uploading ? "Uploading…" : "Upload image"}
             <input
               ref={inputRef}

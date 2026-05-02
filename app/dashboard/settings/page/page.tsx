@@ -28,7 +28,7 @@ export default async function PublicPageSettingsPage() {
             href={`/${creator.handle}`}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-[#0e0f0c] text-white text-[13px] font-semibold hover:bg-[#163300] transition-colors"
+            className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-[#163300] text-white text-[13px] font-semibold hover:bg-[#054d28] transition-colors"
           >
             Open page
           </a>
