@@ -42,23 +42,6 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${notoBangla.variable} ${balooBangla.variable} h-full antialiased`}
     >
-      <head>
-        {/* Pre-warm the Supabase + Storage origins so the first DB / image
-            request doesn't pay a fresh TCP+TLS handshake. */}
-        {process.env.NEXT_PUBLIC_SUPABASE_URL && (
-          <>
-            <link
-              rel="preconnect"
-              href={process.env.NEXT_PUBLIC_SUPABASE_URL}
-              crossOrigin="anonymous"
-            />
-            <link
-              rel="dns-prefetch"
-              href={process.env.NEXT_PUBLIC_SUPABASE_URL}
-            />
-          </>
-        )}
-      </head>
       <body className="min-h-full">{children}</body>
     </html>
   );
