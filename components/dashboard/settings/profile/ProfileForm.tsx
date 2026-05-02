@@ -47,12 +47,6 @@ export default function ProfileForm({ creator, page }: ProfileFormProps) {
       <Card
         title="About you"
         description="This shows up at the top of your public page."
-        footer={
-          <>
-            <SaveBadge savedAt={state.savedAt} error={state.error} />
-            <SubmitButton label="Save profile" />
-          </>
-        }
       >
         <div className="grid gap-5 md:grid-cols-2">
           <Field
@@ -241,6 +235,22 @@ export default function ProfileForm({ creator, page }: ProfileFormProps) {
           </div>
         </div>
       </Card>
+
+      {/* One save bar at the bottom — sticks to the viewport so the user
+          always sees a way to commit their edits, no matter how far they've
+          scrolled into the form. */}
+      <div className="sticky bottom-4 z-20">
+        <div className="rounded-[20px] bg-white border border-[rgba(14,15,12,0.1)] shadow-[0_2px_0_0_rgba(14,15,12,0.04),0_18px_40px_-18px_rgba(14,15,12,0.25)] px-5 py-3.5 flex items-center justify-between gap-3 flex-wrap">
+          <div className="text-[13px] text-[#454745]">
+            <span className="font-semibold text-[#0e0f0c]">All sections</span>{" "}
+            save together — name, page styling, social links.
+          </div>
+          <div className="flex items-center gap-3">
+            <SaveBadge savedAt={state.savedAt} error={state.error} />
+            <SubmitButton label="Save profile" />
+          </div>
+        </div>
+      </div>
     </form>
   );
 }
