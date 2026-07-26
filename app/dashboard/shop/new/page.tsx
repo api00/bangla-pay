@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import CreateProductForm from "@/components/shop/CreateProductForm";
+import ProductWizard from "@/components/shop/wizard/ProductWizard";
 
 export const metadata = {
   title: "New product · BanglaPay",
@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function DashboardNewProductPage() {
   return (
-    <div className="space-y-6 max-w-[680px]">
+    <div className="max-w-[760px] space-y-6">
       <header>
         <Link
           href="/dashboard/shop"
@@ -17,17 +17,17 @@ export default function DashboardNewProductPage() {
           ← Back to shop
         </Link>
         <h1
-          className="display mt-3 text-[28px] md:text-[36px] text-[#0e0f0c]"
+          className="display mt-3 text-[28px] text-[#0e0f0c] md:text-[36px]"
           style={{ lineHeight: 1.1, fontWeight: 700 }}
         >
           New product
         </h1>
-        <p className="text-[14px] text-[#454745] mt-1">
-          A digital product is an original file delivered online after
-          purchase. Choose one category now, then add its files and cover.
+        <p className="mt-1 text-[14px] text-[#454745]">
+          Three steps. Nothing goes live until you publish.
         </p>
       </header>
-      <CreateProductForm />
+
+      <ProductWizard />
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import Sidebar, { type SidebarUser } from "@/components/dashboard/Sidebar";
-import TopBar from "@/components/dashboard/TopBar";
 import { countUnreadMessages } from "@/db/queries/messages";
 import { requireCreator } from "@/lib/auth";
 
@@ -55,7 +54,6 @@ export default async function DashboardLayout({
     <div className="min-h-screen bg-[#f7f9f5] flex">
       <Sidebar user={sidebarUser} unreadMessages={unreadMessages} />
       <div className="flex-1 flex flex-col min-w-0">
-        <TopBar handle={creator.handle} unreadMessages={unreadMessages} />
         <main className="flex-1 px-6 md:px-8 py-6 md:py-8">
           <div className="max-w-[1200px] mx-auto w-full">{children}</div>
         </main>

@@ -102,56 +102,6 @@ export default async function PublicProductPage({ params }: PageProps) {
             )}
 
             <ProductFilesPreview files={files} />
-
-            <section
-              aria-labelledby="product-rights"
-              className="mt-6 rounded-[20px] border border-[rgba(14,15,12,0.08)] bg-[#f7f9f5] p-5"
-            >
-              <div className="flex items-start gap-3">
-                <svg
-                  aria-hidden
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  className="mt-0.5 h-6 w-6 shrink-0 text-[#163300]"
-                >
-                  <path
-                    d="M12 3 5 6v5c0 4.7 2.9 8 7 10 4.1-2 7-5.3 7-10V6l-7-3Z"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="m9 12 2 2 4-4"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <div>
-                  <h2
-                    id="product-rights"
-                    className="text-[16px] font-semibold text-[#0e0f0c]"
-                  >
-                    Creator rights and your licence
-                  </h2>
-                  <p className="mt-1 text-[14px] leading-[1.6] text-[#454745]">
-                    {product.rightsConfirmedAt
-                      ? "The creator has confirmed that they made this product or have permission to sell it. "
-                      : ""}
-                    Your purchase gives you personal access through{" "}
-                    {delivery.label}. Copyright stays with the creator unless
-                    this description clearly grants a different licence.
-                  </p>
-                  <Link
-                    href="/copyright"
-                    className="mt-3 inline-flex min-h-11 items-center font-semibold text-[13px] text-[#163300] underline decoration-[#9fe870] decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
-                  >
-                    Read BanglaPay&rsquo;s copyright policy
-                  </Link>
-                </div>
-              </div>
-            </section>
           </article>
 
           <aside className="md:sticky md:top-8 md:self-start">

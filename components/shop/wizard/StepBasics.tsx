@@ -1,0 +1,240 @@
+"use client";
+
+import { PRODUCT_CATEGORIES, type ProductCategory } from "@/lib/product-catalog";
+import { slugify } from "@/lib/slug";
+
+import type { WizardField } from "@/app/dashboard/shop/_actions/wizard-steps";
+
+export type PricingModel = "fixed" | "pay_what_you_want" | "free";
+
+export interface BasicsValues {
+  category: ProductCategory | "";
+  title: string;
+  slug: string;
+  slugDirty: boolean;
+  pricing: PricingModel;
+  basePrice: string;
+  minPrice: string;
+}
+
+interface StepBasicsProps {
+  values: BasicsValues;
+  errorField?: WizardField;
+  onChange: (patch: Partial<BasicsValues>) => void;
+}
+
+const PRICING_OPTIONS: { value: PricingModel; title: string; sub: string }[] = [
+  {
+    value: "fixed",
+    title: "Fixed price",
+    sub: "One set amount. Most products use this.",
+  },
+  {
+    value: "pay_what_you_want",
+    title: "Pay what you want",
+    sub: "Suggest a price; supporters can pay more.",
+  },
+  { value: "free", title: "Free", sub: "No payment — collect emails and fans." },
+];
+
+const inputBase =
+  "h-12 w-full rounded-2xl border-[1.5px] bg-white px-4 text-[16px] font-medium text-[#0e0f0c] outline-none transition-colors placeholder:text-[#6b6d6b] focus-visible:border-[#163300] focus-visible:ring-2 focus-visible:ring-[#9fe870]";
+
+function borderFor(invalid: boolean): string {
+  return invalid ? "border-[#da291c]" : "border-[rgba(14,15,12,0.14)]";
+}
+
+const labelClass =
+  "mb-2 block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745]";
+
+export default function StepBasics({
+  values,
+  errorField,
+  onChange,
+}: StepBasicsProps) {
+  return (
+    <div className="space-y-6">
+      <div>
+        <label htmlFor="category" className={labelClass}>
+          Product category
+        </label>
+        <div className="relative">
+          <select
+            id="category"
+            value={values.category}
+            onChange={(event) =>
+              onChange({ category: event.target.value as ProductCategory })
+            }
+            aria-describedby="category-help"
+            className={`${inputBase} ${borderFor(errorField === "category")} appearance-none pr-11 font-semibold`}
+          >
+            <option value="" disabled>
+              Choose a category
+            </option>
+            {PRODUCT_CATEGORIES.map((item) => (
+              <option key={item.value} value={item.value}>
+                {item.label} — {item.formats}
+              </option>
+            ))}
+          </select>
+          <svg
+            aria-hidden
+            viewBox="0 0 20 20"
+            fill="none"
+            className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#454745]"
+          >
+            <path
+              d="m6 8 4 4 4-4"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
+        <p id="category-help" className="mt-2 text-[13px] text-[#454745]">
+          This decides which file types you can sell and how buyers open them.
+        </p>
+      </div>
+
+      <div>
+        <label htmlFor="title" className={labelClass}>
+          Title
+        </label>
+        <input
+          id="title"
+          type="text"
+          maxLength={80}
+          value={values.title}
+          onChange={(event) => {
+            const title = event.target.value;
+            onChange(
+              values.slugDirty
+                ? { title }
+                : { title, slug: slugify(title) },
+            );
+          }}
+          placeholder="Monsoon Stories — vol. 2"
+          className={`${inputBase} ${borderFor(errorField === "title")}`}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="slug" className={labelClass}>
+          Link
+        </label>
+        <div
+          className={`flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] bg-white transition-colors focus-within:border-[#163300] focus-within:ring-2 focus-within:ring-[#9fe870] ${borderFor(errorField === "slug")}`}
+        >
+          <span className="inline-flex items-center whitespace-nowrap border-r border-[rgba(14,15,12,0.08)] bg-[#f7f9f5] px-4 text-[14px] text-[#454745]">
+            /shop/
+          </span>
+          <input
+            id="slug"
+            type="text"
+            value={values.slug}
+            onChange={(event) =>
+              onChange({ slug: event.target.value, slugDirty: true })
+            }
+            placeholder="monsoon-stories"
+            className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-[#0e0f0c] outline-none placeholder:text-[#6b6d6b]"
+          />
+        </div>
+        <p className="mt-2 text-[13px] text-[#454745]">
+          Lowercase and hyphenated. Changing it later breaks old links.
+        </p>
+      </div>
+
+      <div>
+        <p className={labelClass}>Pricing</p>
+        <div
+          role="radiogroup"
+          aria-label="Pricing model"
+          className="grid gap-3 sm:grid-cols-3"
+        >
+          {PRICING_OPTIONS.map((opt) => {
+            const checked = opt.value === values.pricing;
+            return (
+              <label
+                key={opt.value}
+                className={[
+                  "flex cursor-pointer flex-col gap-1 rounded-2xl border-[1.5px] px-4 py-4 transition-colors focus-within:ring-2 focus-within:ring-[#9fe870]",
+                  checked
+                    ? "border-[#0e0f0c] bg-[#f7f9f5]"
+                    : "border-[rgba(14,15,12,0.10)] bg-white hover:border-[#454745]",
+                ].join(" ")}
+              >
+                <input
+                  type="radio"
+                  name="pricing_model"
+                  value={opt.value}
+                  checked={checked}
+                  onChange={() => onChange({ pricing: opt.value })}
+                  className="sr-only"
+                />
+                <span className="text-[14px] font-semibold text-[#0e0f0c]">
+                  {opt.title}
+                </span>
+                <span className="text-[12px] leading-[1.5] text-[#454745]">
+                  {opt.sub}
+                </span>
+              </label>
+            );
+          })}
+        </div>
+      </div>
+
+      {values.pricing !== "free" && (
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label htmlFor="base_price" className={labelClass}>
+              {values.pricing === "pay_what_you_want"
+                ? "Suggested price"
+                : "Price"}
+            </label>
+            <div
+              className={`flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] bg-white transition-colors focus-within:border-[#163300] focus-within:ring-2 focus-within:ring-[#9fe870] ${borderFor(errorField === "price")}`}
+            >
+              <span className="inline-flex items-center border-r border-[rgba(14,15,12,0.08)] bg-[#f7f9f5] px-4 text-[15px] text-[#454745]">
+                ৳
+              </span>
+              <input
+                id="base_price"
+                type="text"
+                inputMode="decimal"
+                value={values.basePrice}
+                onChange={(event) => onChange({ basePrice: event.target.value })}
+                placeholder="500"
+                className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-[#0e0f0c] outline-none placeholder:text-[#6b6d6b]"
+              />
+            </div>
+          </div>
+
+          {values.pricing === "pay_what_you_want" && (
+            <div>
+              <label htmlFor="min_price" className={labelClass}>
+                Minimum (optional)
+              </label>
+              <div className="flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white transition-colors focus-within:border-[#163300] focus-within:ring-2 focus-within:ring-[#9fe870]">
+                <span className="inline-flex items-center border-r border-[rgba(14,15,12,0.08)] bg-[#f7f9f5] px-4 text-[15px] text-[#454745]">
+                  ৳
+                </span>
+                <input
+                  id="min_price"
+                  type="text"
+                  inputMode="decimal"
+                  value={values.minPrice}
+                  onChange={(event) =>
+                    onChange({ minPrice: event.target.value })
+                  }
+                  placeholder="100"
+                  className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-[#0e0f0c] outline-none placeholder:text-[#6b6d6b]"
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

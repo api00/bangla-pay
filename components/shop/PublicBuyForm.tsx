@@ -9,7 +9,6 @@ import {
 } from "@/app/[handle]/shop/[slug]/_actions/start-purchase";
 import type { Product } from "@/db/schema";
 import { formatTaka, paisaToTaka, parseTakaInput } from "@/lib/money";
-import { getDeliveryMode } from "@/lib/product-catalog";
 
 interface PublicBuyFormProps {
   handle: string;
@@ -35,7 +34,6 @@ export default function PublicBuyForm({
   const minPaisa = product.minPricePaisa ?? 0;
   const defaultCustom = String(paisaToTaka(product.basePricePaisa));
   const [customRaw, setCustomRaw] = useState(defaultCustom);
-  const [licenseAccepted, setLicenseAccepted] = useState(false);
 
   const customPaisa = parseTakaInput(customRaw) ?? 0;
   const effectivePaisa = showCustom ? customPaisa : product.basePricePaisa;
@@ -49,13 +47,25 @@ export default function PublicBuyForm({
       ? "Get for free"
       : `Buy for ${formatTaka(effectivePaisa)}`;
 
-  const canSubmit =
-    !isPending &&
-    licenseAccepted &&
-    (product.pricingModel === "free" ||
-      (effectivePaisa > 0 && effectivePaisa >= minPaisa));
-  const delivery = getDeliveryMode(product.deliveryMode);
+  // Licence consent is enforced by the checkbox's own `required` attribute, not
+  // by React state. A controlled checkbox desyncs when the browser restores or
+  // autofills the form: the box renders ticked but no `change` event fires, so
+  // state stays false and the button looks disabled for no visible reason.
+  //
+  // The only thing that disables the button is a price we cannot charge — and
+  // when that happens we say so, so it is never a mystery.
+  const priceReason =
+    product.pricingModel === "free"
+      ? null
+      : effectivePaisa <= 0
+        ? showCustom
+          ? "Enter an amount to continue."
+          : "This product has no price set yet. Contact the creator."
+        : effectivePaisa < minPaisa
+          ? `Minimum for this product is ${formatTaka(minPaisa)}.`
+          : null;
 
+  const canSubmit = !isPending && !priceReason;
   return (
     <form action={formAction} className="space-y-4">
       <input type="hidden" name="handle" value={handle} />
@@ -125,37 +135,31 @@ export default function PublicBuyForm({
         />
       </div>
 
-      <div className="rounded-2xl border border-[rgba(14,15,12,0.1)] bg-[#f7f9f5] p-4">
-        <div className="flex items-start gap-3">
-          <input
-            id="license_accepted"
-            name="license_accepted"
-            type="checkbox"
-            value="yes"
-            required
-            checked={licenseAccepted}
-            onChange={(event) => setLicenseAccepted(event.target.checked)}
-            className="mt-0.5 h-5 w-5 shrink-0 accent-[#163300] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
-          />
-          <label
-            htmlFor="license_accepted"
-            className="text-[13px] font-semibold leading-[1.55] text-[#0e0f0c]"
-          >
-            I accept the personal-use licence and will not copy, resell, or
-            share this product.
-          </label>
-        </div>
-        <p className="ml-8 mt-2 text-[12px] leading-[1.5] text-[#454745]">
-          Access is tied to your email and order code.{" "}
+      <div className="flex items-start gap-3">
+        <input
+          id="license_accepted"
+          name="license_accepted"
+          type="checkbox"
+          value="yes"
+          required
+          className="mt-0.5 h-5 w-5 shrink-0 accent-[#163300] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
+        />
+        <label
+          htmlFor="license_accepted"
+          className="text-[13px] leading-[1.55] text-[#454745]"
+        >
+          <span className="font-semibold text-[#0e0f0c]">
+            I accept the personal-use licence
+          </span>{" "}
+          — for your use only, no sharing or resale.{" "}
           <Link
             href="/copyright"
             target="_blank"
             className="font-semibold text-[#163300] underline decoration-[#9fe870] decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
           >
-            Read the policy
+            Details
           </Link>
-          .
-        </p>
+        </label>
       </div>
 
       {state.error && (
@@ -176,10 +180,13 @@ export default function PublicBuyForm({
         {isPending ? "Preparing checkout…" : ctaLabel}
         {!isPending && <span aria-hidden>→</span>}
       </button>
+      {priceReason && (
+        <p className="text-center text-[12px] font-medium leading-[1.5] text-[#454745]">
+          {priceReason}
+        </p>
+      )}
       <p className="text-center text-[12px] leading-[1.5] text-[#454745]">
-        After purchase:{" "}
-        <span className="font-semibold text-[#0e0f0c]">{delivery.label}</span>{" "}
-        from your private library.
+        Access starts after purchase and stays tied to this email.
       </p>
     </form>
   );
