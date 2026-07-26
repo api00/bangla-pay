@@ -1,8 +1,9 @@
 import "server-only";
 
-import { and, asc, desc, eq, isNotNull } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull, sql } from "drizzle-orm";
 
 import { db } from "@/db";
+import type { ProductSort } from "@/lib/product-sort";
 import {
   productFiles,
   products,
@@ -12,12 +13,65 @@ import {
 
 export async function listProductsForCreator(
   creatorId: string,
+  sort: ProductSort = "updated",
 ): Promise<Product[]> {
+  const orderBy = {
+    updated: desc(products.updatedAt),
+    newest: desc(products.createdAt),
+    title: asc(products.title),
+    price: desc(products.basePricePaisa),
+    sales: desc(products.totalSales),
+  }[sort];
+
   return db
     .select()
     .from(products)
     .where(eq(products.creatorId, creatorId))
-    .orderBy(desc(products.updatedAt));
+    .orderBy(orderBy);
+}
+
+export interface ProductWithStats extends Product {
+  /** Number of deliverable files attached. */
+  fileCount: number;
+  /** Combined size of those files, in bytes. */
+  totalBytes: number;
+}
+
+/**
+ * Listing rows plus their deliverable stats, in one round-trip.
+ *
+ * A LEFT JOIN + GROUP BY keeps this to a single query rather than one
+ * getProductFiles() call per card.
+ */
+export async function listProductsWithStats(
+  creatorId: string,
+  sort: ProductSort = "updated",
+): Promise<ProductWithStats[]> {
+  const orderBy = {
+    updated: desc(products.updatedAt),
+    newest: desc(products.createdAt),
+    title: asc(products.title),
+    price: desc(products.basePricePaisa),
+    sales: desc(products.totalSales),
+  }[sort];
+
+  const rows = await db
+    .select({
+      product: products,
+      fileCount: sql<number>`count(${productFiles.id})::int`,
+      totalBytes: sql<number>`coalesce(sum(${productFiles.sizeBytes}), 0)::bigint`,
+    })
+    .from(products)
+    .leftJoin(productFiles, eq(productFiles.productId, products.id))
+    .where(eq(products.creatorId, creatorId))
+    .groupBy(products.id)
+    .orderBy(orderBy);
+
+  return rows.map((row) => ({
+    ...row.product,
+    fileCount: Number(row.fileCount ?? 0),
+    totalBytes: Number(row.totalBytes ?? 0),
+  }));
 }
 
 export async function getProductById(
