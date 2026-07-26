@@ -15,7 +15,7 @@ Reuses the mock checkout pattern. Phase 5 (real providers) stays deferred.
 
 ### 6.2 Server actions
 
-- [x] `app/dashboard/shop/_actions/create-product.ts` — slug + title + price + pricing model
+- [x] `app/dashboard/shop/_actions/create-product.ts` — category + slug + title + price + pricing model
 - [x] `app/dashboard/shop/_actions/update-product.ts` — full edit
 - [x] `app/dashboard/shop/_actions/publish-product.ts` — toggle `is_published`
 - [x] `app/dashboard/shop/_actions/delete-product.ts` — confirms via form, hard-deletes
@@ -72,3 +72,12 @@ Reuses the mock checkout pattern. Phase 5 (real providers) stays deferred.
 - Supporter can buy a product via mock checkout, receives download link on success page
 - `/d/{token}` streams the file once, increments counter, returns 410 after limit/expiry
 - `npm run build` green, `npx tsc --noEmit` clean
+
+## Product scope and rights update (2026-07-26)
+
+- [x] V1 catalog narrowed to e-books/guides, audio products, and design/image packs
+- [x] Category-specific file formats and 50 MB limit validated by client and server actions
+- [x] Creator rights declaration stored once and required before publication
+- [x] Existing pre-declaration listings returned to draft during migration
+- [x] Public product pages explain buyer access, creator copyright, and default personal-use licence
+- [x] `/copyright` defines digital products, responsibilities, delivery protection, and reporting

@@ -46,7 +46,7 @@ export default function PricingPicker({
             <label
               key={opt.value}
               className={[
-                "flex flex-col gap-1 rounded-2xl border-[1.5px] px-4 py-4 cursor-pointer transition-colors",
+                "flex min-h-12 cursor-pointer flex-col gap-1 rounded-2xl border-[1.5px] px-4 py-4 transition-colors focus-within:ring-2 focus-within:ring-[#9fe870]",
                 checked
                   ? "border-[#0e0f0c] bg-[#f7f9f5]"
                   : "border-[rgba(14,15,12,0.10)] bg-white hover:border-[#454745]",
@@ -80,8 +80,8 @@ export default function PricingPicker({
             >
               {model === "pay_what_you_want" ? "Suggested price" : "Price"}
             </label>
-            <div className="flex items-stretch h-12 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white focus-within:border-[#0e0f0c] transition-colors overflow-hidden">
-              <span className="px-4 inline-flex items-center text-[15px] text-[#868685] bg-[#f7f9f5] border-r border-[rgba(14,15,12,0.08)]">
+            <div className="flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white transition-colors focus-within:border-[#163300] focus-within:ring-2 focus-within:ring-[#9fe870]">
+              <span className="inline-flex items-center border-r border-[rgba(14,15,12,0.08)] bg-[#f7f9f5] px-4 text-[15px] text-[#454745]">
                 ৳
               </span>
               <input
@@ -92,7 +92,7 @@ export default function PricingPicker({
                 defaultValue={defaultBasePrice}
                 placeholder="500"
                 required
-                className="flex-1 px-4 text-[15px] font-semibold text-[#0e0f0c] placeholder:text-[#868685] outline-none"
+                className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-[#0e0f0c] outline-none placeholder:text-[#6b6d6b]"
               />
             </div>
           </div>
@@ -105,8 +105,8 @@ export default function PricingPicker({
               >
                 Minimum (optional)
               </label>
-              <div className="flex items-stretch h-12 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white focus-within:border-[#0e0f0c] transition-colors overflow-hidden">
-                <span className="px-4 inline-flex items-center text-[15px] text-[#868685] bg-[#f7f9f5] border-r border-[rgba(14,15,12,0.08)]">
+              <div className="flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white transition-colors focus-within:border-[#163300] focus-within:ring-2 focus-within:ring-[#9fe870]">
+                <span className="inline-flex items-center border-r border-[rgba(14,15,12,0.08)] bg-[#f7f9f5] px-4 text-[15px] text-[#454745]">
                   ৳
                 </span>
                 <input
@@ -116,7 +116,7 @@ export default function PricingPicker({
                   name="min_price"
                   defaultValue={defaultMinPrice}
                   placeholder="100"
-                  className="flex-1 px-4 text-[15px] font-semibold text-[#0e0f0c] placeholder:text-[#868685] outline-none"
+                  className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-[#0e0f0c] outline-none placeholder:text-[#6b6d6b]"
                 />
               </div>
             </div>

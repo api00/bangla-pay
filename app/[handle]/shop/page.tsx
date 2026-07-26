@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import CreatorPageFooter from "@/components/creator-page/CreatorPageFooter";
+import ProductCategoryBadge from "@/components/shop/ProductCategoryBadge";
 import { getCreatorByHandle } from "@/db/queries/creators";
 import { listPublishedProducts } from "@/db/queries/products";
 import { normalizeHandle, RESERVED_HANDLES } from "@/lib/handle";
@@ -97,6 +98,11 @@ export default async function PublicShopPage({ params }: PageProps) {
                     </div>
                   )}
                   <div className="p-5">
+                    {product.category && (
+                      <div className="mb-3">
+                        <ProductCategoryBadge category={product.category} />
+                      </div>
+                    )}
                     <div className="flex items-baseline justify-between gap-3">
                       <h3 className="text-[16px] font-semibold text-[#0e0f0c] leading-[1.3]">
                         {product.title}

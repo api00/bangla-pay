@@ -5,6 +5,11 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { getProductById } from "@/db/queries/products";
 import { productFiles } from "@/db/schema";
+import {
+  MAX_PRODUCT_FILENAME_LENGTH,
+  validateProductFile,
+} from "@/lib/product-catalog";
+import { removeStorageObject } from "@/lib/storage/signed-urls";
 
 import { requireCreator } from "./_helpers";
 
@@ -32,17 +37,45 @@ export async function registerProductFile(
     return { ok: false, error: "Invalid upload path." };
   }
 
-  if (!Number.isFinite(input.sizeBytes) || input.sizeBytes <= 0) {
-    return { ok: false, error: "Invalid file size." };
+  if (!product.category) {
+    await removeStorageObject(input.storagePath);
+    return {
+      ok: false,
+      error: "Choose a product category and save Details before uploading.",
+    };
   }
 
-  await db.insert(productFiles).values({
-    productId: product.id,
-    storagePath: input.storagePath,
-    filename: input.filename,
-    mimeType: input.mimeType || "application/octet-stream",
+  const filename =
+    typeof input.filename === "string"
+      ? input.filename.trim().slice(0, MAX_PRODUCT_FILENAME_LENGTH)
+      : "";
+  const mimeType =
+    typeof input.mimeType === "string" && input.mimeType.trim()
+      ? input.mimeType.trim()
+      : "application/octet-stream";
+  const validationError = validateProductFile({
+    category: product.category,
+    filename,
+    mimeType,
     sizeBytes: input.sizeBytes,
   });
+  if (validationError) {
+    await removeStorageObject(input.storagePath);
+    return { ok: false, error: validationError };
+  }
+
+  try {
+    await db.insert(productFiles).values({
+      productId: product.id,
+      storagePath: input.storagePath,
+      filename,
+      mimeType,
+      sizeBytes: input.sizeBytes,
+    });
+  } catch {
+    await removeStorageObject(input.storagePath);
+    return { ok: false, error: "Couldn't save the uploaded file." };
+  }
 
   revalidatePath(`/dashboard/shop/${product.id}/edit`);
   return { ok: true };

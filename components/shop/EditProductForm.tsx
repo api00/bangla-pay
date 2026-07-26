@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import Link from "next/link";
+import { useActionState } from "react";
 
 import {
   updateProduct,
@@ -10,6 +11,7 @@ import type { Product } from "@/db/schema";
 import { paisaToTaka } from "@/lib/money";
 
 import PricingPicker from "./PricingPicker";
+import ProductCategorySelect from "./ProductCategorySelect";
 
 const initial: UpdateProductState = { ok: false };
 
@@ -22,19 +24,14 @@ export default function EditProductForm({ product }: EditProductFormProps) {
     updateProduct,
     initial,
   );
-  const [savedHint, setSavedHint] = useState(false);
 
   const isOk = state.ok && !state.error;
 
-  if (isOk && !savedHint) setSavedHint(true);
-
   return (
-    <form
-      action={formAction}
-      className="space-y-6"
-      onSubmit={() => setSavedHint(false)}
-    >
+    <form action={formAction} className="space-y-6">
       <input type="hidden" name="product_id" value={product.id} />
+
+      <ProductCategorySelect defaultValue={product.category} />
 
       <div>
         <label
@@ -50,7 +47,7 @@ export default function EditProductForm({ product }: EditProductFormProps) {
           maxLength={80}
           required
           defaultValue={product.title}
-          className="w-full h-12 px-4 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white text-[15px] font-medium text-[#0e0f0c] placeholder:text-[#868685] outline-none focus:border-[#0e0f0c] transition-colors"
+          className="h-12 w-full rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-4 text-[16px] font-medium text-[#0e0f0c] outline-none transition-colors placeholder:text-[#6b6d6b] focus-visible:border-[#163300] focus-visible:ring-2 focus-visible:ring-[#9fe870]"
         />
       </div>
 
@@ -68,7 +65,7 @@ export default function EditProductForm({ product }: EditProductFormProps) {
           maxLength={140}
           defaultValue={product.subtitle ?? ""}
           placeholder="A short, punchy line"
-          className="w-full h-12 px-4 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white text-[15px] font-medium text-[#0e0f0c] placeholder:text-[#868685] outline-none focus:border-[#0e0f0c] transition-colors"
+          className="h-12 w-full rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-4 text-[16px] font-medium text-[#0e0f0c] outline-none transition-colors placeholder:text-[#6b6d6b] focus-visible:border-[#163300] focus-visible:ring-2 focus-visible:ring-[#9fe870]"
         />
       </div>
 
@@ -86,7 +83,7 @@ export default function EditProductForm({ product }: EditProductFormProps) {
           maxLength={4_000}
           defaultValue={product.descriptionMd ?? ""}
           placeholder="What do supporters get? Format, length, why it's worth it."
-          className="w-full px-4 py-3 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white text-[14px] text-[#0e0f0c] placeholder:text-[#868685] outline-none focus:border-[#0e0f0c] transition-colors resize-y leading-[1.6]"
+          className="w-full resize-y rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-4 py-3 text-[16px] leading-[1.6] text-[#0e0f0c] outline-none transition-colors placeholder:text-[#6b6d6b] focus-visible:border-[#163300] focus-visible:ring-2 focus-visible:ring-[#9fe870]"
         />
       </div>
 
@@ -103,6 +100,40 @@ export default function EditProductForm({ product }: EditProductFormProps) {
             : ""
         }
       />
+
+      <div className="rounded-2xl border border-[rgba(14,15,12,0.1)] bg-[#f7f9f5] p-4">
+        <div className="flex items-start gap-3">
+          <input
+            id="rights_confirmed"
+            name="rights_confirmed"
+            type="checkbox"
+            value="yes"
+            defaultChecked={Boolean(product.rightsConfirmedAt)}
+            disabled={Boolean(product.rightsConfirmedAt)}
+            className="mt-0.5 h-5 w-5 shrink-0 accent-[#163300] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
+          />
+          <label
+            htmlFor="rights_confirmed"
+            className="text-[14px] font-semibold leading-[1.55] text-[#0e0f0c]"
+          >
+            I confirm that I created this product or have the necessary
+            permission or licence to sell and distribute it.
+          </label>
+        </div>
+        <p className="ml-8 mt-2 text-[13px] leading-[1.55] text-[#454745]">
+          {product.rightsConfirmedAt
+            ? "Rights confirmed. This declaration is required for every published product."
+            : "Save this declaration before publishing. Copyright remains with you; buyers receive access, not ownership."}{" "}
+          <Link
+            href="/copyright"
+            target="_blank"
+            className="font-semibold text-[#163300] underline decoration-[#9fe870] decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
+          >
+            Read the copyright policy
+          </Link>
+          .
+        </p>
+      </div>
 
       {state.error && !state.ok && (
         <p
@@ -121,8 +152,11 @@ export default function EditProductForm({ product }: EditProductFormProps) {
         >
           {isPending ? "Saving…" : "Save changes"}
         </button>
-        {savedHint && (
-          <span className="text-[13px] font-semibold text-[#163300]">
+        {isOk && !isPending && (
+          <span
+            role="status"
+            className="save-badge text-[13px] font-semibold text-[#163300]"
+          >
             ✓ Saved
           </span>
         )}

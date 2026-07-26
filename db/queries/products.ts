@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull } from "drizzle-orm";
 
 import { db } from "@/db";
 import {
@@ -49,7 +49,12 @@ export async function listPublishedProducts(
     .select()
     .from(products)
     .where(
-      and(eq(products.creatorId, creatorId), eq(products.isPublished, true)),
+      and(
+        eq(products.creatorId, creatorId),
+        eq(products.isPublished, true),
+        isNotNull(products.category),
+        isNotNull(products.rightsConfirmedAt),
+      ),
     )
     .orderBy(desc(products.totalSales), desc(products.updatedAt));
 }
@@ -72,6 +77,8 @@ export async function getPublicProduct(
         eq(products.creatorId, creatorId),
         eq(products.slug, slug),
         eq(products.isPublished, true),
+        isNotNull(products.category),
+        isNotNull(products.rightsConfirmedAt),
       ),
     )
     .limit(1);

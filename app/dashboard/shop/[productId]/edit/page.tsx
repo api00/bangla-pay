@@ -77,7 +77,11 @@ export default async function DashboardEditProductPage({ params }: PageProps) {
 
       {/* Files (private downloads) */}
       <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6 md:p-7">
-        <FileUploader productId={product.id} files={files} />
+        <FileUploader
+          productId={product.id}
+          files={files}
+          productCategory={product.category}
+        />
       </section>
 
       <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6 md:p-7">

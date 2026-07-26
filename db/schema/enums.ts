@@ -46,6 +46,12 @@ export const productType = pgEnum("product_type", [
   "external_link",
 ]);
 
+export const productCategory = pgEnum("product_category", [
+  "ebook",
+  "audio",
+  "design_asset",
+]);
+
 export const pricingModel = pgEnum("pricing_model", [
   "fixed",
   "pay_what_you_want",

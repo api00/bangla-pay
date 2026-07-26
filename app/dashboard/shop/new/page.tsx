@@ -23,8 +23,8 @@ export default function DashboardNewProductPage() {
           New product
         </h1>
         <p className="text-[14px] text-[#454745] mt-1">
-          The basics now — you can add files, description, and cover image
-          after creating.
+          A digital product is an original file delivered online after
+          purchase. Choose one category now, then add its files and cover.
         </p>
       </header>
       <CreateProductForm />

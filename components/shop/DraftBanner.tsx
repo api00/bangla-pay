@@ -78,7 +78,8 @@ export default function DraftBanner({
           Draft — not visible to anyone yet
         </div>
         <div className="text-[12px] text-[#8a6d00]">
-          Add images, set a price, then publish to make it live in your shop.
+          Add files, choose a category, and confirm your rights before
+          publishing.
         </div>
         {error && (
           <div className="text-[12px] font-medium text-[#a3221a] mt-1">

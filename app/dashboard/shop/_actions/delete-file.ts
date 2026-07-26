@@ -15,7 +15,7 @@ export interface DeleteFileInput {
 
 export async function deleteProductFile(
   input: DeleteFileInput,
-): Promise<{ ok: boolean; error?: string }> {
+): Promise<{ ok: boolean; error?: string; unpublished?: boolean }> {
   const creator = await requireCreator();
 
   // Join to products so we only delete files the creator owns.
@@ -23,6 +23,8 @@ export async function deleteProductFile(
     .select({
       file: productFiles,
       productId: products.id,
+      isPublished: products.isPublished,
+      slug: products.slug,
     })
     .from(productFiles)
     .innerJoin(products, eq(products.id, productFiles.productId))
@@ -40,9 +42,33 @@ export async function deleteProductFile(
     .delete(productFiles)
     .where(eq(productFiles.id, input.fileId));
 
+  const remainingFiles = await db
+    .select({ id: productFiles.id })
+    .from(productFiles)
+    .where(eq(productFiles.productId, row.productId))
+    .limit(1);
+  const unpublished = row.isPublished && remainingFiles.length === 0;
+  if (unpublished) {
+    await db
+      .update(products)
+      .set({ isPublished: false, updatedAt: new Date() })
+      .where(
+        and(
+          eq(products.id, row.productId),
+          eq(products.creatorId, creator.id),
+        ),
+      );
+  }
+
   // Best-effort: if storage delete fails, the row is already gone.
   await removeStorageObject(row.file.storagePath);
 
   revalidatePath(`/dashboard/shop/${row.productId}/edit`);
-  return { ok: true };
+  if (unpublished) {
+    revalidatePath("/dashboard/shop");
+    revalidatePath(`/${creator.handle}`);
+    revalidatePath(`/${creator.handle}/shop`);
+    revalidatePath(`/${creator.handle}/shop/${row.slug}`);
+  }
+  return { ok: true, unpublished };
 }

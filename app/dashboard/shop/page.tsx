@@ -24,8 +24,9 @@ export default async function DashboardShopPage() {
           >
             Shop
           </h1>
-          <p className="text-[14px] text-[#454745] mt-1">
-            Sell digital products to your supporters.{" "}
+          <p className="mt-1 max-w-[620px] text-[14px] leading-[1.55] text-[#454745]">
+            Sell original files delivered online after purchase: e-books,
+            audio, or design and image packs.{" "}
             {products.length > 0 &&
               `${publishedCount} of ${products.length} live.`}
           </p>
@@ -44,8 +45,8 @@ export default async function DashboardShopPage() {
             No products yet.
           </p>
           <p className="mt-1 text-[14px] text-[#454745] leading-[1.55] max-w-[400px] mx-auto">
-            Add a digital download — a PDF, audio file, preset pack, or zip —
-            and start selling.
+            Add an e-book, audio product, or design pack and deliver it
+            securely after purchase.
           </p>
           <Link
             href="/dashboard/shop/new"

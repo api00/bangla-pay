@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { getProductById, getProductFiles } from "@/db/queries/products";
 import { products } from "@/db/schema";
+import { validateProductFile } from "@/lib/product-catalog";
 
 import { requireCreator } from "./_helpers";
 
@@ -14,9 +15,7 @@ export interface PublishProductInput {
   publish: boolean;
 }
 
-/** Toggle a product's `is_published` flag. Refuses to publish a fixed-price
- *  product with no files (so supporters never buy a paid product without
- *  a deliverable). Free + external products are exempt. */
+/** Toggle a product's `is_published` flag after validating its deliverable. */
 export async function setProductPublished(
   input: PublishProductInput,
 ): Promise<{ ok: boolean; error?: string }> {
@@ -25,15 +24,39 @@ export async function setProductPublished(
   if (!product) return { ok: false, error: "Product not found." };
 
   if (input.publish) {
-    if (
-      product.productType === "digital_download" &&
-      product.pricingModel !== "free"
-    ) {
+    if (!product.category) {
+      return {
+        ok: false,
+        error: "Choose a product category in Details and save it first.",
+      };
+    }
+    const category = product.category;
+    if (!product.rightsConfirmedAt) {
+      return {
+        ok: false,
+        error: "Confirm your right to sell this product in Details first.",
+      };
+    }
+    if (product.productType === "digital_download") {
       const files = await getProductFiles(product.id);
       if (files.length === 0) {
         return {
           ok: false,
-          error: "Add at least one file before publishing a paid product.",
+          error: "Add at least one downloadable file before publishing.",
+        };
+      }
+      const invalidFile = files.find((file) =>
+        validateProductFile({
+          category,
+          filename: file.filename,
+          mimeType: file.mimeType,
+          sizeBytes: file.sizeBytes,
+        }),
+      );
+      if (invalidFile) {
+        return {
+          ok: false,
+          error: `${invalidFile.filename} does not match the selected category. Remove it or choose the correct category.`,
         };
       }
     }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Product } from "@/db/schema";
 import { formatTaka } from "@/lib/money";
 
+import ProductCategoryBadge from "./ProductCategoryBadge";
 import PublishToggle from "./PublishToggle";
 
 interface ProductCardProps {
@@ -39,8 +40,13 @@ export default function ProductCard({ product, handle }: ProductCardProps) {
         </div>
       )}
 
-      <div className="p-5 flex-1 flex flex-col gap-4">
+        <div className="p-5 flex-1 flex flex-col gap-4">
         <div className="flex-1">
+          {product.category && (
+            <div className="mb-3">
+              <ProductCategoryBadge category={product.category} />
+            </div>
+          )}
           <div className="flex items-baseline justify-between gap-3">
             <h3 className="text-[16px] font-semibold text-[#0e0f0c] leading-[1.3]">
               {product.title}

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { db } from "@/db";
 import { pricingModel, products } from "@/db/schema";
+import { isProductCategory } from "@/lib/product-catalog";
 import { isValidSlug, slugify } from "@/lib/slug";
 import { parseTakaInput } from "@/lib/money";
 
@@ -31,8 +32,13 @@ export async function createProduct(
   }
   const title = titleRaw.trim().slice(0, TITLE_MAX);
 
+  const categoryRaw = formData.get("category");
+  if (!isProductCategory(categoryRaw)) {
+    return { ok: false, error: "Choose a supported product category." };
+  }
+
   const slugRaw = formData.get("slug");
-  let slug =
+  const slug =
     typeof slugRaw === "string" && slugRaw.trim()
       ? slugRaw.trim().toLowerCase()
       : slugify(title);
@@ -86,6 +92,7 @@ export async function createProduct(
         creatorId: creator.id,
         title,
         slug,
+        category: categoryRaw,
         pricingModel: pricing,
         basePricePaisa,
       })

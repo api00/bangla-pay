@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useState } from "react";
 
 import {
   createProduct,
@@ -9,6 +9,7 @@ import {
 import { slugify } from "@/lib/slug";
 
 import PricingPicker from "./PricingPicker";
+import ProductCategorySelect from "./ProductCategorySelect";
 
 const initial: CreateProductState = { ok: false };
 
@@ -21,14 +22,10 @@ export default function CreateProductForm() {
   const [slug, setSlug] = useState("");
   const [slugDirty, setSlugDirty] = useState(false);
 
-  useEffect(() => {
-    if (!slugDirty) {
-      setSlug(slugify(title));
-    }
-  }, [title, slugDirty]);
-
   return (
     <form action={formAction} className="space-y-6">
+      <ProductCategorySelect />
+
       <div>
         <label
           htmlFor="title"
@@ -43,9 +40,13 @@ export default function CreateProductForm() {
           maxLength={80}
           required
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(event) => {
+            const nextTitle = event.target.value;
+            setTitle(nextTitle);
+            if (!slugDirty) setSlug(slugify(nextTitle));
+          }}
           placeholder="Monsoon Stories — vol. 2"
-          className="w-full h-12 px-4 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white text-[15px] font-medium text-[#0e0f0c] placeholder:text-[#868685] outline-none focus:border-[#0e0f0c] transition-colors"
+          className="h-12 w-full rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-4 text-[16px] font-medium text-[#0e0f0c] outline-none transition-colors placeholder:text-[#6b6d6b] focus-visible:border-[#163300] focus-visible:ring-2 focus-visible:ring-[#9fe870]"
         />
       </div>
 
@@ -56,8 +57,8 @@ export default function CreateProductForm() {
         >
           Slug
         </label>
-        <div className="flex items-stretch h-12 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white focus-within:border-[#0e0f0c] transition-colors overflow-hidden">
-          <span className="px-4 inline-flex items-center text-[14px] text-[#868685] bg-[#f7f9f5] border-r border-[rgba(14,15,12,0.08)] whitespace-nowrap">
+        <div className="flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white transition-colors focus-within:border-[#163300] focus-within:ring-2 focus-within:ring-[#9fe870]">
+          <span className="inline-flex items-center whitespace-nowrap border-r border-[rgba(14,15,12,0.08)] bg-[#f7f9f5] px-4 text-[14px] text-[#454745]">
             /shop/
           </span>
           <input
@@ -70,10 +71,10 @@ export default function CreateProductForm() {
               setSlugDirty(true);
             }}
             placeholder="monsoon-stories"
-            className="flex-1 px-4 text-[15px] font-semibold text-[#0e0f0c] placeholder:text-[#868685] outline-none"
+            className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-[#0e0f0c] outline-none placeholder:text-[#6b6d6b]"
           />
         </div>
-        <p className="mt-2 text-[12px] text-[#868685] leading-[1.5]">
+        <p className="mt-2 text-[13px] leading-[1.5] text-[#454745]">
           Lowercase, hyphenated. You can change this later, but old links break.
         </p>
       </div>
@@ -96,14 +97,16 @@ export default function CreateProductForm() {
       <div className="rounded-2xl bg-[#f7f9f5] border border-[rgba(14,15,12,0.06)] px-4 py-3 flex gap-3 items-start">
         <span
           aria-hidden
-          className="w-6 h-6 shrink-0 rounded-full bg-[#9fe870] text-[#163300] inline-flex items-center justify-center text-[13px] font-bold"
+          className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#9fe870] text-[#163300]"
         >
-          ★
+          <svg viewBox="0 0 24 24" fill="currentColor" className="h-3.5 w-3.5">
+            <path d="M12 2c.45 5.45 1.36 6.36 9 9-7.64 2.64-8.55 3.55-9 9-.45-5.45-1.36-6.36-9-9 7.64-2.64 8.55-3.55 9-9Z" />
+          </svg>
         </span>
         <p className="text-[13px] text-[#454745] leading-[1.55]">
           <strong className="text-[#0e0f0c]">Next step:</strong> upload images
-          (up to 8), add files supporters get when they buy, and write a
-          description. The first image becomes the cover.
+          (up to 8), add the files supporters receive, describe the product,
+          and confirm that you have the right to sell it.
         </p>
       </div>
 

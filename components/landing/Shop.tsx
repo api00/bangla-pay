@@ -17,7 +17,9 @@ export default function Shop() {
         </h2>
 
         <p className="mt-6 text-lg md:text-xl text-[#454745] leading-[1.5] max-w-2xl mx-auto">
-          Not every creator belongs in a store built for warehouses. Sell ebooks, courses, presets, or 1-on-1 sessions straight from your page &mdash; priced in taka, delivered the moment they buy.
+          Sell original e-books, audio, and design packs straight from your
+          page &mdash; priced in taka and delivered securely after purchase.
+          Think Kindle or Spotify, but direct from creator to supporter.
         </p>
 
         {/* Visual — product card with supporting floating cards */}

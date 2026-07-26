@@ -4,9 +4,13 @@ import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
-import { getProductById } from "@/db/queries/products";
+import { getProductById, getProductFiles } from "@/db/queries/products";
 import { pricingModel, products } from "@/db/schema";
 import { parseTakaInput } from "@/lib/money";
+import {
+  isProductCategory,
+  validateProductFile,
+} from "@/lib/product-catalog";
 
 import { requireCreator } from "./_helpers";
 
@@ -40,6 +44,11 @@ export async function updateProduct(
   }
   const title = titleRaw.trim().slice(0, TITLE_MAX);
 
+  const categoryRaw = formData.get("category");
+  if (!isProductCategory(categoryRaw)) {
+    return { ok: false, error: "Choose a supported product category." };
+  }
+
   const subtitleRaw = formData.get("subtitle");
   const subtitle =
     typeof subtitleRaw === "string" && subtitleRaw.trim()
@@ -51,6 +60,28 @@ export async function updateProduct(
     typeof descriptionRaw === "string" && descriptionRaw.trim()
       ? descriptionRaw.trim().slice(0, DESCRIPTION_MAX)
       : null;
+
+  const rightsConfirmed = formData.get("rights_confirmed") === "yes";
+  const rightsConfirmedAt =
+    product.rightsConfirmedAt ?? (rightsConfirmed ? new Date() : null);
+
+  if (product.isPublished && categoryRaw !== product.category) {
+    const files = await getProductFiles(product.id);
+    const invalidFile = files.find((file) =>
+      validateProductFile({
+        category: categoryRaw,
+        filename: file.filename,
+        mimeType: file.mimeType,
+        sizeBytes: file.sizeBytes,
+      }),
+    );
+    if (invalidFile) {
+      return {
+        ok: false,
+        error: `${invalidFile.filename} does not fit that category. Remove it or keep the current category.`,
+      };
+    }
+  }
 
   const pricingRaw = formData.get("pricing_model");
   const pricing =
@@ -97,9 +128,11 @@ export async function updateProduct(
         title,
         subtitle,
         descriptionMd,
+        category: categoryRaw,
         pricingModel: pricing,
         basePricePaisa,
         minPricePaisa,
+        rightsConfirmedAt,
         updatedAt: new Date(),
       })
       .where(

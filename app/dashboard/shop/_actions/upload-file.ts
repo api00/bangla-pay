@@ -3,6 +3,10 @@
 import { randomUUID } from "node:crypto";
 
 import { getProductById } from "@/db/queries/products";
+import {
+  MAX_PRODUCT_FILENAME_LENGTH,
+  validateProductFile,
+} from "@/lib/product-catalog";
 import { productFilePath } from "@/lib/storage/buckets";
 import { signedProductFileUpload } from "@/lib/storage/signed-urls";
 
@@ -11,6 +15,8 @@ import { requireCreator } from "./_helpers";
 export interface SignUploadInput {
   productId: string;
   filename: string;
+  mimeType: string;
+  sizeBytes: number;
 }
 
 export interface SignUploadResult {
@@ -21,8 +27,6 @@ export interface SignUploadResult {
   token?: string;
   error?: string;
 }
-
-const MAX_FILENAME_LENGTH = 200;
 
 /** Issue a signed PUT URL the browser can use to upload directly to Storage. */
 export async function signProductFileUpload(
@@ -35,7 +39,25 @@ export async function signProductFileUpload(
   if (typeof input.filename !== "string" || !input.filename.trim()) {
     return { ok: false, error: "Filename is required." };
   }
-  const filename = input.filename.trim().slice(0, MAX_FILENAME_LENGTH);
+  if (!product.category) {
+    return {
+      ok: false,
+      error: "Choose a product category and save Details before uploading.",
+    };
+  }
+  const filename = input.filename
+    .trim()
+    .slice(0, MAX_PRODUCT_FILENAME_LENGTH);
+  const validationError = validateProductFile({
+    category: product.category,
+    filename,
+    mimeType:
+      typeof input.mimeType === "string"
+        ? input.mimeType
+        : "application/octet-stream",
+    sizeBytes: input.sizeBytes,
+  });
+  if (validationError) return { ok: false, error: validationError };
 
   const fileId = randomUUID();
   const storagePath = productFilePath(creator.id, product.id, fileId, filename);

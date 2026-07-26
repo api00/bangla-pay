@@ -1,4 +1,13 @@
-const navLinks = ["About", "Help", "FAQ", "Privacy", "Terms"];
+import Link from "next/link";
+
+const navLinks = [
+  { label: "About", href: "#" },
+  { label: "Help", href: "#" },
+  { label: "FAQ", href: "/#faq" },
+  { label: "Copyright", href: "/copyright" },
+  { label: "Privacy", href: "#" },
+  { label: "Terms", href: "#" },
+];
 
 export default function Footer() {
   return (
@@ -10,11 +19,15 @@ export default function Footer() {
         </div>
 
         {/* Center — nav links */}
-        <nav className="flex items-center gap-7 md:gap-9 text-[15px] font-semibold text-[#0e0f0c]">
-          {navLinks.map((l) => (
-            <a key={l} href="#" className="hover:opacity-60 transition-opacity">
-              {l}
-            </a>
+        <nav className="flex flex-wrap items-center justify-center gap-x-7 gap-y-1 text-[15px] font-semibold text-[#0e0f0c] md:gap-x-9">
+          {navLinks.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="inline-flex min-h-11 items-center transition-opacity hover:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
+            >
+              {link.label}
+            </Link>
           ))}
         </nav>
 
