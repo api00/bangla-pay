@@ -52,10 +52,22 @@ export const productCategory = pgEnum("product_category", [
   "design_asset",
 ]);
 
+export const deliveryMode = pgEnum("delivery_mode", [
+  "view_only",
+  "stream_only",
+  "download",
+]);
+
 export const pricingModel = pgEnum("pricing_model", [
   "fixed",
   "pay_what_you_want",
   "free",
+]);
+
+export const accessEventKind = pgEnum("access_event_kind", [
+  "view",
+  "stream",
+  "download",
 ]);
 
 // ---------- Profile enums ----------

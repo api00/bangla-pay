@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getOrderForCreator } from "@/db/queries/orders";
 import { requireCreator } from "@/lib/auth";
 import { formatTaka } from "@/lib/money";
+import { getDeliveryMode } from "@/lib/product-catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +22,7 @@ export default async function DashboardOrderDetailPage({ params }: PageProps) {
   const { creator } = await requireCreator();
   const detail = await getOrderForCreator(creator.id, orderId);
   if (!detail) notFound();
-  const { order, items, downloads } = detail;
+  const { order, items, downloads, accessEvents } = detail;
 
   return (
     <div className="space-y-6 max-w-[820px]">
@@ -44,7 +45,7 @@ export default async function DashboardOrderDetailPage({ params }: PageProps) {
         </p>
       </header>
 
-      <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6 grid gap-4 sm:grid-cols-2">
+      <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6 grid gap-4 sm:grid-cols-3">
         <div>
           <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#868685]">
             Supporter
@@ -54,6 +55,19 @@ export default async function DashboardOrderDetailPage({ params }: PageProps) {
           </p>
           <p className="text-[13px] text-[#454745] mt-0.5">
             {order.supporterEmail}
+          </p>
+        </div>
+        <div>
+          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#868685]">
+            Order code
+          </p>
+          <p className="mt-1 text-[15px] font-semibold tabular-nums text-[#0e0f0c]">
+            {order.orderCode}
+          </p>
+          <p className="mt-0.5 text-[13px] text-[#454745]">
+            {order.licenseAcceptedAt
+              ? "Personal licence accepted"
+              : "Legacy order · no licence record"}
           </p>
         </div>
         <div>
@@ -96,7 +110,7 @@ export default async function DashboardOrderDetailPage({ params }: PageProps) {
       {downloads.length > 0 && (
         <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6">
           <h2 className="text-[14px] font-semibold text-[#0e0f0c] mb-4">
-            Downloads
+            Buyer access
           </h2>
           <ul className="space-y-2">
             {downloads.map((d) => (
@@ -109,10 +123,42 @@ export default async function DashboardOrderDetailPage({ params }: PageProps) {
                     {d.file.filename}
                   </p>
                   <p className="text-[11px] text-[#868685] tabular-nums">
-                    Used {d.download.downloadsUsed}× · expires{" "}
-                    {DATE_FORMAT.format(d.download.expiresAt)}
+                    {getDeliveryMode(d.download.accessMode).label}
+                    {d.download.accessMode === "download" &&
+                      ` · downloaded ${d.download.downloadsUsed}×`}
+                    {" · "}
+                    {
+                      accessEvents.filter(
+                        (event) =>
+                          event.orderDownloadId === d.download.id,
+                      ).length
+                    }{" "}
+                    access event(s)
                   </p>
                 </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {accessEvents.length > 0 && (
+        <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6">
+          <h2 className="text-[14px] font-semibold text-[#0e0f0c] mb-4">
+            Access activity
+          </h2>
+          <ul className="divide-y divide-[rgba(14,15,12,0.05)]">
+            {accessEvents.map((event) => (
+              <li
+                key={event.id}
+                className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
+              >
+                <span className="text-[14px] font-semibold capitalize text-[#0e0f0c]">
+                  {event.kind}
+                </span>
+                <span className="text-[12px] tabular-nums text-[#454745]">
+                  {DATE_FORMAT.format(event.createdAt)}
+                </span>
               </li>
             ))}
           </ul>

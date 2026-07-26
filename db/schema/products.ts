@@ -13,7 +13,12 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { creators } from "./creators";
-import { pricingModel, productCategory, productType } from "./enums";
+import {
+  deliveryMode,
+  pricingModel,
+  productCategory,
+  productType,
+} from "./enums";
 
 // ---------- products ----------
 // Digital product in a creator's shop. `slug` is unique per creator
@@ -38,6 +43,7 @@ export const products = pgTable(
       .notNull()
       .default("digital_download"),
     category: productCategory("category"),
+    deliveryMode: deliveryMode("delivery_mode").notNull().default("download"),
     pricingModel: pricingModel("pricing_model").notNull().default("fixed"),
     basePricePaisa: integer("base_price_paisa").notNull().default(0),
     minPricePaisa: integer("min_price_paisa"),

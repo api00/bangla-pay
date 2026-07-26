@@ -6,7 +6,9 @@ import { db } from "@/db";
 import { getCreatorByHandle } from "@/db/queries/creators";
 import { getPublicProduct } from "@/db/queries/products";
 import { orderItems, orders } from "@/db/schema";
+import { createOrderCode } from "@/lib/ids";
 import { parseTakaInput } from "@/lib/money";
+import { PERSONAL_LICENSE_VERSION } from "@/lib/product-catalog";
 
 const NAME_MAX = 60;
 const EMAIL_MAX = 200;
@@ -40,9 +42,16 @@ export async function startPurchase(
   if (!bundle) return { ok: false, error: "Product not found." };
   const { product } = bundle;
 
+  if (formData.get("license_accepted") !== "yes") {
+    return {
+      ok: false,
+      error: "Accept the personal-use licence to continue.",
+    };
+  }
+
   const emailRaw = formData.get("supporter_email");
   if (typeof emailRaw !== "string" || !emailRaw.trim()) {
-    return { ok: false, error: "Email is required so we can send the file." };
+    return { ok: false, error: "Email is required for private access." };
   }
   const supporterEmail = emailRaw.trim().toLowerCase().slice(0, EMAIL_MAX);
   if (!EMAIL_REGEX.test(supporterEmail)) {
@@ -92,10 +101,13 @@ export async function startPurchase(
           creatorId: creator.id,
           supporterName,
           supporterEmail,
+          orderCode: createOrderCode(),
           totalPaisa: unitPricePaisa,
           status: "pending",
           provider: "card",
           providerRef: null,
+          licenseAcceptedAt: new Date(),
+          licenseVersion: PERSONAL_LICENSE_VERSION,
         })
         .returning({ id: orders.id });
       if (!orderRow) throw new Error("order insert failed");

@@ -57,6 +57,22 @@ export async function signedProductFileDownload(
   return data.signedUrl;
 }
 
+/** Time-limited URL without an attachment header, for server-side proxying. */
+export async function signedProductFileAccess(
+  storagePath: string,
+): Promise<string> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.storage
+    .from(BUCKETS.PRODUCT_FILES)
+    .createSignedUrl(storagePath, DOWNLOAD_EXPIRES_IN_SECONDS);
+  if (error || !data) {
+    throw new Error(
+      `Storage access URL failed: ${error?.message ?? "unknown error"}`,
+    );
+  }
+  return data.signedUrl;
+}
+
 /** Remove a stored object — safe to call even if the object is already gone. */
 export async function removeStorageObject(storagePath: string): Promise<void> {
   const supabase = createAdminClient();

@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 import { getProductById } from "@/db/queries/products";
 import {
   MAX_PRODUCT_FILENAME_LENGTH,
-  validateProductFile,
+  validateDeliveryFile,
 } from "@/lib/product-catalog";
 import { productFilePath } from "@/lib/storage/buckets";
 import { signedProductFileUpload } from "@/lib/storage/signed-urls";
@@ -48,8 +48,9 @@ export async function signProductFileUpload(
   const filename = input.filename
     .trim()
     .slice(0, MAX_PRODUCT_FILENAME_LENGTH);
-  const validationError = validateProductFile({
+  const validationError = validateDeliveryFile({
     category: product.category,
+    deliveryMode: product.deliveryMode,
     filename,
     mimeType:
       typeof input.mimeType === "string"

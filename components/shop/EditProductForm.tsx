@@ -11,7 +11,7 @@ import type { Product } from "@/db/schema";
 import { paisaToTaka } from "@/lib/money";
 
 import PricingPicker from "./PricingPicker";
-import ProductCategorySelect from "./ProductCategorySelect";
+import ProductDeliveryFields from "./ProductDeliveryFields";
 
 const initial: UpdateProductState = { ok: false };
 
@@ -31,7 +31,10 @@ export default function EditProductForm({ product }: EditProductFormProps) {
     <form action={formAction} className="space-y-6">
       <input type="hidden" name="product_id" value={product.id} />
 
-      <ProductCategorySelect defaultValue={product.category} />
+      <ProductDeliveryFields
+        defaultCategory={product.category}
+        defaultDeliveryMode={product.deliveryMode}
+      />
 
       <div>
         <label

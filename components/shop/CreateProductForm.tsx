@@ -9,7 +9,7 @@ import {
 import { slugify } from "@/lib/slug";
 
 import PricingPicker from "./PricingPicker";
-import ProductCategorySelect from "./ProductCategorySelect";
+import ProductDeliveryFields from "./ProductDeliveryFields";
 
 const initial: CreateProductState = { ok: false };
 
@@ -24,7 +24,7 @@ export default function CreateProductForm() {
 
   return (
     <form action={formAction} className="space-y-6">
-      <ProductCategorySelect />
+      <ProductDeliveryFields />
 
       <div>
         <label
@@ -106,7 +106,7 @@ export default function CreateProductForm() {
         <p className="text-[13px] text-[#454745] leading-[1.55]">
           <strong className="text-[#0e0f0c]">Next step:</strong> upload images
           (up to 8), add the files supporters receive, describe the product,
-          and confirm that you have the right to sell it.
+          choose buyer access, and confirm that you have the right to sell it.
         </p>
       </div>
 

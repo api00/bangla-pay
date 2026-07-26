@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import {
@@ -9,6 +9,8 @@ import {
   orders,
   productFiles,
   products,
+  contentAccessEvents,
+  type ContentAccessEvent,
   type Order,
   type OrderDownload,
   type OrderItem,
@@ -36,6 +38,7 @@ export interface OrderItemDetail {
 export interface OrderDetail {
   order: Order;
   items: OrderItemDetail[];
+  accessEvents: ContentAccessEvent[];
   downloads: Array<{
     download: OrderDownload;
     file: Pick<ProductFile, "id" | "filename" | "mimeType" | "sizeBytes">;
@@ -57,18 +60,42 @@ export async function getOrderForCreator(
   return loadOrderDetail(order);
 }
 
-/** Used by the supporter-facing success page (no auth) — must match by email. */
-export async function getOrderForSupporter(
-  orderId: string,
+/** Paid order lookup for the authenticated buyer. Email matching is required. */
+export async function getOrderForBuyer(
+  orderCode: string,
+  buyerEmail: string,
 ): Promise<OrderDetail | null> {
   const orderRows = await db
     .select()
     .from(orders)
-    .where(eq(orders.id, orderId))
+    .where(
+      and(
+        eq(orders.orderCode, orderCode),
+        eq(orders.status, "paid"),
+        sql`lower(${orders.supporterEmail}) = ${buyerEmail.toLowerCase()}`,
+      ),
+    )
     .limit(1);
   const order = orderRows[0];
   if (!order) return null;
   return loadOrderDetail(order);
+}
+
+export async function listOrdersForBuyer(
+  buyerEmail: string,
+  limit = 50,
+): Promise<Order[]> {
+  return db
+    .select()
+    .from(orders)
+    .where(
+      and(
+        eq(orders.status, "paid"),
+        sql`lower(${orders.supporterEmail}) = ${buyerEmail.toLowerCase()}`,
+      ),
+    )
+    .orderBy(desc(orders.paidAt), desc(orders.createdAt))
+    .limit(limit);
 }
 
 async function loadOrderDetail(order: Order): Promise<OrderDetail> {
@@ -108,9 +135,16 @@ async function loadOrderDetail(order: Order): Promise<OrderDetail> {
         .where(eq(orderItems.orderId, order.id))
     : [];
 
+  const accessEvents = await db
+    .select()
+    .from(contentAccessEvents)
+    .where(eq(contentAccessEvents.orderId, order.id))
+    .orderBy(desc(contentAccessEvents.createdAt));
+
   return {
     order,
     items: itemRows,
+    accessEvents,
     downloads: downloadRows,
   };
 }

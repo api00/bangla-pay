@@ -63,7 +63,7 @@ export default function ProductFilesPreview({
           id="what-you-get"
           className="text-[12px] font-bold uppercase tracking-[0.2em] text-[#454745]"
         >
-          What you get
+          Included content
         </p>
         <p className="text-[12px] text-[#868685] mt-0.5 tabular-nums">
           {summary(files)}

@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import type { Product } from "@/db/schema";
 import { formatTaka } from "@/lib/money";
+import { getDeliveryMode } from "@/lib/product-catalog";
 
 import ProductCategoryBadge from "./ProductCategoryBadge";
 import PublishToggle from "./PublishToggle";
@@ -43,8 +44,11 @@ export default function ProductCard({ product, handle }: ProductCardProps) {
         <div className="p-5 flex-1 flex flex-col gap-4">
         <div className="flex-1">
           {product.category && (
-            <div className="mb-3">
+            <div className="mb-3 flex flex-wrap gap-2">
               <ProductCategoryBadge category={product.category} />
+              <span className="inline-flex min-h-7 items-center rounded-full border border-[rgba(14,15,12,0.1)] bg-[#f7f9f5] px-3 text-[12px] font-semibold text-[#454745]">
+                {getDeliveryMode(product.deliveryMode).shortLabel}
+              </span>
             </div>
           )}
           <div className="flex items-baseline justify-between gap-3">

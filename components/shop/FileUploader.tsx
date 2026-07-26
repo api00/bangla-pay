@@ -12,15 +12,18 @@ import { registerProductFile } from "@/app/dashboard/shop/_actions/register-file
 import { signProductFileUpload } from "@/app/dashboard/shop/_actions/upload-file";
 import type { ProductFile } from "@/db/schema";
 import {
+  getDeliveryFileGuidance,
   getProductCategory,
+  type DeliveryMode,
   type ProductCategory,
-  validateProductFile,
+  validateDeliveryFile,
 } from "@/lib/product-catalog";
 
 interface FileUploaderProps {
   productId: string;
   files: ProductFile[];
   productCategory: ProductCategory | null;
+  deliveryMode: DeliveryMode;
 }
 
 function formatBytes(bytes: number): string {
@@ -35,6 +38,7 @@ export default function FileUploader({
   productId,
   files: initialFiles,
   productCategory,
+  deliveryMode,
 }: FileUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -55,8 +59,9 @@ export default function FileUploader({
     }
 
     const mimeType = file.type || "application/octet-stream";
-    const validationError = validateProductFile({
+    const validationError = validateDeliveryFile({
       category: productCategory,
+      deliveryMode,
       filename: file.name,
       mimeType,
       sizeBytes: file.size,
@@ -123,6 +128,9 @@ export default function FileUploader({
   }
 
   const category = getProductCategory(productCategory);
+  const guidance = productCategory
+    ? getDeliveryFileGuidance(productCategory, deliveryMode)
+    : null;
 
   return (
     <div className="space-y-4">
@@ -134,7 +142,7 @@ export default function FileUploader({
         <div className="rounded-2xl border-[1.5px] border-dashed border-[rgba(14,15,12,0.14)] bg-white px-5 py-6 flex items-center justify-between gap-4 flex-wrap">
           <div className="text-[13px] text-[#454745] leading-[1.5]">
             {category
-              ? `${category.label}: ${category.formats}. Maximum 50 MB per file.`
+              ? `${category.label}: ${guidance?.formats}. Maximum 50 MB per file.`
               : "Choose a category in Details before adding product files."}
           </div>
           <label
@@ -149,7 +157,7 @@ export default function FileUploader({
             <input
               ref={fileInputRef}
               type="file"
-              accept={category?.accept}
+              accept={guidance?.accept}
               className="sr-only"
               onChange={handlePick}
               disabled={Boolean(uploading) || !productCategory}

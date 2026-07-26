@@ -81,6 +81,7 @@ export default async function DashboardEditProductPage({ params }: PageProps) {
           productId={product.id}
           files={files}
           productCategory={product.category}
+          deliveryMode={product.deliveryMode}
         />
       </section>
 

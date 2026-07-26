@@ -6,7 +6,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 // Strict allowlist for what an unauthenticated visitor may reach. Everything
 // under these prefixes redirects to /login when the session cookie is missing.
-const PROTECTED_PREFIXES = ["/dashboard", "/onboarding"];
+const PROTECTED_PREFIXES = ["/dashboard", "/onboarding", "/library"];
 
 // Already signed in? Bounce away from these.
 const AUTH_ROUTES = ["/login", "/signup"];
@@ -21,6 +21,13 @@ function isProtected(pathname: string): boolean {
 
 function isAuthRoute(pathname: string): boolean {
   return AUTH_ROUTES.includes(pathname);
+}
+
+function safeNext(next: string | null): string | null {
+  if (!next?.startsWith("/") || next.startsWith("//") || next.startsWith("/\\")) {
+    return null;
+  }
+  return next;
 }
 
 /**
@@ -88,10 +95,10 @@ export async function updateSession(request: NextRequest) {
   }
 
   if (user && isAuthRoute(pathname)) {
-    const dashUrl = request.nextUrl.clone();
-    dashUrl.pathname = "/dashboard";
-    dashUrl.search = "";
-    return NextResponse.redirect(dashUrl);
+    const destination = safeNext(request.nextUrl.searchParams.get("next"));
+    return NextResponse.redirect(
+      new URL(destination ?? "/dashboard", request.url),
+    );
   }
 
   return supabaseResponse;

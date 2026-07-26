@@ -13,6 +13,7 @@ import { getPublicProduct } from "@/db/queries/products";
 import { creatorPages } from "@/db/schema";
 import { normalizeHandle, RESERVED_HANDLES } from "@/lib/handle";
 import { formatTaka } from "@/lib/money";
+import { getDeliveryMode } from "@/lib/product-catalog";
 
 export const revalidate = 60;
 
@@ -45,6 +46,7 @@ export default async function PublicProductPage({ params }: PageProps) {
       : product.pricingModel === "pay_what_you_want"
         ? `From ${formatTaka(product.minPricePaisa ?? product.basePricePaisa)}`
         : formatTaka(product.basePricePaisa);
+  const delivery = getDeliveryMode(product.deliveryMode);
 
   return (
     <main className="min-h-screen bg-[#f7f9f5]">
@@ -74,8 +76,11 @@ export default async function PublicProductPage({ params }: PageProps) {
               )
             )}
             {product.category && (
-              <div className="mb-4">
+              <div className="mb-4 flex flex-wrap gap-2">
                 <ProductCategoryBadge category={product.category} />
+                <span className="inline-flex min-h-7 items-center rounded-full border border-[rgba(14,15,12,0.1)] bg-white px-3 text-[12px] font-semibold text-[#454745]">
+                  {delivery.label}
+                </span>
               </div>
             )}
             <h1
@@ -134,9 +139,9 @@ export default async function PublicProductPage({ params }: PageProps) {
                     {product.rightsConfirmedAt
                       ? "The creator has confirmed that they made this product or have permission to sell it. "
                       : ""}
-                    Your purchase gives you personal access to the files.
-                    Copyright stays with the creator unless this description
-                    clearly grants a different licence.
+                    Your purchase gives you personal access through{" "}
+                    {delivery.label}. Copyright stays with the creator unless
+                    this description clearly grants a different licence.
                   </p>
                   <Link
                     href="/copyright"

@@ -20,11 +20,9 @@ interface ActionInput {
   orderId: string;
 }
 
-const DEFAULT_DOWNLOAD_TTL_HOURS = 168; // 7 days
-
 /**
  * Stub success: flips order to `paid`, links supporter, generates one
- * `order_downloads` row per (item × file), increments product.totalSales.
+ * durable entitlement per (item × file), and increments product.totalSales.
  *
  * Phase 5 webhook handler will call the same logic — kept transactional.
  */
@@ -37,9 +35,10 @@ export async function markOrderPaid({ orderId }: ActionInput): Promise<void> {
   if (!orderRow) redirect("/");
 
   if (orderRow.status === "paid") {
-    redirect(`/checkout/success?order=${orderRow.id}`);
+    redirect(`/library/${orderRow.orderCode}`);
   }
   if (orderRow.status !== "pending") redirect("/");
+  if (!orderRow.licenseAcceptedAt || !orderRow.licenseVersion) redirect("/");
 
   const supporter = await upsertSupporterByEmail(
     orderRow.supporterEmail,
@@ -52,7 +51,7 @@ export async function markOrderPaid({ orderId }: ActionInput): Promise<void> {
       itemId: orderItems.id,
       productId: orderItems.productId,
       fileId: productFiles.id,
-      ttlHours: products.downloadTtlHours,
+      accessMode: products.deliveryMode,
     })
     .from(orderItems)
     .innerJoin(products, eq(products.id, orderItems.productId))
@@ -63,26 +62,26 @@ export async function markOrderPaid({ orderId }: ActionInput): Promise<void> {
 
   const downloadRowsToInsert = itemFileRows
     .filter((row) => row.fileId !== null)
-    .map((row) => {
-      const ttlHours = row.ttlHours ?? DEFAULT_DOWNLOAD_TTL_HOURS;
-      const expiresAt = new Date(Date.now() + ttlHours * 60 * 60 * 1000);
-      return {
-        orderItemId: row.itemId,
-        productFileId: row.fileId as string,
-        downloadToken: shortId(20),
-        expiresAt,
-      };
-    });
+    .map((row) => ({
+      orderItemId: row.itemId,
+      productFileId: row.fileId as string,
+      accessMode: row.accessMode,
+      downloadToken: shortId(20),
+      expiresAt: null,
+    }));
 
-  await db.transaction(async (tx) => {
-    await tx
+  const paidNow = await db.transaction(async (tx) => {
+    const updated = await tx
       .update(orders)
       .set({
         status: "paid",
         paidAt: new Date(),
         supporterId: supporter.id,
       })
-      .where(and(eq(orders.id, orderId), eq(orders.status, "pending")));
+      .where(and(eq(orders.id, orderId), eq(orders.status, "pending")))
+      .returning({ id: orders.id });
+
+    if (updated.length === 0) return false;
 
     if (downloadRowsToInsert.length > 0) {
       await tx.insert(orderDownloads).values(downloadRowsToInsert);
@@ -94,22 +93,25 @@ export async function markOrderPaid({ orderId }: ActionInput): Promise<void> {
         .set({ totalSales: sql`${products.totalSales} + 1` })
         .where(inArray(products.id, Array.from(productIds)));
     }
+    return true;
   });
 
-  const [creator] = await db
-    .select({ handle: creators.handle })
-    .from(creators)
-    .where(eq(creators.id, orderRow.creatorId))
-    .limit(1);
+  if (paidNow) {
+    const [creator] = await db
+      .select({ handle: creators.handle })
+      .from(creators)
+      .where(eq(creators.id, orderRow.creatorId))
+      .limit(1);
 
-  if (creator?.handle) {
-    revalidatePath(`/${creator.handle}/shop`);
-    revalidatePath(`/${creator.handle}`);
+    if (creator?.handle) {
+      revalidatePath(`/${creator.handle}/shop`);
+      revalidatePath(`/${creator.handle}`);
+    }
+    revalidatePath("/dashboard/orders");
+    revalidatePath("/dashboard");
   }
-  revalidatePath("/dashboard/orders");
-  revalidatePath("/dashboard");
 
-  redirect(`/checkout/success?order=${orderRow.id}`);
+  redirect(`/library/${orderRow.orderCode}`);
 }
 
 export async function markOrderFailed({ orderId }: ActionInput): Promise<void> {

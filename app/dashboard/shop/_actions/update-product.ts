@@ -8,8 +8,10 @@ import { getProductById, getProductFiles } from "@/db/queries/products";
 import { pricingModel, products } from "@/db/schema";
 import { parseTakaInput } from "@/lib/money";
 import {
+  isDeliveryMode,
+  isDeliveryModeAllowed,
   isProductCategory,
-  validateProductFile,
+  validateDeliveryFile,
 } from "@/lib/product-catalog";
 
 import { requireCreator } from "./_helpers";
@@ -48,6 +50,13 @@ export async function updateProduct(
   if (!isProductCategory(categoryRaw)) {
     return { ok: false, error: "Choose a supported product category." };
   }
+  const deliveryModeRaw = formData.get("delivery_mode");
+  if (
+    !isDeliveryMode(deliveryModeRaw) ||
+    !isDeliveryModeAllowed(categoryRaw, deliveryModeRaw)
+  ) {
+    return { ok: false, error: "Choose a valid buyer access option." };
+  }
 
   const subtitleRaw = formData.get("subtitle");
   const subtitle =
@@ -65,11 +74,16 @@ export async function updateProduct(
   const rightsConfirmedAt =
     product.rightsConfirmedAt ?? (rightsConfirmed ? new Date() : null);
 
-  if (product.isPublished && categoryRaw !== product.category) {
+  if (
+    product.isPublished &&
+    (categoryRaw !== product.category ||
+      deliveryModeRaw !== product.deliveryMode)
+  ) {
     const files = await getProductFiles(product.id);
     const invalidFile = files.find((file) =>
-      validateProductFile({
+      validateDeliveryFile({
         category: categoryRaw,
+        deliveryMode: deliveryModeRaw,
         filename: file.filename,
         mimeType: file.mimeType,
         sizeBytes: file.sizeBytes,
@@ -129,6 +143,7 @@ export async function updateProduct(
         subtitle,
         descriptionMd,
         category: categoryRaw,
+        deliveryMode: deliveryModeRaw,
         pricingModel: pricing,
         basePricePaisa,
         minPricePaisa,

@@ -11,3 +11,8 @@ export function shortId(byteLength = 24): string {
     .replace(/\//g, "_")
     .replace(/=+$/, "");
 }
+
+/** Human-readable receipt code. Buyer authorization still requires login. */
+export function createOrderCode(): string {
+  return `BP-${randomBytes(6).toString("hex").toUpperCase()}`;
+}

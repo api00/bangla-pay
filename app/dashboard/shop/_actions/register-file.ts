@@ -7,7 +7,7 @@ import { getProductById } from "@/db/queries/products";
 import { productFiles } from "@/db/schema";
 import {
   MAX_PRODUCT_FILENAME_LENGTH,
-  validateProductFile,
+  validateDeliveryFile,
 } from "@/lib/product-catalog";
 import { removeStorageObject } from "@/lib/storage/signed-urls";
 
@@ -53,8 +53,9 @@ export async function registerProductFile(
     typeof input.mimeType === "string" && input.mimeType.trim()
       ? input.mimeType.trim()
       : "application/octet-stream";
-  const validationError = validateProductFile({
+  const validationError = validateDeliveryFile({
     category: product.category,
+    deliveryMode: product.deliveryMode,
     filename,
     mimeType,
     sizeBytes: input.sizeBytes,

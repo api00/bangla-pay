@@ -22,6 +22,8 @@ export default async function StubOrderCheckoutPage({ params }: PageProps) {
       orderId: orders.id,
       totalPaisa: orders.totalPaisa,
       supporterEmail: orders.supporterEmail,
+      orderCode: orders.orderCode,
+      licenseAcceptedAt: orders.licenseAcceptedAt,
       status: orders.status,
       handle: creators.handle,
       displayName: creators.displayName,
@@ -96,8 +98,10 @@ export default async function StubOrderCheckoutPage({ params }: PageProps) {
             </div>
 
             <p className="mt-5 pt-5 border-t border-[rgba(14,15,12,0.06)] text-[12px] text-[#868685]">
-              Receipt &amp; downloads will be available on the next page after
-              payment.
+              Order <span className="font-semibold">{orderRow.orderCode}</span>{" "}
+              · personal-use licence{" "}
+              {orderRow.licenseAcceptedAt ? "accepted" : "required"}. Your
+              private library opens after payment and email sign-in.
             </p>
           </div>
 

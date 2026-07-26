@@ -24,6 +24,7 @@ export async function GET(
       downloadId: orderDownloads.id,
       downloadsUsed: orderDownloads.downloadsUsed,
       expiresAt: orderDownloads.expiresAt,
+      accessMode: orderDownloads.accessMode,
       storagePath: productFiles.storagePath,
       filename: productFiles.filename,
       orderStatus: orders.status,
@@ -43,7 +44,12 @@ export async function GET(
   if (row.orderStatus !== "paid") {
     return new NextResponse("Order not paid.", { status: 403 });
   }
-  if (row.expiresAt.getTime() < Date.now()) {
+  if (row.accessMode !== "download") {
+    return new NextResponse("This product is available in the private library.", {
+      status: 403,
+    });
+  }
+  if (row.expiresAt && row.expiresAt.getTime() < Date.now()) {
     return new NextResponse("This link has expired.", { status: 410 });
   }
   if (row.downloadsUsed >= row.downloadLimit) {

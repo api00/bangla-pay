@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { getProductById, getProductFiles } from "@/db/queries/products";
 import { products } from "@/db/schema";
-import { validateProductFile } from "@/lib/product-catalog";
+import { validateDeliveryFile } from "@/lib/product-catalog";
 
 import { requireCreator } from "./_helpers";
 
@@ -46,8 +46,9 @@ export async function setProductPublished(
         };
       }
       const invalidFile = files.find((file) =>
-        validateProductFile({
+        validateDeliveryFile({
           category,
+          deliveryMode: product.deliveryMode,
           filename: file.filename,
           mimeType: file.mimeType,
           sizeBytes: file.sizeBytes,
@@ -56,7 +57,7 @@ export async function setProductPublished(
       if (invalidFile) {
         return {
           ok: false,
-          error: `${invalidFile.filename} does not match the selected category. Remove it or choose the correct category.`,
+          error: `${invalidFile.filename} does not support ${product.deliveryMode.replaceAll("_", " ")} access. Remove it or choose another delivery option.`,
         };
       }
     }

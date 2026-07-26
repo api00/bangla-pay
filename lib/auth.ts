@@ -89,6 +89,18 @@ export const requireUser = cache(async (): Promise<User> => {
   return user;
 });
 
+/** Require login while preserving the buyer's exact private-library route. */
+export async function requireLibraryUser(nextPath: string): Promise<User> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    redirect(`/login?next=${encodeURIComponent(nextPath)}`);
+  }
+  return user;
+}
+
 /**
  * Auth check for Server Actions. Returns `{ creator }` or `null`.
  *

@@ -5,7 +5,11 @@ import { redirect } from "next/navigation";
 
 import { db } from "@/db";
 import { pricingModel, products } from "@/db/schema";
-import { isProductCategory } from "@/lib/product-catalog";
+import {
+  isDeliveryMode,
+  isDeliveryModeAllowed,
+  isProductCategory,
+} from "@/lib/product-catalog";
 import { isValidSlug, slugify } from "@/lib/slug";
 import { parseTakaInput } from "@/lib/money";
 
@@ -35,6 +39,13 @@ export async function createProduct(
   const categoryRaw = formData.get("category");
   if (!isProductCategory(categoryRaw)) {
     return { ok: false, error: "Choose a supported product category." };
+  }
+  const deliveryModeRaw = formData.get("delivery_mode");
+  if (
+    !isDeliveryMode(deliveryModeRaw) ||
+    !isDeliveryModeAllowed(categoryRaw, deliveryModeRaw)
+  ) {
+    return { ok: false, error: "Choose a valid buyer access option." };
   }
 
   const slugRaw = formData.get("slug");
@@ -93,6 +104,7 @@ export async function createProduct(
         title,
         slug,
         category: categoryRaw,
+        deliveryMode: deliveryModeRaw,
         pricingModel: pricing,
         basePricePaisa,
       })

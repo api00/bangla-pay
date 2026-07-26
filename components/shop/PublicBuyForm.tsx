@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useState, type ChangeEvent } from "react";
 
 import {
@@ -8,6 +9,7 @@ import {
 } from "@/app/[handle]/shop/[slug]/_actions/start-purchase";
 import type { Product } from "@/db/schema";
 import { formatTaka, paisaToTaka, parseTakaInput } from "@/lib/money";
+import { getDeliveryMode } from "@/lib/product-catalog";
 
 interface PublicBuyFormProps {
   handle: string;
@@ -33,6 +35,7 @@ export default function PublicBuyForm({
   const minPaisa = product.minPricePaisa ?? 0;
   const defaultCustom = String(paisaToTaka(product.basePricePaisa));
   const [customRaw, setCustomRaw] = useState(defaultCustom);
+  const [licenseAccepted, setLicenseAccepted] = useState(false);
 
   const customPaisa = parseTakaInput(customRaw) ?? 0;
   const effectivePaisa = showCustom ? customPaisa : product.basePricePaisa;
@@ -48,8 +51,10 @@ export default function PublicBuyForm({
 
   const canSubmit =
     !isPending &&
+    licenseAccepted &&
     (product.pricingModel === "free" ||
       (effectivePaisa > 0 && effectivePaisa >= minPaisa));
+  const delivery = getDeliveryMode(product.deliveryMode);
 
   return (
     <form action={formAction} className="space-y-4">
@@ -91,7 +96,7 @@ export default function PublicBuyForm({
           htmlFor="supporter_email"
           className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745] mb-2"
         >
-          Email (we send the file here)
+          Email for private access
         </label>
         <input
           id="supporter_email"
@@ -120,6 +125,39 @@ export default function PublicBuyForm({
         />
       </div>
 
+      <div className="rounded-2xl border border-[rgba(14,15,12,0.1)] bg-[#f7f9f5] p-4">
+        <div className="flex items-start gap-3">
+          <input
+            id="license_accepted"
+            name="license_accepted"
+            type="checkbox"
+            value="yes"
+            required
+            checked={licenseAccepted}
+            onChange={(event) => setLicenseAccepted(event.target.checked)}
+            className="mt-0.5 h-5 w-5 shrink-0 accent-[#163300] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
+          />
+          <label
+            htmlFor="license_accepted"
+            className="text-[13px] font-semibold leading-[1.55] text-[#0e0f0c]"
+          >
+            I accept the personal-use licence and will not copy, resell, or
+            share this product.
+          </label>
+        </div>
+        <p className="ml-8 mt-2 text-[12px] leading-[1.5] text-[#454745]">
+          Access is tied to your email and order code.{" "}
+          <Link
+            href="/copyright"
+            target="_blank"
+            className="font-semibold text-[#163300] underline decoration-[#9fe870] decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
+          >
+            Read the policy
+          </Link>
+          .
+        </p>
+      </div>
+
       {state.error && (
         <p
           role="alert"
@@ -138,6 +176,11 @@ export default function PublicBuyForm({
         {isPending ? "Preparing checkout…" : ctaLabel}
         {!isPending && <span aria-hidden>→</span>}
       </button>
+      <p className="text-center text-[12px] leading-[1.5] text-[#454745]">
+        After purchase:{" "}
+        <span className="font-semibold text-[#0e0f0c]">{delivery.label}</span>{" "}
+        from your private library.
+      </p>
     </form>
   );
 }
