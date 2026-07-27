@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 
 import { deleteProduct } from "@/app/dashboard/shop/_actions/delete-product";
+import { useToast } from "@/components/ui/Toast";
 import { creatorUrl } from "@/lib/site";
 
 interface ProductActionsMenuProps {
@@ -13,17 +15,16 @@ interface ProductActionsMenuProps {
   isPublished: boolean;
 }
 
-type Feedback = { kind: "ok" | "error"; text: string } | null;
-
 export default function ProductActionsMenu({
   productId,
   handle,
   slug,
   isPublished,
 }: ProductActionsMenuProps) {
+  const router = useRouter();
+  const toast = useToast();
   const [open, setOpen] = useState(false);
   const [confirming, setConfirming] = useState(false);
-  const [feedback, setFeedback] = useState<Feedback>(null);
   const [pending, startTransition] = useTransition();
   const rootRef = useRef<HTMLDivElement>(null);
 
@@ -54,25 +55,27 @@ export default function ProductActionsMenu({
   async function copyLink() {
     try {
       await navigator.clipboard.writeText(publicUrl);
-      setFeedback({ kind: "ok", text: "Link copied" });
+      toast.success("Link copied");
     } catch {
-      setFeedback({ kind: "error", text: "Couldn't copy — copy it manually." });
+      toast.error("Couldn't copy the link — copy it from the address bar.");
     }
     setOpen(false);
-    window.setTimeout(() => setFeedback(null), 2200);
   }
 
   function confirmDelete() {
     startTransition(async () => {
       const result = await deleteProduct({ productId });
       if (!result.ok) {
-        setFeedback({ kind: "error", text: result.error ?? "Couldn't delete." });
+        toast.error(result.error ?? "Couldn't delete.");
         setConfirming(false);
         setOpen(false);
         return;
       }
-      // The server action revalidates /dashboard/shop; the row disappears.
+      toast.success("Product deleted");
       setOpen(false);
+      // revalidatePath alone does not repaint this client tree — without the
+      // refresh the deleted card stays on screen and delete looks broken.
+      router.refresh();
     });
   }
 
@@ -95,20 +98,6 @@ export default function ProductActionsMenu({
           <circle cx="16" cy="10" r="1.6" />
         </svg>
       </button>
-
-      {feedback && (
-        <p
-          role="status"
-          className={[
-            "absolute right-0 top-11 z-20 whitespace-nowrap rounded-full px-3 py-1.5 text-[12px] font-semibold shadow-[0_8px_24px_-12px_rgba(14,15,12,0.4)]",
-            feedback.kind === "ok"
-              ? "bg-[#163300] text-white"
-              : "bg-[#fde2df] text-[#a3221a]",
-          ].join(" ")}
-        >
-          {feedback.text}
-        </p>
-      )}
 
       {open && (
         <div

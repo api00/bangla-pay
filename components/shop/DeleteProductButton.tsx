@@ -1,8 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 import { deleteProduct } from "@/app/dashboard/shop/_actions/delete-product";
+import { useToast } from "@/components/ui/Toast";
 
 interface DeleteProductButtonProps {
   productId: string;
@@ -11,6 +13,8 @@ interface DeleteProductButtonProps {
 export default function DeleteProductButton({
   productId,
 }: DeleteProductButtonProps) {
+  const router = useRouter();
+  const toast = useToast();
   const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
@@ -19,10 +23,15 @@ export default function DeleteProductButton({
     setError(null);
     startTransition(async () => {
       const result = await deleteProduct({ productId });
-      if (result && !result.ok) {
-        setError(result.error ?? "Couldn't delete.");
+      if (!result.ok) {
+        const message = result.error ?? "Couldn't delete.";
+        setError(message);
+        toast.error(message);
         setConfirming(false);
+        return;
       }
+      toast.success("Product deleted");
+      router.push("/dashboard/shop");
     });
   }
 

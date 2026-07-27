@@ -197,7 +197,10 @@ function LibraryAccess({
         <iframe
           src={accessHref}
           title={`Read ${filename}`}
-          sandbox="allow-same-origin"
+          // Chrome refuses to start its PDF viewer inside a sandboxed frame
+          // without allow-scripts and blocks the frame outright. Downloads and
+          // popups remain disallowed, so view-only still cannot save the file.
+          sandbox="allow-same-origin allow-scripts"
           className="h-[70vh] min-h-[520px] w-full bg-[#e8ebe6]"
         />
       </div>

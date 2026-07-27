@@ -9,6 +9,7 @@ import {
 
 import { deleteProductFile } from "@/app/dashboard/shop/_actions/delete-file";
 import { registerProductFile } from "@/app/dashboard/shop/_actions/register-file";
+import { useToast } from "@/components/ui/Toast";
 import { signProductFileUpload } from "@/app/dashboard/shop/_actions/upload-file";
 import type { ProductFile } from "@/db/schema";
 import {
@@ -41,10 +42,23 @@ export default function FileUploader({
   deliveryMode,
 }: FileUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const toast = useToast();
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [uploading, setUploading] = useState<string | null>(null);
   const [, startTransition] = useTransition();
+
+  // Files attached during this session. The wizard renders before any server
+  // round-trip, so without this an upload would leave the list looking empty.
+  const [added, setAdded] = useState<ProductFile[]>([]);
+  const [removedIds, setRemovedIds] = useState<string[]>([]);
+
+  const visibleFiles = [
+    ...initialFiles,
+    ...added.filter(
+      (extra) => !initialFiles.some((file) => file.id === extra.id),
+    ),
+  ].filter((file) => !removedIds.includes(file.id));
 
   async function handlePick(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -68,6 +82,7 @@ export default function FileUploader({
     });
     if (validationError) {
       setError(validationError);
+      toast.error(validationError);
       return;
     }
 
@@ -103,8 +118,12 @@ export default function FileUploader({
         sizeBytes: file.size,
       });
       if (!result.ok) throw new Error(result.error ?? "Couldn't save file.");
+      if (result.file) setAdded((prev) => [...prev, result.file as ProductFile]);
+      toast.success(`${file.name} added`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Upload failed.");
+      const message = err instanceof Error ? err.message : "Upload failed.";
+      setError(message);
+      toast.error(message);
     } finally {
       setUploading(null);
     }
@@ -116,13 +135,20 @@ export default function FileUploader({
     startTransition(async () => {
       const result = await deleteProductFile({ fileId });
       if (!result.ok) {
-        setError(result.error ?? "Couldn't remove file.");
+        const message = result.error ?? "Couldn't remove file.";
+        setError(message);
+        toast.error(message);
         return;
       }
+      setRemovedIds((prev) => [...prev, fileId]);
+      setAdded((prev) => prev.filter((file) => file.id !== fileId));
       if (result.unpublished) {
-        setNotice(
-          "Product moved to draft because every published product needs a downloadable file.",
-        );
+        const message =
+          "Product moved to draft — a published product needs at least one file.";
+        setNotice(message);
+        toast.info(message);
+      } else {
+        toast.success("File removed");
       }
     });
   }
@@ -182,9 +208,9 @@ export default function FileUploader({
         )}
       </div>
 
-      {initialFiles.length > 0 && (
+      {visibleFiles.length > 0 && (
         <ul className="space-y-2">
-          {initialFiles.map((file) => (
+          {visibleFiles.map((file) => (
             <li
               key={file.id}
               className="flex items-center gap-3 px-4 py-3 rounded-xl border border-[rgba(14,15,12,0.06)] bg-white"

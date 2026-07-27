@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
 import { getProductById } from "@/db/queries/products";
-import { productFiles } from "@/db/schema";
+import { productFiles, type ProductFile } from "@/db/schema";
 import {
   MAX_PRODUCT_FILENAME_LENGTH,
   validateDeliveryFile,
@@ -24,7 +24,7 @@ export interface RegisterFileInput {
 /** Called after the browser successfully PUT the file to Storage. */
 export async function registerProductFile(
   input: RegisterFileInput,
-): Promise<{ ok: boolean; error?: string }> {
+): Promise<{ ok: boolean; error?: string; file?: ProductFile }> {
   const creator = await requireCreator();
   const product = await getProductById(input.productId, creator.id);
   if (!product) return { ok: false, error: "Product not found." };
@@ -65,19 +65,26 @@ export async function registerProductFile(
     return { ok: false, error: validationError };
   }
 
+  let created;
   try {
-    await db.insert(productFiles).values({
-      productId: product.id,
-      storagePath: input.storagePath,
-      filename,
-      mimeType,
-      sizeBytes: input.sizeBytes,
-    });
+    // Return the row so the uploader can show the file immediately, without
+    // waiting on a server round-trip that the wizard never makes.
+    const [row] = await db
+      .insert(productFiles)
+      .values({
+        productId: product.id,
+        storagePath: input.storagePath,
+        filename,
+        mimeType,
+        sizeBytes: input.sizeBytes,
+      })
+      .returning();
+    created = row;
   } catch {
     await removeStorageObject(input.storagePath);
     return { ok: false, error: "Couldn't save the uploaded file." };
   }
 
   revalidatePath(`/dashboard/shop/${product.id}/edit`);
-  return { ok: true };
+  return { ok: true, file: created };
 }
