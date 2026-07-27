@@ -1,4 +1,4 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, inArray, or, sql } from "drizzle-orm";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { db } from "@/db";
@@ -9,6 +9,7 @@ import {
   orders,
 } from "@/db/schema";
 import { createMediaToken } from "@/lib/media-access";
+import { readOrderGrants } from "@/lib/order-grants";
 import { createClient } from "@/utils/supabase/server";
 
 export const dynamic = "force-dynamic";
@@ -22,16 +23,27 @@ export async function GET(
   context: { params: Promise<Params> },
 ) {
   const { downloadId } = await context.params;
+  // Authorized either by a browser grant from this checkout, or by being
+  // signed in with the email used at checkout. Same rule as the library page.
+  const grants = await readOrderGrants();
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user?.email) {
+  if (!user?.email && grants.length === 0) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("next", request.nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
   }
+
+  const ownership = [];
+  if (user?.email) {
+    ownership.push(
+      sql`lower(${orders.supporterEmail}) = ${user.email.toLowerCase()}`,
+    );
+  }
+  if (grants.length > 0) ownership.push(inArray(orders.id, grants));
 
   const [entitlement] = await db
     .select({ id: orderDownloads.id })
@@ -42,7 +54,7 @@ export async function GET(
       and(
         eq(orderDownloads.id, downloadId),
         eq(orders.status, "paid"),
-        sql`lower(${orders.supporterEmail}) = ${user.email.toLowerCase()}`,
+        or(...ownership),
       ),
     )
     .limit(1);

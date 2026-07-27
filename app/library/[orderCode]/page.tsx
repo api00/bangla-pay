@@ -3,9 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { db } from "@/db";
-import { getOrderForBuyer } from "@/db/queries/orders";
+import { getPaidOrderByCode } from "@/db/queries/orders";
 import { creators } from "@/db/schema";
 import { requireLibraryUser } from "@/lib/auth";
+import { hasOrderGrant } from "@/lib/order-grants";
 import { formatTaka } from "@/lib/money";
 import { getDeliveryMode } from "@/lib/product-catalog";
 
@@ -23,11 +24,25 @@ const DATE_FORMAT = new Intl.DateTimeFormat("en-BD", {
 export default async function OrderLibraryPage({ params }: PageProps) {
   const { orderCode } = await params;
   const nextPath = `/library/${encodeURIComponent(orderCode)}`;
-  const user = await requireLibraryUser(nextPath);
-  if (!user.email) notFound();
 
-  const detail = await getOrderForBuyer(orderCode, user.email);
+  // Two ways in, checked before any sign-in wall:
+  //  1. this browser completed the checkout (cookie grant), or
+  //  2. the visitor is signed in with the email used at checkout.
+  // Without (1) a buyer who typed an email they cannot log in as would be
+  // permanently locked out of something they already paid for.
+  const detail = await getPaidOrderByCode(orderCode);
   if (!detail) notFound();
+
+  const granted = await hasOrderGrant(detail.order.id);
+
+  if (!granted) {
+    const user = await requireLibraryUser(nextPath);
+    const email = user.email?.trim().toLowerCase();
+    if (email !== detail.order.supporterEmail.trim().toLowerCase()) {
+      return <WrongAccount orderEmail={detail.order.supporterEmail} />;
+    }
+  }
+
   const { order, items, downloads } = detail;
 
   const [creator] = await db
@@ -227,5 +242,55 @@ function LibraryAccess({
         Download file
       </Link>
     </div>
+  );
+}
+
+/**
+ * Shown when someone is signed in as a different account than the one used at
+ * checkout. Deliberately not a 404: the order is real, the visitor simply
+ * needs the right identity. The email is masked so an order code alone never
+ * discloses a buyer's full address.
+ */
+function maskEmail(email: string): string {
+  const [local = "", domain = ""] = email.split("@");
+  const head = local.slice(0, 2);
+  return `${head}${"•".repeat(Math.max(local.length - 2, 1))}@${domain}`;
+}
+
+function WrongAccount({ orderEmail }: { orderEmail: string }) {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-[#f7f9f5] px-5 py-10 sm:px-6">
+      <div className="w-full max-w-[460px] space-y-5 text-center">
+        <h1
+          className="display text-[30px] text-[#0e0f0c] sm:text-[38px]"
+          style={{ lineHeight: 1.05, fontWeight: 700 }}
+        >
+          Signed in as the wrong account.
+        </h1>
+        <p className="text-[15px] leading-[1.6] text-[#454745]">
+          This purchase belongs to{" "}
+          <span className="font-semibold text-[#0e0f0c]">
+            {maskEmail(orderEmail)}
+          </span>
+          . Sign in with that email to open it.
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
+          <form action="/auth/signout" method="post">
+            <button
+              type="submit"
+              className="inline-flex h-12 items-center justify-center rounded-full bg-[#0e0f0c] px-6 text-[14px] font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] motion-reduce:transform-none"
+            >
+              Switch account
+            </button>
+          </form>
+          <Link
+            href="/library"
+            className="inline-flex h-12 items-center justify-center rounded-full border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-5 text-[14px] font-semibold text-[#0e0f0c] transition-colors hover:border-[#0e0f0c]"
+          >
+            Your library
+          </Link>
+        </div>
+      </div>
+    </main>
   );
 }

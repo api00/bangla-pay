@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-import { listOrdersForBuyer } from "@/db/queries/orders";
-import { requireLibraryUser } from "@/lib/auth";
+import { listOrdersForBuyerOrGrants } from "@/db/queries/orders";
+import { getAuthedUserOptional } from "@/lib/auth";
+import { readOrderGrants } from "@/lib/order-grants";
 import { formatTaka } from "@/lib/money";
 
 export const dynamic = "force-dynamic";
@@ -15,9 +17,17 @@ const DATE_FORMAT = new Intl.DateTimeFormat("en-BD", {
 });
 
 export default async function LibraryPage() {
-  const user = await requireLibraryUser("/library");
-  const email = user.email?.trim().toLowerCase();
-  const orders = email ? await listOrdersForBuyer(email) : [];
+  // A guest buyer has no account, so this page must work from browser grants
+  // alone. Only send someone to sign in when there is nothing to show at all.
+  const grants = await readOrderGrants();
+  const user = await getAuthedUserOptional();
+  const email = user?.email?.trim().toLowerCase() ?? null;
+
+  if (!email && grants.length === 0) {
+    redirect(`/login?next=${encodeURIComponent("/library")}`);
+  }
+
+  const orders = await listOrdersForBuyerOrGrants(email, grants);
 
   return (
     <main className="min-h-screen bg-[#f7f9f5]">

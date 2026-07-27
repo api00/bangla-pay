@@ -1,4 +1,4 @@
-import { and, eq, isNull, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, or, sql } from "drizzle-orm";
 import { type NextRequest } from "next/server";
 
 import { db } from "@/db";
@@ -12,6 +12,7 @@ import {
   products,
 } from "@/db/schema";
 import { hashMediaToken } from "@/lib/media-access";
+import { readOrderGrants } from "@/lib/order-grants";
 import { signedProductFileAccess } from "@/lib/storage/signed-urls";
 import { createClient } from "@/utils/supabase/server";
 
@@ -29,11 +30,22 @@ export async function GET(
   const { token } = await context.params;
   if (!token) return textResponse("Invalid access token.", 400);
 
+  const grants = await readOrderGrants();
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user?.email) return textResponse("Sign in to access this product.", 401);
+  if (!user?.email && grants.length === 0) {
+    return textResponse("Sign in to access this product.", 401);
+  }
+
+  const ownership = [];
+  if (user?.email) {
+    ownership.push(
+      sql`lower(${orders.supporterEmail}) = ${user.email.toLowerCase()}`,
+    );
+  }
+  if (grants.length > 0) ownership.push(inArray(orders.id, grants));
 
   const [access] = await db
     .select({
@@ -63,7 +75,7 @@ export async function GET(
       and(
         eq(mediaAccessTokens.tokenHash, hashMediaToken(token)),
         eq(orders.status, "paid"),
-        sql`lower(${orders.supporterEmail}) = ${user.email.toLowerCase()}`,
+        or(...ownership),
       ),
     )
     .limit(1);

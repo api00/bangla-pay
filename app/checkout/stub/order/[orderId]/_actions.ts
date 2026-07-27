@@ -15,6 +15,7 @@ import {
   products,
 } from "@/db/schema";
 import { shortId } from "@/lib/ids";
+import { grantOrderAccess } from "@/lib/order-grants";
 
 interface ActionInput {
   orderId: string;
@@ -35,6 +36,7 @@ export async function markOrderPaid({ orderId }: ActionInput): Promise<void> {
   if (!orderRow) redirect("/");
 
   if (orderRow.status === "paid") {
+    await grantOrderAccess(orderRow.id);
     redirect(`/library/${orderRow.orderCode}`);
   }
   if (orderRow.status !== "pending") redirect("/");
@@ -110,6 +112,10 @@ export async function markOrderPaid({ orderId }: ActionInput): Promise<void> {
     revalidatePath("/dashboard/orders");
     revalidatePath("/dashboard");
   }
+
+  // The buyer typed an email that may not match any account — this cookie is
+  // what lets them open the purchase immediately instead of hitting a wall.
+  await grantOrderAccess(orderRow.id);
 
   redirect(`/library/${orderRow.orderCode}`);
 }

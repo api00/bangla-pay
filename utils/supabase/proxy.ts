@@ -13,10 +13,17 @@ const AUTH_ROUTES = ["/login", "/signup"];
 
 const PATHNAME_HEADER = "x-banglapay-pathname";
 
+// Set when a browser completes a checkout. See lib/order-grants.ts.
+const ORDER_GRANT_COOKIE = "bp_order_grants";
+
 function isProtected(pathname: string): boolean {
   return PROTECTED_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
+}
+
+function isLibrary(pathname: string): boolean {
+  return pathname === "/library" || pathname.startsWith("/library/");
 }
 
 function isAuthRoute(pathname: string): boolean {
@@ -87,7 +94,14 @@ export async function updateSession(request: NextRequest) {
 
   const { pathname, search } = request.nextUrl;
 
-  if (!user && isProtected(pathname)) {
+  // A supporter can buy without ever creating an account, so /library must stay
+  // reachable for a guest holding a checkout grant. Presence of the cookie is
+  // enough here — this gate is optimistic by design. The signature is verified
+  // authoritatively in the page and the download routes, which fall back to the
+  // sign-in wall when it does not check out.
+  const hasOrderGrant = Boolean(request.cookies.get(ORDER_GRANT_COOKIE)?.value);
+
+  if (!user && isProtected(pathname) && !(isLibrary(pathname) && hasOrderGrant)) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = "/login";
     loginUrl.search = `?next=${encodeURIComponent(pathname + search)}`;

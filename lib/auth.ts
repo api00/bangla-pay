@@ -89,6 +89,25 @@ export const requireUser = cache(async (): Promise<User> => {
   return user;
 });
 
+/**
+ * Current Supabase user, or null. Never redirects.
+ *
+ * For buyer-facing surfaces that must also serve guests — a supporter can pay
+ * without ever creating an account, so those pages authorize by browser grant
+ * instead and only fall back to identity when one exists.
+ */
+export const getAuthedUserOptional = cache(async (): Promise<User | null> => {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    return user ?? null;
+  } catch {
+    return null;
+  }
+});
+
 /** Require login while preserving the buyer's exact private-library route. */
 export async function requireLibraryUser(nextPath: string): Promise<User> {
   const supabase = await createClient();

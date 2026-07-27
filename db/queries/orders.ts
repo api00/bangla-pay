@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, or, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import {
@@ -94,6 +94,51 @@ export async function listOrdersForBuyer(
         sql`lower(${orders.supporterEmail}) = ${buyerEmail.toLowerCase()}`,
       ),
     )
+    .orderBy(desc(orders.paidAt), desc(orders.createdAt))
+    .limit(limit);
+}
+
+/**
+ * Paid order by code, with NO buyer check.
+ *
+ * The caller must authorize — either a matching signed-in email or a browser
+ * grant from lib/order-grants. Never expose this result directly.
+ */
+export async function getPaidOrderByCode(
+  orderCode: string,
+): Promise<OrderDetail | null> {
+  const rows = await db
+    .select()
+    .from(orders)
+    .where(and(eq(orders.orderCode, orderCode), eq(orders.status, "paid")))
+    .limit(1);
+  const order = rows[0];
+  if (!order) return null;
+  return loadOrderDetail(order);
+}
+
+/** Paid orders for a signed-in email plus any granted to this browser. */
+export async function listOrdersForBuyerOrGrants(
+  buyerEmail: string | null,
+  grantedOrderIds: string[],
+  limit = 50,
+): Promise<Order[]> {
+  if (!buyerEmail && grantedOrderIds.length === 0) return [];
+
+  const clauses = [];
+  if (buyerEmail) {
+    clauses.push(
+      sql`lower(${orders.supporterEmail}) = ${buyerEmail.toLowerCase()}`,
+    );
+  }
+  if (grantedOrderIds.length > 0) {
+    clauses.push(inArray(orders.id, grantedOrderIds));
+  }
+
+  return db
+    .select()
+    .from(orders)
+    .where(and(eq(orders.status, "paid"), or(...clauses)))
     .orderBy(desc(orders.paidAt), desc(orders.createdAt))
     .limit(limit);
 }
