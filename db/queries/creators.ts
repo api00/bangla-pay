@@ -1,9 +1,15 @@
 import "server-only";
 
-import { eq } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull, ne, or, sql } from "drizzle-orm";
 
 import { db } from "@/db";
-import { creators, type Creator } from "@/db/schema";
+import {
+  creatorPages,
+  creators,
+  products,
+  tips,
+  type Creator,
+} from "@/db/schema";
 
 /** Fetch creator by their Supabase auth user id. Returns `null` if not onboarded. */
 export async function getCreatorByUserId(
@@ -37,4 +43,76 @@ export async function handleIsTaken(handle: string): Promise<boolean> {
     .where(eq(creators.handle, handle))
     .limit(1);
   return rows.length > 0;
+}
+
+export interface DirectoryCreator {
+  handle: string;
+  displayName: string;
+  category: Creator["category"];
+  bio: string | null;
+  avatarUrl: string | null;
+  themeColor: string;
+  liveProducts: number;
+  supporters: number;
+}
+
+/**
+ * Creators shown in the public directory.
+ *
+ * Deliberately not "everyone who signed up": a creator appears once they have
+ * a bio or an avatar. An empty card is worse than no card, and a directory of
+ * blank placeholders makes the whole platform look abandoned. Finishing a
+ * profile is what earns the listing.
+ *
+ * Ordered by the creators who have actually shipped something, so the top of
+ * the page is always the strongest example of what BanglaPay is for.
+ */
+export async function listDirectoryCreators(
+  limit = 60,
+  category?: Creator["category"],
+): Promise<DirectoryCreator[]> {
+  const liveProducts = sql<number>`(
+    select count(*)::int from ${products}
+    where ${products.creatorId} = ${creators.id}
+      and ${products.isPublished} = true
+  )`;
+  const supporters = sql<number>`(
+    select count(distinct ${tips.supporterEmail})::int from ${tips}
+    where ${tips.creatorId} = ${creators.id}
+      and ${tips.status} = 'succeeded'
+  )`;
+
+  const rows = await db
+    .select({
+      handle: creators.handle,
+      displayName: creators.displayName,
+      category: creators.category,
+      bio: creatorPages.bio,
+      avatarUrl: creatorPages.avatarUrl,
+      themeColor: creatorPages.themeColor,
+      liveProducts,
+      supporters,
+    })
+    .from(creators)
+    .innerJoin(creatorPages, eq(creatorPages.creatorId, creators.id))
+    .where(
+      and(
+        eq(creators.onboardingStep, "done"),
+        category ? eq(creators.category, category) : undefined,
+        // "Ready" = has something to show.
+        or(
+          and(isNotNull(creatorPages.bio), ne(creatorPages.bio, "")),
+          isNotNull(creatorPages.avatarUrl),
+        ),
+      ),
+    )
+    .orderBy(desc(liveProducts), desc(supporters), asc(creators.createdAt))
+    .limit(limit);
+
+  return rows.map((row) => ({
+    ...row,
+    themeColor: row.themeColor ?? "#9fe870",
+    liveProducts: Number(row.liveProducts ?? 0),
+    supporters: Number(row.supporters ?? 0),
+  }));
 }
