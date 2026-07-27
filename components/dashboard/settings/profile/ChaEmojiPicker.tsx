@@ -87,7 +87,7 @@ export default function ChaEmojiPicker({
       <input type="hidden" name={name} value={value} />
 
       {/* Selected preview header */}
-      <div className="flex items-center gap-4 px-5 py-4 bg-[#f7f9f5] border-b border-[rgba(14,15,12,0.05)]">
+      <div className="flex items-center gap-4 px-5 py-4 bg-off-white border-b border-[rgba(14,15,12,0.05)]">
         <div
           aria-hidden
           className="w-14 h-14 rounded-2xl bg-white border border-[rgba(14,15,12,0.06)] flex items-center justify-center text-[30px] shadow-[0_1px_0_0_rgba(14,15,12,0.04)]"
@@ -95,10 +95,10 @@ export default function ChaEmojiPicker({
           {value}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#868685]">
+          <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray">
             Currently using
           </div>
-          <div className="text-[14px] font-semibold text-[#0e0f0c] truncate mt-0.5">
+          <div className="text-[14px] font-semibold text-near-black truncate mt-0.5">
             {isCurated(value)
               ? CATEGORIES[findCategoryIndexFor(value)].label
               : "Custom emoji"}
@@ -125,8 +125,8 @@ export default function ChaEmojiPicker({
               className={[
                 "shrink-0 h-8 px-3.5 rounded-full text-[12px] font-semibold transition-colors whitespace-nowrap",
                 isActive
-                  ? "bg-[#9fe870] text-[#163300] shadow-[0_1px_0_0_rgba(22,51,0,0.12)]"
-                  : "text-[#454745] hover:bg-[#f2f6ec] hover:text-[#163300]",
+                  ? "bg-wise-green text-dark-green shadow-[0_1px_0_0_rgba(22,51,0,0.12)]"
+                  : "text-warm-dark hover:bg-mint-surface hover:text-dark-green",
               ].join(" ")}
             >
               {cat.label}
@@ -152,8 +152,8 @@ export default function ChaEmojiPicker({
               className={[
                 "w-full aspect-square rounded-xl text-[22px] flex items-center justify-center transition-all",
                 isActive
-                  ? "bg-[#e2f6d5] ring-2 ring-[#9fe870] ring-offset-2 ring-offset-white scale-[1.06]"
-                  : "bg-[#f7f9f5] hover:bg-[#e2f6d5] hover:scale-[1.06]",
+                  ? "bg-light-mint ring-2 ring-wise-green ring-offset-2 ring-offset-white scale-[1.06]"
+                  : "bg-off-white hover:bg-light-mint hover:scale-[1.06]",
               ].join(" ")}
             >
               {emoji}
@@ -163,12 +163,12 @@ export default function ChaEmojiPicker({
       </div>
 
       {/* Custom emoji — collapsed by default */}
-      <div className="border-t border-[rgba(14,15,12,0.05)] bg-[#f7f9f5]">
+      <div className="border-t border-[rgba(14,15,12,0.05)] bg-off-white">
         <button
           type="button"
           onClick={() => setShowCustom((s) => !s)}
           aria-expanded={showCustom}
-          className="w-full flex items-center justify-between gap-2 px-5 py-3 text-[12px] font-semibold text-[#454745] hover:text-[#0e0f0c] transition-colors"
+          className="w-full flex items-center justify-between gap-2 px-5 py-3 text-[12px] font-semibold text-warm-dark hover:text-near-black transition-colors"
         >
           <span>Or paste any emoji from your keyboard</span>
           <span
@@ -189,9 +189,9 @@ export default function ChaEmojiPicker({
               onChange={onCustomChange}
               placeholder="🦋"
               maxLength={4}
-              className="w-full h-11 px-3 rounded-xl border border-[rgba(14,15,12,0.1)] bg-white text-[18px] font-medium text-[#0e0f0c] placeholder:text-[#c8c8c7] outline-none focus:border-[#163300] transition-colors text-center"
+              className="w-full h-11 px-3 rounded-xl border border-[rgba(14,15,12,0.1)] bg-white text-[18px] font-medium text-near-black placeholder:text-gray-light outline-none focus:border-dark-green transition-colors text-center"
             />
-            <p className="text-[11px] text-[#868685] mt-1.5 leading-[1.4]">
+            <p className="text-[11px] text-gray mt-1.5 leading-[1.4]">
               e.g. 🦋, 🪕, 🥟. Up to 4 characters.
             </p>
           </div>

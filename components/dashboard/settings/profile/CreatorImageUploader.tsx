@@ -99,7 +99,7 @@ export default function CreatorImageUploader({
 
   return (
     <div>
-      <label className="block text-[12px] font-semibold uppercase tracking-[0.16em] text-[#454745] mb-2">
+      <label className="block text-[12px] font-semibold uppercase tracking-[0.16em] text-warm-dark mb-2">
         {label}
       </label>
 
@@ -109,10 +109,10 @@ export default function CreatorImageUploader({
           <img
             src={previewUrl}
             alt=""
-            className={`w-full ${previewMaxWidth} ${aspect} ${rounded} object-cover border border-[rgba(14,15,12,0.06)] bg-[#f2f6ec]`}
+            className={`w-full ${previewMaxWidth} ${aspect} ${rounded} object-cover border border-[rgba(14,15,12,0.06)] bg-mint-surface`}
           />
           <div className="flex items-center gap-2 flex-wrap">
-            <label className="inline-flex items-center justify-center h-9 px-4 rounded-full bg-[#163300] text-white text-[13px] font-semibold cursor-pointer hover:bg-[#054d28] transition-colors">
+            <label className="inline-flex items-center justify-center h-9 px-4 rounded-full bg-dark-green text-white text-[13px] font-semibold cursor-pointer hover:bg-positive transition-colors">
               {uploading ? "Uploading…" : "Replace"}
               <input
                 ref={inputRef}
@@ -127,19 +127,19 @@ export default function CreatorImageUploader({
               type="button"
               onClick={removeImage}
               disabled={uploading}
-              className="inline-flex items-center justify-center h-9 px-4 rounded-full border border-[rgba(14,15,12,0.12)] bg-white text-[#454745] text-[13px] font-semibold hover:border-[#a3221a] hover:text-[#a3221a] transition-colors disabled:opacity-50"
+              className="inline-flex items-center justify-center h-9 px-4 rounded-full border border-[rgba(14,15,12,0.12)] bg-white text-warm-dark text-[13px] font-semibold hover:border-heritage-red-ink hover:text-heritage-red-ink transition-colors disabled:opacity-50"
             >
               Remove
             </button>
-            <span className="text-[12px] text-[#163300] font-semibold ml-1">
+            <span className="text-[12px] text-dark-green font-semibold ml-1">
               ✓ Saved
             </span>
           </div>
         </div>
       ) : (
         <div className="rounded-2xl border-[1.5px] border-dashed border-[rgba(14,15,12,0.14)] bg-white px-5 py-5 flex items-center justify-between gap-4 flex-wrap">
-          <div className="text-[13px] text-[#454745] leading-[1.5]">{hint}</div>
-          <label className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-[#163300] text-white text-[13px] font-semibold cursor-pointer hover:bg-[#054d28] transition-colors">
+          <div className="text-[13px] text-warm-dark leading-[1.5]">{hint}</div>
+          <label className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-dark-green text-white text-[13px] font-semibold cursor-pointer hover:bg-positive transition-colors">
             {uploading ? "Uploading…" : "Upload image"}
             <input
               ref={inputRef}
@@ -154,7 +154,7 @@ export default function CreatorImageUploader({
       )}
 
       {error && (
-        <p className="mt-2 text-[12px] font-medium text-[#a3221a]">{error}</p>
+        <p className="mt-2 text-[12px] font-medium text-heritage-red-ink">{error}</p>
       )}
     </div>
   );

@@ -53,16 +53,16 @@ export default async function CreatorsDirectoryPage({
       <main className="bg-white">
         <section className="mx-auto max-w-[1120px] px-5 pb-16 pt-12 sm:px-6 md:pt-16">
           <header className="max-w-[640px]">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#868685]">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-gray">
               Discover
             </p>
             <h1
-              className="display mt-3 text-[38px] text-[#0e0f0c] sm:text-[54px]"
+              className="display mt-3 text-[38px] text-near-black sm:text-[54px]"
               style={{ lineHeight: 0.95, fontWeight: 900 }}
             >
               Creators worth backing.
             </h1>
-            <p className="mt-4 text-[16px] leading-[1.6] text-[#454745]">
+            <p className="mt-4 text-[16px] leading-[1.6] text-warm-dark">
               Bangladeshi writers, musicians, illustrators and educators. Send a
               cha in taka, or buy something they made.
             </p>
@@ -82,10 +82,10 @@ export default async function CreatorsDirectoryPage({
                   }
                   aria-current={active ? "page" : undefined}
                   className={[
-                    "inline-flex min-h-10 items-center rounded-full px-4 text-[13px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]",
+                    "inline-flex min-h-10 items-center rounded-full px-4 text-[13px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-green",
                     active
-                      ? "bg-[#163300] text-white"
-                      : "border border-[rgba(14,15,12,0.12)] bg-white text-[#454745] hover:border-[#0e0f0c] hover:text-[#0e0f0c]",
+                      ? "bg-dark-green text-white"
+                      : "border border-[rgba(14,15,12,0.12)] bg-white text-warm-dark hover:border-near-black hover:text-near-black",
                   ].join(" ")}
                 >
                   {filter.label}
@@ -95,18 +95,18 @@ export default async function CreatorsDirectoryPage({
           </nav>
 
           {creators.length === 0 ? (
-            <div className="mt-10 rounded-3xl border border-dashed border-[rgba(14,15,12,0.14)] bg-[#f7f9f5] px-8 py-14 text-center">
-              <p className="text-[17px] font-semibold text-[#0e0f0c]">
+            <div className="mt-10 rounded-3xl border border-dashed border-[rgba(14,15,12,0.14)] bg-off-white px-8 py-14 text-center">
+              <p className="text-[17px] font-semibold text-near-black">
                 No creators here yet.
               </p>
-              <p className="mx-auto mt-2 max-w-[420px] text-[14px] leading-[1.6] text-[#454745]">
+              <p className="mx-auto mt-2 max-w-[420px] text-[14px] leading-[1.6] text-warm-dark">
                 {category
                   ? "Nobody in this category has published a page yet. Try another one."
                   : "Be the first — claim your handle and start collecting cha."}
               </p>
               <Link
                 href={category ? "/creators" : "/signup"}
-                className="mt-6 inline-flex h-12 items-center justify-center rounded-full bg-[#9fe870] px-6 text-[14px] font-semibold text-[#163300] transition-transform hover:scale-[1.02] active:scale-[0.98] motion-reduce:transform-none"
+                className="mt-6 inline-flex h-12 items-center justify-center rounded-full bg-wise-green px-6 text-[14px] font-semibold text-dark-green transition-transform hover:scale-[1.02] active:scale-[0.98] motion-reduce:transform-none"
               >
                 {category ? "See all creators" : "Create your page"}
               </Link>

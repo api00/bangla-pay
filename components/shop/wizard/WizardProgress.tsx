@@ -40,14 +40,14 @@ export default function WizardProgress({
                     className={[
                       "inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold transition-colors",
                       isCurrent
-                        ? "bg-[#163300] text-white"
+                        ? "bg-dark-green text-white"
                         : isDone
-                          ? "bg-[#9fe870] text-[#163300]"
-                          : "bg-[#e8ebe6] text-[#868685]",
+                          ? "bg-wise-green text-dark-green"
+                          : "bg-light-surface text-gray",
                       canJump
                         ? "cursor-pointer hover:opacity-90"
                         : "cursor-default",
-                      "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]",
+                      "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-green",
                     ].join(" ")}
                   >
                     {isDone ? (
@@ -79,7 +79,7 @@ export default function WizardProgress({
                       aria-hidden
                       className={[
                         "hidden h-[2px] flex-1 rounded-full sm:block",
-                        step.id < current ? "bg-[#9fe870]" : "bg-[#e8ebe6]",
+                        step.id < current ? "bg-wise-green" : "bg-light-surface",
                       ].join(" ")}
                     />
                   )}
@@ -89,12 +89,12 @@ export default function WizardProgress({
                   <p
                     className={[
                       "truncate text-[13px] font-semibold",
-                      isCurrent ? "text-[#0e0f0c]" : "text-[#868685]",
+                      isCurrent ? "text-near-black" : "text-gray",
                     ].join(" ")}
                   >
                     {step.label}
                   </p>
-                  <p className="hidden truncate text-[12px] text-[#868685] sm:block">
+                  <p className="hidden truncate text-[12px] text-gray sm:block">
                     {step.hint}
                   </p>
                 </div>

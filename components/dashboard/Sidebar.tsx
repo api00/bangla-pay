@@ -54,12 +54,12 @@ function NavLink({
       rel={item.external ? "noreferrer" : undefined}
       className={`group flex items-center gap-3 px-3 py-2 rounded-xl text-[14px] font-semibold transition-colors ${
         active
-          ? "bg-[#f2f6ec] text-[#0e0f0c]"
-          : "text-[#454745] hover:bg-[#f7f9f5] hover:text-[#0e0f0c]"
+          ? "bg-mint-surface text-near-black"
+          : "text-warm-dark hover:bg-off-white hover:text-near-black"
       }`}
     >
       <span
-        className={`${active ? "text-[#163300]" : "text-[#454745]"} shrink-0`}
+        className={`${active ? "text-dark-green" : "text-warm-dark"} shrink-0`}
       >
         {item.icon}
       </span>
@@ -68,7 +68,7 @@ function NavLink({
         <ExternalIcon className="opacity-40 group-hover:opacity-70 transition-opacity" />
       )}
       {item.badge && (
-        <span className="text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded-full bg-[#da291c] text-white">
+        <span className="text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded-full bg-heritage-red text-white">
           {item.badge}
         </span>
       )}
@@ -88,7 +88,7 @@ function Section({
   return (
     <div>
       {title && (
-        <div className="px-3 mb-2 text-[10px] font-semibold tracking-[0.2em] uppercase text-[#868685]">
+        <div className="px-3 mb-2 text-[10px] font-semibold tracking-[0.2em] uppercase text-gray">
           {title}
         </div>
       )}
@@ -157,7 +157,7 @@ export default function Sidebar({ user, unreadMessages }: SidebarProps) {
         aria-label="BanglaPay home"
       >
         <span className="display text-xl tracking-tight">banglapay</span>
-        <span className="w-1.5 h-1.5 rounded-full bg-[#9fe870]" aria-hidden />
+        <span className="w-1.5 h-1.5 rounded-full bg-wise-green" aria-hidden />
       </Link>
 
       {/* Nav */}
@@ -170,16 +170,16 @@ export default function Sidebar({ user, unreadMessages }: SidebarProps) {
       {/* Footer — user card + sign out */}
       <div className="border-t border-[rgba(14,15,12,0.06)] p-3 space-y-1">
         <div className="flex items-center gap-3 px-2 py-2 rounded-xl">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#9fe870] to-[#cdffad] flex items-center justify-center shrink-0">
-            <span className="text-[12px] font-semibold text-[#163300] uppercase tabular-nums">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-wise-green to-pastel-green flex items-center justify-center shrink-0">
+            <span className="text-[12px] font-semibold text-dark-green uppercase tabular-nums">
               {user.initials}
             </span>
           </div>
           <div className="min-w-0 text-left flex-1">
-            <div className="text-[13px] font-semibold text-[#0e0f0c] truncate">
+            <div className="text-[13px] font-semibold text-near-black truncate">
               {user.displayName}
             </div>
-            <div className="text-[11px] text-[#868685] truncate">
+            <div className="text-[11px] text-gray truncate">
               {user.email}
             </div>
           </div>
@@ -187,7 +187,7 @@ export default function Sidebar({ user, unreadMessages }: SidebarProps) {
         <form action="/auth/signout" method="post">
           <button
             type="submit"
-            className="w-full px-2 py-2 rounded-xl text-[13px] font-semibold text-[#454745] hover:bg-[#f7f9f5] hover:text-[#da291c] transition-colors text-left"
+            className="w-full px-2 py-2 rounded-xl text-[13px] font-semibold text-warm-dark hover:bg-off-white hover:text-heritage-red transition-colors text-left"
           >
             Sign out
           </button>

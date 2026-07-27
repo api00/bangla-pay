@@ -37,7 +37,7 @@ export default function ProductDeliveryFields({
       <div>
         <label
           htmlFor="category"
-          className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745]"
+          className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark"
         >
           Product category
         </label>
@@ -53,7 +53,7 @@ export default function ProductDeliveryFields({
               setDeliveryMode(getDefaultDeliveryMode(nextCategory));
             }}
             aria-describedby="category-help"
-            className="h-12 w-full appearance-none rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-4 pr-11 text-[16px] font-semibold text-[#0e0f0c] outline-none transition-colors focus-visible:border-[#163300] focus-visible:ring-2 focus-visible:ring-[#9fe870]"
+            className="h-12 w-full appearance-none rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-4 pr-11 text-[16px] font-semibold text-near-black outline-none transition-colors focus-visible:border-dark-green focus-visible:ring-2 focus-visible:ring-wise-green"
           >
             <option value="" disabled>
               Choose a category
@@ -68,7 +68,7 @@ export default function ProductDeliveryFields({
             aria-hidden
             viewBox="0 0 20 20"
             fill="none"
-            className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#454745]"
+            className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-warm-dark"
           >
             <path
               d="m6 8 4 4 4-4"
@@ -81,7 +81,7 @@ export default function ProductDeliveryFields({
         </div>
         <p
           id="category-help"
-          className="mt-2 text-[13px] leading-[1.5] text-[#454745]"
+          className="mt-2 text-[13px] leading-[1.5] text-warm-dark"
         >
           BanglaPay supports e-books, audio, and design or image packs.
         </p>
@@ -90,7 +90,7 @@ export default function ProductDeliveryFields({
       <div>
         <p
           id="delivery-label"
-          className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745]"
+          className="mb-2 block text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark"
         >
           Buyer access
         </p>
@@ -108,7 +108,7 @@ export default function ProductDeliveryFields({
                 className={[
                   "cursor-pointer rounded-2xl border p-4 transition-colors",
                   deliveryMode === mode.value
-                    ? "border-[#163300] bg-[#e2f6d5]"
+                    ? "border-dark-green bg-light-mint"
                     : "border-[rgba(14,15,12,0.12)] bg-white hover:border-[rgba(14,15,12,0.28)]",
                 ].join(" ")}
               >
@@ -119,13 +119,13 @@ export default function ProductDeliveryFields({
                     value={mode.value}
                     checked={deliveryMode === mode.value}
                     onChange={() => setDeliveryMode(mode.value)}
-                    className="mt-0.5 h-5 w-5 shrink-0 accent-[#163300] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
+                    className="mt-0.5 h-5 w-5 shrink-0 accent-dark-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-green"
                   />
                   <span>
-                    <span className="block text-[14px] font-semibold text-[#0e0f0c]">
+                    <span className="block text-[14px] font-semibold text-near-black">
                       {mode.label}
                     </span>
-                    <span className="mt-1 block text-[12px] leading-[1.5] text-[#454745]">
+                    <span className="mt-1 block text-[12px] leading-[1.5] text-warm-dark">
                       {mode.description}
                     </span>
                   </span>
@@ -134,7 +134,7 @@ export default function ProductDeliveryFields({
             ))}
           </div>
         ) : (
-          <p className="rounded-2xl border border-dashed border-[rgba(14,15,12,0.14)] bg-[#f7f9f5] px-4 py-3 text-[13px] text-[#454745]">
+          <p className="rounded-2xl border border-dashed border-[rgba(14,15,12,0.14)] bg-off-white px-4 py-3 text-[13px] text-warm-dark">
             Choose a category to see its safe delivery options.
           </p>
         )}

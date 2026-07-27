@@ -16,7 +16,7 @@ export default function Sparkline({
 }: SparklineProps) {
   if (data.length === 0) {
     return (
-      <div className="h-[64px] rounded-2xl bg-[#f2f6ec] flex items-center justify-center text-[12px] text-[#868685]">
+      <div className="h-[64px] rounded-2xl bg-mint-surface flex items-center justify-center text-[12px] text-gray">
         No activity yet
       </div>
     );
@@ -61,11 +61,11 @@ export default function Sparkline({
           fill="none"
         />
       </svg>
-      <div className="flex items-center justify-between text-[11px] text-[#868685] tabular-nums">
+      <div className="flex items-center justify-between text-[11px] text-gray tabular-nums">
         <span>Last 30 days</span>
         {peak && peak.totalPaisa > 0 && (
           <span>
-            Peak day: <span className="font-semibold text-[#0e0f0c]">{formatTaka(peak.totalPaisa)}</span>
+            Peak day: <span className="font-semibold text-near-black">{formatTaka(peak.totalPaisa)}</span>
           </span>
         )}
       </div>

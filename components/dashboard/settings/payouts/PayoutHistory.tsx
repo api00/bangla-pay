@@ -14,8 +14,8 @@ const STATUS_STYLE: Record<
 > = {
   requested: {
     label: "Requested",
-    bg: "bg-[#fff4d9]",
-    fg: "text-[#7a5b00]",
+    bg: "bg-warning-surface",
+    fg: "text-warning-ink",
   },
   processing: {
     label: "Processing",
@@ -24,13 +24,13 @@ const STATUS_STYLE: Record<
   },
   settled: {
     label: "Settled",
-    bg: "bg-[#e2f6d5]",
-    fg: "text-[#163300]",
+    bg: "bg-light-mint",
+    fg: "text-dark-green",
   },
   failed: {
     label: "Failed",
-    bg: "bg-[#fde2df]",
-    fg: "text-[#a3221a]",
+    bg: "bg-danger-surface",
+    fg: "text-heritage-red-ink",
   },
 };
 
@@ -57,7 +57,7 @@ export default function PayoutHistory({ payouts }: PayoutHistoryProps) {
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-[15px] font-semibold tabular-nums text-[#0e0f0c]">
+                  <span className="text-[15px] font-semibold tabular-nums text-near-black">
                     {formatTaka(p.amountPaisa)}
                   </span>
                   <span
@@ -66,14 +66,14 @@ export default function PayoutHistory({ payouts }: PayoutHistoryProps) {
                     {style.label}
                   </span>
                 </div>
-                <div className="text-[12px] text-[#868685] mt-1 tabular-nums">
+                <div className="text-[12px] text-gray mt-1 tabular-nums">
                   Requested {formatBdtDateTime(p.requestedAt)}
                   {p.settledAt && (
                     <> · Settled {formatBdtDate(p.settledAt)}</>
                   )}
                 </div>
                 {p.failureReason && (
-                  <div className="text-[12px] text-[#a3221a] mt-1">
+                  <div className="text-[12px] text-heritage-red-ink mt-1">
                     {p.failureReason}
                   </div>
                 )}
@@ -89,7 +89,7 @@ export default function PayoutHistory({ payouts }: PayoutHistoryProps) {
                       });
                     }
                   }}
-                  className="text-[13px] font-semibold text-[#454745] hover:text-[#a3221a] h-9 px-3 rounded-full hover:bg-[#fde2df] transition-colors disabled:opacity-50"
+                  className="text-[13px] font-semibold text-warm-dark hover:text-heritage-red-ink h-9 px-3 rounded-full hover:bg-danger-surface transition-colors disabled:opacity-50"
                 >
                   Cancel
                 </button>

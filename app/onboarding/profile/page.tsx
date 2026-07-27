@@ -34,21 +34,21 @@ export default async function OnboardingProfilePage() {
       step="profile"
       title={
         <>
-          Tell supporters who <span className="text-[#163300]">you are</span>.
+          Tell supporters who <span className="text-dark-green">you are</span>.
         </>
       }
       subtitle="A short, friendly profile makes the difference between a tip and a scroll."
       aside={
         <div>
-          <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#868685] mb-4">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-gray mb-4">
             Your page so far
           </p>
           <div className="rounded-2xl border border-[rgba(14,15,12,0.08)] bg-white p-5">
-            <p className="text-[12px] text-[#868685]">{SITE_HOST}</p>
-            <p className="text-[20px] font-semibold text-[#0e0f0c]">
+            <p className="text-[12px] text-gray">{SITE_HOST}</p>
+            <p className="text-[20px] font-semibold text-near-black">
               /{creator.handle}
             </p>
-            <p className="mt-3 text-[14px] text-[#454745] leading-[1.5]">
+            <p className="mt-3 text-[14px] text-warm-dark leading-[1.5]">
               Your handle is locked in. Now make it feel like yours.
             </p>
           </div>

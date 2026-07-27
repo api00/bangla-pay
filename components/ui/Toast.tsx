@@ -117,9 +117,9 @@ function ToastViewport({
 }
 
 const TONE_STYLES: Record<ToastTone, string> = {
-  success: "bg-[#163300] text-white",
-  info: "bg-[#0e0f0c] text-white",
-  error: "bg-[#fde2df] text-[#a3221a] ring-1 ring-[#da291c]/25",
+  success: "bg-dark-green text-white",
+  info: "bg-near-black text-white",
+  error: "bg-danger-surface text-heritage-red-ink ring-1 ring-heritage-red/25",
 };
 
 function ToastRow({

@@ -29,56 +29,56 @@ export default async function DashboardOrderDetailPage({ params }: PageProps) {
       <header>
         <Link
           href="/dashboard/orders"
-          className="text-[13px] font-semibold text-[#454745] hover:text-[#0e0f0c]"
+          className="text-[13px] font-semibold text-warm-dark hover:text-near-black"
         >
           ← Back to orders
         </Link>
         <h1
-          className="display mt-3 text-[28px] md:text-[34px] text-[#0e0f0c]"
+          className="display mt-3 text-[28px] md:text-[34px] text-near-black"
           style={{ lineHeight: 1.1, fontWeight: 700 }}
         >
           {formatTaka(order.totalPaisa)}{" "}
-          <span className="text-[#454745]">order</span>
+          <span className="text-warm-dark">order</span>
         </h1>
-        <p className="text-[13px] text-[#868685] mt-1 tabular-nums">
+        <p className="text-[13px] text-gray mt-1 tabular-nums">
           {DATE_FORMAT.format(order.createdAt)}
         </p>
       </header>
 
       <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6 grid gap-4 sm:grid-cols-3">
         <div>
-          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#868685]">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-gray">
             Supporter
           </p>
-          <p className="text-[15px] font-semibold text-[#0e0f0c] mt-1">
+          <p className="text-[15px] font-semibold text-near-black mt-1">
             {order.supporterName ?? "Anonymous"}
           </p>
-          <p className="text-[13px] text-[#454745] mt-0.5">
+          <p className="text-[13px] text-warm-dark mt-0.5">
             {order.supporterEmail}
           </p>
         </div>
         <div>
-          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#868685]">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-gray">
             Order code
           </p>
-          <p className="mt-1 text-[15px] font-semibold tabular-nums text-[#0e0f0c]">
+          <p className="mt-1 text-[15px] font-semibold tabular-nums text-near-black">
             {order.orderCode}
           </p>
-          <p className="mt-0.5 text-[13px] text-[#454745]">
+          <p className="mt-0.5 text-[13px] text-warm-dark">
             {order.licenseAcceptedAt
               ? "Personal licence accepted"
               : "Legacy order · no licence record"}
           </p>
         </div>
         <div>
-          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#868685]">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-gray">
             Status
           </p>
-          <p className="text-[15px] font-semibold text-[#0e0f0c] mt-1 capitalize">
+          <p className="text-[15px] font-semibold text-near-black mt-1 capitalize">
             {order.status}
           </p>
           {order.paidAt && (
-            <p className="text-[13px] text-[#454745] mt-0.5 tabular-nums">
+            <p className="text-[13px] text-warm-dark mt-0.5 tabular-nums">
               Paid {DATE_FORMAT.format(order.paidAt)}
             </p>
           )}
@@ -86,7 +86,7 @@ export default async function DashboardOrderDetailPage({ params }: PageProps) {
       </section>
 
       <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6">
-        <h2 className="text-[14px] font-semibold text-[#0e0f0c] mb-4">
+        <h2 className="text-[14px] font-semibold text-near-black mb-4">
           Items
         </h2>
         <ul className="divide-y divide-[rgba(14,15,12,0.05)]">
@@ -95,10 +95,10 @@ export default async function DashboardOrderDetailPage({ params }: PageProps) {
               key={row.item.id}
               className="py-3 first:pt-0 last:pb-0 flex justify-between items-baseline gap-3"
             >
-              <span className="text-[14px] text-[#0e0f0c] truncate">
+              <span className="text-[14px] text-near-black truncate">
                 {row.item.productTitleSnapshot}
               </span>
-              <span className="text-[13px] tabular-nums text-[#454745] shrink-0">
+              <span className="text-[13px] tabular-nums text-warm-dark shrink-0">
                 {row.item.quantity > 1 && `${row.item.quantity} × `}
                 {formatTaka(row.item.unitPricePaisa)}
               </span>
@@ -109,20 +109,20 @@ export default async function DashboardOrderDetailPage({ params }: PageProps) {
 
       {downloads.length > 0 && (
         <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6">
-          <h2 className="text-[14px] font-semibold text-[#0e0f0c] mb-4">
+          <h2 className="text-[14px] font-semibold text-near-black mb-4">
             Buyer access
           </h2>
           <ul className="space-y-2">
             {downloads.map((d) => (
               <li
                 key={d.download.id}
-                className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-[rgba(14,15,12,0.06)] bg-[#f7f9f5]"
+                className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-[rgba(14,15,12,0.06)] bg-off-white"
               >
                 <div className="min-w-0">
-                  <p className="text-[14px] font-semibold text-[#0e0f0c] truncate">
+                  <p className="text-[14px] font-semibold text-near-black truncate">
                     {d.file.filename}
                   </p>
-                  <p className="text-[11px] text-[#868685] tabular-nums">
+                  <p className="text-[11px] text-gray tabular-nums">
                     {getDeliveryMode(d.download.accessMode).label}
                     {d.download.accessMode === "download" &&
                       ` · downloaded ${d.download.downloadsUsed}×`}
@@ -144,7 +144,7 @@ export default async function DashboardOrderDetailPage({ params }: PageProps) {
 
       {accessEvents.length > 0 && (
         <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6">
-          <h2 className="text-[14px] font-semibold text-[#0e0f0c] mb-4">
+          <h2 className="text-[14px] font-semibold text-near-black mb-4">
             Access activity
           </h2>
           <ul className="divide-y divide-[rgba(14,15,12,0.05)]">
@@ -153,10 +153,10 @@ export default async function DashboardOrderDetailPage({ params }: PageProps) {
                 key={event.id}
                 className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
               >
-                <span className="text-[14px] font-semibold capitalize text-[#0e0f0c]">
+                <span className="text-[14px] font-semibold capitalize text-near-black">
                   {event.kind}
                 </span>
-                <span className="text-[12px] tabular-nums text-[#454745]">
+                <span className="text-[12px] tabular-nums text-warm-dark">
                   {DATE_FORMAT.format(event.createdAt)}
                 </span>
               </li>

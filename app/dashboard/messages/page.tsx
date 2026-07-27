@@ -66,14 +66,14 @@ function Stat({
     <div
       className={`rounded-2xl border px-5 py-4 ${
         highlight
-          ? "bg-[#f7faf3] border-[#cdffad]"
+          ? "bg-[#f7faf3] border-pastel-green"
           : "bg-white border-[rgba(14,15,12,0.06)]"
       }`}
     >
-      <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#868685]">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray">
         {label}
       </div>
-      <div className="mt-1 text-[22px] font-semibold tabular-nums text-[#0e0f0c]">
+      <div className="mt-1 text-[22px] font-semibold tabular-nums text-near-black">
         {value}
       </div>
     </div>

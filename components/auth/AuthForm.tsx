@@ -211,12 +211,12 @@ export default function AuthForm({
     return (
       <div className="space-y-5">
         <div className="space-y-2">
-          <p className="text-[15px] font-semibold text-[#0e0f0c]">
+          <p className="text-[15px] font-semibold text-near-black">
             Check your email.
           </p>
-          <p className="text-[13px] text-[#454745] leading-[1.55]">
+          <p className="text-[13px] text-warm-dark leading-[1.55]">
             We sent a 6-digit code to{" "}
-            <span className="font-semibold text-[#0e0f0c]">{status.email}</span>
+            <span className="font-semibold text-near-black">{status.email}</span>
             . Enter it below to continue.
           </p>
         </div>
@@ -250,14 +250,14 @@ export default function AuthForm({
                   aria-label={`Digit ${idx + 1}`}
                   className={[
                     "aspect-square w-full rounded-xl border-[1.5px] bg-white text-center",
-                    "text-[22px] sm:text-[26px] font-semibold text-[#0e0f0c] tabular-nums",
+                    "text-[22px] sm:text-[26px] font-semibold text-near-black tabular-nums",
                     "outline-none transition-[border-color,box-shadow,background-color] duration-150",
                     "disabled:opacity-60 disabled:cursor-not-allowed",
                     filled
-                      ? "border-[#0e0f0c] bg-[#f7f9f5]"
+                      ? "border-near-black bg-off-white"
                       : "border-[rgba(14,15,12,0.14)]",
-                    "focus:border-[#0e0f0c] focus:shadow-[0_0_0_4px_rgba(159,232,112,0.35)]",
-                    "caret-[#163300]",
+                    "focus:border-near-black focus:shadow-[0_0_0_4px_rgba(159,232,112,0.35)]",
+                    "caret-dark-green",
                   ].join(" ")}
                 />
               );
@@ -266,7 +266,7 @@ export default function AuthForm({
           <button
             type="submit"
             disabled={isBusy || code.length !== OTP_LENGTH}
-            className="w-full h-12 rounded-full bg-[#9fe870] text-[#163300] font-semibold text-[15px] inline-flex items-center justify-center gap-2 transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-14px_rgba(159,232,112,0.7)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+            className="w-full h-12 rounded-full bg-wise-green text-dark-green font-semibold text-[15px] inline-flex items-center justify-center gap-2 transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-14px_rgba(159,232,112,0.7)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
             {status.kind === "verifying" ? "Verifying…" : "Verify and continue"}
             {status.kind !== "verifying" && <span aria-hidden>→</span>}
@@ -276,7 +276,7 @@ export default function AuthForm({
         {errorMsg && (
           <p
             role="alert"
-            className="text-[13px] font-medium text-[#da291c] leading-[1.55]"
+            className="text-[13px] font-medium text-heritage-red leading-[1.55]"
           >
             {errorMsg}
           </p>
@@ -290,7 +290,7 @@ export default function AuthForm({
               setCode("");
               setErrorMsg(null);
             }}
-            className="font-semibold text-[#454745] underline underline-offset-4 decoration-[rgba(14,15,12,0.14)] decoration-[2px] hover:text-[#0e0f0c]"
+            className="font-semibold text-warm-dark underline underline-offset-4 decoration-[rgba(14,15,12,0.14)] decoration-[2px] hover:text-near-black"
           >
             Use a different email
           </button>
@@ -298,7 +298,7 @@ export default function AuthForm({
             type="button"
             onClick={handleResend}
             disabled={isBusy}
-            className="font-semibold text-[#163300] underline underline-offset-4 decoration-[#9fe870] decoration-[2px] hover:decoration-[#cdffad] disabled:opacity-60"
+            className="font-semibold text-dark-green underline underline-offset-4 decoration-wise-green decoration-[2px] hover:decoration-pastel-green disabled:opacity-60"
           >
             Resend code
           </button>
@@ -314,7 +314,7 @@ export default function AuthForm({
         type="button"
         onClick={handleGoogle}
         disabled={isBusy}
-        className="w-full h-12 rounded-full border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white text-[15px] font-semibold text-[#0e0f0c] inline-flex items-center justify-center gap-3 hover:border-[#0e0f0c] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+        className="w-full h-12 rounded-full border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white text-[15px] font-semibold text-near-black inline-flex items-center justify-center gap-3 hover:border-near-black transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
       >
         <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
           <path
@@ -340,7 +340,7 @@ export default function AuthForm({
       {/* Divider */}
       <div className="flex items-center gap-4">
         <div className="flex-1 h-px bg-[rgba(14,15,12,0.08)]" />
-        <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#868685]">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gray">
           or use email
         </span>
         <div className="flex-1 h-px bg-[rgba(14,15,12,0.08)]" />
@@ -350,7 +350,7 @@ export default function AuthForm({
       <form className="space-y-3" onSubmit={handleSendCode}>
         <div className="relative">
           <span
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-[#868685]"
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray"
             aria-hidden
           >
             <svg
@@ -378,14 +378,14 @@ export default function AuthForm({
             required
             disabled={isBusy}
             aria-label="Email address"
-            className="w-full h-12 rounded-full border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white pl-11 pr-4 text-[15px] font-medium text-[#0e0f0c] placeholder:text-[#868685] outline-none focus:border-[#0e0f0c] transition-colors disabled:opacity-60"
+            className="w-full h-12 rounded-full border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white pl-11 pr-4 text-[15px] font-medium text-near-black placeholder:text-gray outline-none focus:border-near-black transition-colors disabled:opacity-60"
           />
         </div>
 
         <button
           type="submit"
           disabled={isBusy || !email}
-          className="w-full h-12 rounded-full bg-[#9fe870] text-[#163300] font-semibold text-[15px] inline-flex items-center justify-center gap-2 transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-14px_rgba(159,232,112,0.7)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+          className="w-full h-12 rounded-full bg-wise-green text-dark-green font-semibold text-[15px] inline-flex items-center justify-center gap-2 transition-transform hover:scale-[1.02] active:scale-[0.98] shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-14px_rgba(159,232,112,0.7)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
         >
           {status.kind === "submitting" ? "Sending code…" : submitLabel}
           {status.kind !== "submitting" && <span aria-hidden>→</span>}
@@ -395,13 +395,13 @@ export default function AuthForm({
       {errorMsg && (
         <p
           role="alert"
-          className="text-[13px] font-medium text-[#da291c] leading-[1.55]"
+          className="text-[13px] font-medium text-heritage-red leading-[1.55]"
         >
           {errorMsg}
         </p>
       )}
 
-      <p className="text-[12px] text-[#868685] leading-[1.55]">
+      <p className="text-[12px] text-gray leading-[1.55]">
         No password needed. We&rsquo;ll send a one-time code to your inbox
         &mdash; works for both new and existing accounts.
       </p>

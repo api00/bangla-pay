@@ -67,7 +67,7 @@ export default async function PublicCreatorPage({ params }: PageProps) {
   const previewProducts = allProducts.slice(0, 4);
 
   return (
-    <main className="min-h-screen bg-[#f7f9f5]">
+    <main className="min-h-screen bg-off-white">
       <div className="max-w-[680px] mx-auto px-5 sm:px-6 py-10 md:py-14 space-y-10">
         <CreatorHeader creator={creator} page={page} />
         <CreatorStats

@@ -38,14 +38,14 @@ const PRICING_OPTIONS: { value: PricingModel; title: string; sub: string }[] = [
 ];
 
 const inputBase =
-  "h-12 w-full rounded-2xl border-[1.5px] bg-white px-4 text-[16px] font-medium text-[#0e0f0c] outline-none transition-colors placeholder:text-[#6b6d6b] focus-visible:border-[#163300] focus-visible:ring-2 focus-visible:ring-[#9fe870]";
+  "h-12 w-full rounded-2xl border-[1.5px] bg-white px-4 text-[16px] font-medium text-near-black outline-none transition-colors placeholder:text-gray-ink focus-visible:border-dark-green focus-visible:ring-2 focus-visible:ring-wise-green";
 
 function borderFor(invalid: boolean): string {
-  return invalid ? "border-[#da291c]" : "border-[rgba(14,15,12,0.14)]";
+  return invalid ? "border-heritage-red" : "border-[rgba(14,15,12,0.14)]";
 }
 
 const labelClass =
-  "mb-2 block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745]";
+  "mb-2 block text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark";
 
 export default function StepBasics({
   values,
@@ -81,7 +81,7 @@ export default function StepBasics({
             aria-hidden
             viewBox="0 0 20 20"
             fill="none"
-            className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#454745]"
+            className="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-warm-dark"
           >
             <path
               d="m6 8 4 4 4-4"
@@ -92,7 +92,7 @@ export default function StepBasics({
             />
           </svg>
         </div>
-        <p id="category-help" className="mt-2 text-[13px] text-[#454745]">
+        <p id="category-help" className="mt-2 text-[13px] text-warm-dark">
           This decides which file types you can sell and how buyers open them.
         </p>
       </div>
@@ -124,9 +124,9 @@ export default function StepBasics({
           Link
         </label>
         <div
-          className={`flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] bg-white transition-colors focus-within:border-[#163300] focus-within:ring-2 focus-within:ring-[#9fe870] ${borderFor(errorField === "slug")}`}
+          className={`flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] bg-white transition-colors focus-within:border-dark-green focus-within:ring-2 focus-within:ring-wise-green ${borderFor(errorField === "slug")}`}
         >
-          <span className="inline-flex items-center whitespace-nowrap border-r border-[rgba(14,15,12,0.08)] bg-[#f7f9f5] px-4 text-[14px] text-[#454745]">
+          <span className="inline-flex items-center whitespace-nowrap border-r border-[rgba(14,15,12,0.08)] bg-off-white px-4 text-[14px] text-warm-dark">
             /shop/
           </span>
           <input
@@ -137,10 +137,10 @@ export default function StepBasics({
               onChange({ slug: event.target.value, slugDirty: true })
             }
             placeholder="monsoon-stories"
-            className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-[#0e0f0c] outline-none placeholder:text-[#6b6d6b]"
+            className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-near-black outline-none placeholder:text-gray-ink"
           />
         </div>
-        <p className="mt-2 text-[13px] text-[#454745]">
+        <p className="mt-2 text-[13px] text-warm-dark">
           Lowercase and hyphenated. Changing it later breaks old links.
         </p>
       </div>
@@ -158,10 +158,10 @@ export default function StepBasics({
               <label
                 key={opt.value}
                 className={[
-                  "flex cursor-pointer flex-col gap-1 rounded-2xl border-[1.5px] px-4 py-4 transition-colors focus-within:ring-2 focus-within:ring-[#9fe870]",
+                  "flex cursor-pointer flex-col gap-1 rounded-2xl border-[1.5px] px-4 py-4 transition-colors focus-within:ring-2 focus-within:ring-wise-green",
                   checked
-                    ? "border-[#0e0f0c] bg-[#f7f9f5]"
-                    : "border-[rgba(14,15,12,0.10)] bg-white hover:border-[#454745]",
+                    ? "border-near-black bg-off-white"
+                    : "border-[rgba(14,15,12,0.10)] bg-white hover:border-warm-dark",
                 ].join(" ")}
               >
                 <input
@@ -172,10 +172,10 @@ export default function StepBasics({
                   onChange={() => onChange({ pricing: opt.value })}
                   className="sr-only"
                 />
-                <span className="text-[14px] font-semibold text-[#0e0f0c]">
+                <span className="text-[14px] font-semibold text-near-black">
                   {opt.title}
                 </span>
-                <span className="text-[12px] leading-[1.5] text-[#454745]">
+                <span className="text-[12px] leading-[1.5] text-warm-dark">
                   {opt.sub}
                 </span>
               </label>
@@ -193,9 +193,9 @@ export default function StepBasics({
                 : "Price"}
             </label>
             <div
-              className={`flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] bg-white transition-colors focus-within:border-[#163300] focus-within:ring-2 focus-within:ring-[#9fe870] ${borderFor(errorField === "price")}`}
+              className={`flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] bg-white transition-colors focus-within:border-dark-green focus-within:ring-2 focus-within:ring-wise-green ${borderFor(errorField === "price")}`}
             >
-              <span className="inline-flex items-center border-r border-[rgba(14,15,12,0.08)] bg-[#f7f9f5] px-4 text-[15px] text-[#454745]">
+              <span className="inline-flex items-center border-r border-[rgba(14,15,12,0.08)] bg-off-white px-4 text-[15px] text-warm-dark">
                 ৳
               </span>
               <input
@@ -205,7 +205,7 @@ export default function StepBasics({
                 value={values.basePrice}
                 onChange={(event) => onChange({ basePrice: event.target.value })}
                 placeholder="500"
-                className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-[#0e0f0c] outline-none placeholder:text-[#6b6d6b]"
+                className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-near-black outline-none placeholder:text-gray-ink"
               />
             </div>
           </div>
@@ -215,8 +215,8 @@ export default function StepBasics({
               <label htmlFor="min_price" className={labelClass}>
                 Minimum (optional)
               </label>
-              <div className="flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white transition-colors focus-within:border-[#163300] focus-within:ring-2 focus-within:ring-[#9fe870]">
-                <span className="inline-flex items-center border-r border-[rgba(14,15,12,0.08)] bg-[#f7f9f5] px-4 text-[15px] text-[#454745]">
+              <div className="flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white transition-colors focus-within:border-dark-green focus-within:ring-2 focus-within:ring-wise-green">
+                <span className="inline-flex items-center border-r border-[rgba(14,15,12,0.08)] bg-off-white px-4 text-[15px] text-warm-dark">
                   ৳
                 </span>
                 <input
@@ -228,7 +228,7 @@ export default function StepBasics({
                     onChange({ minPrice: event.target.value })
                   }
                   placeholder="100"
-                  className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-[#0e0f0c] outline-none placeholder:text-[#6b6d6b]"
+                  className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-near-black outline-none placeholder:text-gray-ink"
                 />
               </div>
             </div>

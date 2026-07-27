@@ -37,18 +37,18 @@ export default async function PublicShopPage({ params }: PageProps) {
   const products = await listPublishedProducts(creator.id);
 
   return (
-    <main className="min-h-screen bg-[#f7f9f5]">
+    <main className="min-h-screen bg-off-white">
       <div className="max-w-[860px] mx-auto px-5 sm:px-6 py-10 md:py-14 space-y-8">
         <header className="flex items-baseline justify-between flex-wrap gap-3">
           <div>
             <Link
               href={`/${handle}`}
-              className="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#868685] hover:text-[#0e0f0c]"
+              className="text-[12px] font-semibold uppercase tracking-[0.22em] text-gray hover:text-near-black"
             >
               ← {creator.displayName}
             </Link>
             <h1
-              className="display mt-3 text-[32px] sm:text-[40px] text-[#0e0f0c]"
+              className="display mt-3 text-[32px] sm:text-[40px] text-near-black"
               style={{ lineHeight: 1.1, fontWeight: 700 }}
             >
               Shop
@@ -58,14 +58,14 @@ export default async function PublicShopPage({ params }: PageProps) {
 
         {products.length === 0 ? (
           <div className="rounded-3xl border border-dashed border-[rgba(14,15,12,0.14)] bg-white px-6 py-12 text-center">
-            <p className="text-[15px] font-semibold text-[#0e0f0c]">
+            <p className="text-[15px] font-semibold text-near-black">
               {creator.displayName} hasn&rsquo;t added any products yet.
             </p>
-            <p className="mt-1 text-[13px] text-[#454745] leading-[1.55]">
+            <p className="mt-1 text-[13px] text-warm-dark leading-[1.55]">
               Come back soon — or{" "}
               <Link
                 href={`/${handle}`}
-                className="font-semibold text-[#163300] underline underline-offset-4 decoration-[#9fe870] decoration-[2px]"
+                className="font-semibold text-dark-green underline underline-offset-4 decoration-wise-green decoration-[2px]"
               >
                 support them with a tip
               </Link>
@@ -78,21 +78,21 @@ export default async function PublicShopPage({ params }: PageProps) {
               <li key={product.id}>
                 <Link
                   href={`/${handle}/shop/${product.slug}`}
-                  className="block rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] hover:border-[#0e0f0c] transition-colors h-full overflow-hidden"
+                  className="block rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] hover:border-near-black transition-colors h-full overflow-hidden"
                 >
                   {product.coverUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={product.coverUrl}
                       alt=""
-                      className="w-full aspect-[16/10] object-cover bg-[#f2f6ec] border-b border-[rgba(14,15,12,0.04)]"
+                      className="w-full aspect-[16/10] object-cover bg-mint-surface border-b border-[rgba(14,15,12,0.04)]"
                     />
                   ) : (
                     <div
                       aria-hidden
-                      className="w-full aspect-[16/10] flex items-center justify-center bg-gradient-to-br from-[#cdffad] to-[#e2f6d5] border-b border-[rgba(14,15,12,0.04)]"
+                      className="w-full aspect-[16/10] flex items-center justify-center bg-gradient-to-br from-pastel-green to-light-mint border-b border-[rgba(14,15,12,0.04)]"
                     >
-                      <span className="text-[40px] font-bold text-[#163300]">
+                      <span className="text-[40px] font-bold text-dark-green">
                         {product.title.trim()[0]?.toUpperCase() ?? "•"}
                       </span>
                     </div>
@@ -104,15 +104,15 @@ export default async function PublicShopPage({ params }: PageProps) {
                       </div>
                     )}
                     <div className="flex items-baseline justify-between gap-3">
-                      <h3 className="text-[16px] font-semibold text-[#0e0f0c] leading-[1.3]">
+                      <h3 className="text-[16px] font-semibold text-near-black leading-[1.3]">
                         {product.title}
                       </h3>
-                      <span className="text-[14px] font-semibold tabular-nums text-[#163300] shrink-0">
+                      <span className="text-[14px] font-semibold tabular-nums text-dark-green shrink-0">
                         {priceLabel(product)}
                       </span>
                     </div>
                     {product.subtitle && (
-                      <p className="mt-2 text-[13px] text-[#454745] leading-[1.5] line-clamp-2">
+                      <p className="mt-2 text-[13px] text-warm-dark leading-[1.5] line-clamp-2">
                         {product.subtitle}
                       </p>
                     )}

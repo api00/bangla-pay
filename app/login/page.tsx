@@ -31,7 +31,7 @@ export default async function LoginPage({ searchParams }: PageProps) {
           : "Enter your email — we'll send a 6-digit code. New here? We'll set up your page automatically."
       }
       footer={
-        <p className="text-[13px] text-[#868685] leading-[1.55]">
+        <p className="text-[13px] text-gray leading-[1.55]">
           By continuing, you agree to BanglaPay&rsquo;s Terms and Privacy
           Policy.
         </p>

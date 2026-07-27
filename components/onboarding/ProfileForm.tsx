@@ -48,7 +48,7 @@ export default function ProfileForm({
       <div>
         <label
           htmlFor="display_name"
-          className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745] mb-2"
+          className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark mb-2"
         >
           Display name
         </label>
@@ -60,14 +60,14 @@ export default function ProfileForm({
           required
           defaultValue={defaultDisplayName}
           disabled={isPending}
-          className="w-full h-12 px-4 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white text-[15px] font-medium text-[#0e0f0c] placeholder:text-[#868685] outline-none focus:border-[#0e0f0c] transition-colors disabled:opacity-60"
+          className="w-full h-12 px-4 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white text-[15px] font-medium text-near-black placeholder:text-gray outline-none focus:border-near-black transition-colors disabled:opacity-60"
         />
       </div>
 
       <div>
         <label
           htmlFor="category"
-          className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745] mb-2"
+          className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark mb-2"
         >
           What do you create?
         </label>
@@ -76,7 +76,7 @@ export default function ProfileForm({
           name="category"
           defaultValue={defaultCategory}
           disabled={isPending}
-          className="w-full h-12 px-4 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white text-[15px] font-medium text-[#0e0f0c] outline-none focus:border-[#0e0f0c] transition-colors disabled:opacity-60 appearance-none bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23454745%22 stroke-width=%221.8%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>')] bg-no-repeat bg-[right_1rem_center] pr-12"
+          className="w-full h-12 px-4 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white text-[15px] font-medium text-near-black outline-none focus:border-near-black transition-colors disabled:opacity-60 appearance-none bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23454745%22 stroke-width=%221.8%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><path d=%22m6 9 6 6 6-6%22/></svg>')] bg-no-repeat bg-[right_1rem_center] pr-12"
         >
           {CATEGORIES.map((c) => (
             <option key={c.value} value={c.value}>
@@ -90,11 +90,11 @@ export default function ProfileForm({
         <div className="flex items-baseline justify-between mb-2">
           <label
             htmlFor="bio"
-            className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745]"
+            className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark"
           >
             Bio (optional)
           </label>
-          <span className="text-[12px] text-[#868685] tabular-nums">
+          <span className="text-[12px] text-gray tabular-nums">
             {bio.length} / {BIO_MAX}
           </span>
         </div>
@@ -107,14 +107,14 @@ export default function ProfileForm({
           onChange={onBioChange}
           disabled={isPending}
           placeholder="A short line about what you make."
-          className="w-full px-4 py-3 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white text-[15px] text-[#0e0f0c] placeholder:text-[#868685] outline-none focus:border-[#0e0f0c] transition-colors disabled:opacity-60 resize-none leading-[1.5]"
+          className="w-full px-4 py-3 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white text-[15px] text-near-black placeholder:text-gray outline-none focus:border-near-black transition-colors disabled:opacity-60 resize-none leading-[1.5]"
         />
       </div>
 
       {state.error && (
         <p
           role="alert"
-          className="text-[13px] font-medium text-[#da291c] leading-[1.55]"
+          className="text-[13px] font-medium text-heritage-red leading-[1.55]"
         >
           {state.error}
         </p>
@@ -123,7 +123,7 @@ export default function ProfileForm({
       <button
         type="submit"
         disabled={isPending}
-        className="w-full h-12 rounded-full bg-[#9fe870] text-[#163300] font-semibold text-[15px] inline-flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] active:scale-[0.99] shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-14px_rgba(159,232,112,0.7)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+        className="w-full h-12 rounded-full bg-wise-green text-dark-green font-semibold text-[15px] inline-flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] active:scale-[0.99] shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-14px_rgba(159,232,112,0.7)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
       >
         {isPending ? "Saving…" : "Continue"}
         {!isPending && <span aria-hidden>→</span>}

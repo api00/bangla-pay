@@ -59,7 +59,7 @@ export default function CreatorHeader({ creator, page }: CreatorHeaderProps) {
             className="h-full w-full rounded-full object-cover"
           />
         ) : (
-          <span className="text-[24px] sm:text-[28px] font-semibold text-[#163300] tabular-nums">
+          <span className="text-[24px] sm:text-[28px] font-semibold text-dark-green tabular-nums">
             {initials}
           </span>
         )}
@@ -67,24 +67,24 @@ export default function CreatorHeader({ creator, page }: CreatorHeaderProps) {
 
       <div className="flex flex-col items-center gap-2">
         <h1
-          className="display text-[28px] sm:text-[36px] md:text-[44px] text-[#0e0f0c]"
+          className="display text-[28px] sm:text-[36px] md:text-[44px] text-near-black"
           style={{ lineHeight: 1.1, fontWeight: 700 }}
         >
           {creator.displayName}
         </h1>
-        <div className="flex items-center gap-3 text-[13px] text-[#454745]">
-          <span className="font-semibold text-[#163300]">
+        <div className="flex items-center gap-3 text-[13px] text-warm-dark">
+          <span className="font-semibold text-dark-green">
             @{creator.handle}
           </span>
-          <span aria-hidden className="w-1 h-1 rounded-full bg-[#c8c8c7]" />
+          <span aria-hidden className="w-1 h-1 rounded-full bg-gray-light" />
           <span>{categoryLabel}</span>
           {creator.isVerified && (
             <>
               <span
                 aria-hidden
-                className="w-1 h-1 rounded-full bg-[#c8c8c7]"
+                className="w-1 h-1 rounded-full bg-gray-light"
               />
-              <span className="inline-flex items-center gap-1 text-[#163300] font-semibold">
+              <span className="inline-flex items-center gap-1 text-dark-green font-semibold">
                 <svg
                   width="14"
                   height="14"
@@ -106,7 +106,7 @@ export default function CreatorHeader({ creator, page }: CreatorHeaderProps) {
       </div>
 
       {page.bio && (
-        <p className="max-w-[520px] text-[16px] text-[#454745] leading-[1.55]">
+        <p className="max-w-[520px] text-[16px] text-warm-dark leading-[1.55]">
           {page.bio}
         </p>
       )}

@@ -15,20 +15,20 @@ export default function LangToggle() {
     >
       <span
         aria-hidden
-        className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-full bg-[#9fe870] transition-all duration-300 ease-out ${
+        className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-full bg-wise-green transition-all duration-300 ease-out ${
           lang === "en" ? "left-1" : "left-[calc(50%+1px)]"
         }`}
       />
       <span
         className={`relative z-10 px-3 h-7 inline-flex items-center rounded-full text-xs font-semibold transition-colors ${
-          lang === "en" ? "text-[#163300]" : "text-[#454745]"
+          lang === "en" ? "text-dark-green" : "text-warm-dark"
         }`}
       >
         EN
       </span>
       <span
         className={`bangla-display relative z-10 px-3 h-7 inline-flex items-center rounded-full text-sm transition-colors ${
-          lang === "bn" ? "text-[#163300]" : "text-[#454745]"
+          lang === "bn" ? "text-dark-green" : "text-warm-dark"
         }`}
       >
         বাং

@@ -36,7 +36,7 @@ export default function OnboardingLayout({
           aria-label="BanglaPay home"
         >
           <span className="display text-2xl tracking-tight">banglapay</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#9fe870]" aria-hidden />
+          <span className="w-1.5 h-1.5 rounded-full bg-wise-green" aria-hidden />
         </Link>
 
         <ol
@@ -52,17 +52,17 @@ export default function OnboardingLayout({
                   aria-current={isActive ? "step" : undefined}
                   className={[
                     "flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.18em]",
-                    isActive ? "text-[#0e0f0c]" : "text-[#868685]",
+                    isActive ? "text-near-black" : "text-gray",
                   ].join(" ")}
                 >
                   <span
                     className={[
                       "w-6 h-6 inline-flex items-center justify-center rounded-full text-[11px] tabular-nums",
                       isDone
-                        ? "bg-[#163300] text-white"
+                        ? "bg-dark-green text-white"
                         : isActive
-                          ? "bg-[#9fe870] text-[#163300]"
-                          : "bg-[#e8ebe6] text-[#868685]",
+                          ? "bg-wise-green text-dark-green"
+                          : "bg-light-surface text-gray",
                     ].join(" ")}
                   >
                     {isDone ? "✓" : idx + 1}
@@ -73,7 +73,7 @@ export default function OnboardingLayout({
                   <span
                     className={[
                       "w-6 sm:w-10 h-px",
-                      isDone ? "bg-[#163300]" : "bg-[rgba(14,15,12,0.08)]",
+                      isDone ? "bg-dark-green" : "bg-[rgba(14,15,12,0.08)]",
                     ].join(" ")}
                     aria-hidden
                   />
@@ -86,7 +86,7 @@ export default function OnboardingLayout({
 
       <div className="flex-1 grid lg:grid-cols-[minmax(0,1fr)_minmax(0,560px)]">
         <section className="px-6 md:px-10 lg:px-16 py-10 md:py-14 max-w-[640px] w-full mx-auto lg:mx-0">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#868685] mb-4">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-gray mb-4">
             Step {activeIndex + 1} of {STEPS.length}
           </p>
           <h1
@@ -95,7 +95,7 @@ export default function OnboardingLayout({
           >
             {title}
           </h1>
-          <p className="mt-4 text-[#454745] text-[17px] leading-[1.5]">
+          <p className="mt-4 text-warm-dark text-[17px] leading-[1.5]">
             {subtitle}
           </p>
 
@@ -103,7 +103,7 @@ export default function OnboardingLayout({
         </section>
 
         {aside && (
-          <aside className="hidden lg:flex bg-[#f7f9f5] border-l border-[rgba(14,15,12,0.06)] items-center justify-center p-12">
+          <aside className="hidden lg:flex bg-off-white border-l border-[rgba(14,15,12,0.06)] items-center justify-center p-12">
             <div className="w-full max-w-[420px]">{aside}</div>
           </aside>
         )}

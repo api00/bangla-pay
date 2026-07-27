@@ -27,15 +27,15 @@ export default function ShopPreview({
       <section aria-labelledby="shop-preview" className="space-y-4">
         <h2
           id="shop-preview"
-          className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[#868685]"
+          className="text-[12px] font-semibold uppercase tracking-[0.2em] text-gray"
         >
           Shop
         </h2>
-        <div className="rounded-3xl border border-dashed border-[rgba(14,15,12,0.14)] bg-[#f7f9f5] px-6 py-10 text-center">
-          <p className="text-[15px] font-semibold text-[#0e0f0c]">
+        <div className="rounded-3xl border border-dashed border-[rgba(14,15,12,0.14)] bg-off-white px-6 py-10 text-center">
+          <p className="text-[15px] font-semibold text-near-black">
             {displayName}&rsquo;s shop is opening soon.
           </p>
-          <p className="mt-1 text-[13px] text-[#454745] leading-[1.55] max-w-[360px] mx-auto">
+          <p className="mt-1 text-[13px] text-warm-dark leading-[1.55] max-w-[360px] mx-auto">
             Digital downloads, presets, and printable goodies — straight from
             the maker.
           </p>
@@ -49,13 +49,13 @@ export default function ShopPreview({
       <div className="flex items-baseline justify-between">
         <h2
           id="shop-preview"
-          className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[#868685]"
+          className="text-[12px] font-semibold uppercase tracking-[0.2em] text-gray"
         >
           Shop
         </h2>
         <Link
           href={`/${handle}/shop`}
-          className="text-[13px] font-semibold text-[#163300] underline underline-offset-4 decoration-[#9fe870] decoration-[2px] hover:decoration-[#cdffad]"
+          className="text-[13px] font-semibold text-dark-green underline underline-offset-4 decoration-wise-green decoration-[2px] hover:decoration-pastel-green"
         >
           View all →
         </Link>
@@ -65,21 +65,21 @@ export default function ShopPreview({
           <li key={product.id}>
             <Link
               href={`/${handle}/shop/${product.slug}`}
-              className="group flex gap-3 rounded-2xl border border-[rgba(14,15,12,0.06)] bg-white p-3 hover:border-[#0e0f0c] transition-colors h-full"
+              className="group flex gap-3 rounded-2xl border border-[rgba(14,15,12,0.06)] bg-white p-3 hover:border-near-black transition-colors h-full"
             >
               <ProductThumb product={product} />
               <div className="flex-1 min-w-0 flex flex-col justify-between py-1">
                 <div>
-                  <p className="text-[14px] font-semibold text-[#0e0f0c] leading-[1.4] line-clamp-2">
+                  <p className="text-[14px] font-semibold text-near-black leading-[1.4] line-clamp-2">
                     {product.title}
                   </p>
                   {product.subtitle && (
-                    <p className="mt-1 text-[12px] text-[#454745] leading-[1.4] line-clamp-1">
+                    <p className="mt-1 text-[12px] text-warm-dark leading-[1.4] line-clamp-1">
                       {product.subtitle}
                     </p>
                   )}
                 </div>
-                <span className="text-[13px] font-semibold tabular-nums text-[#163300]">
+                <span className="text-[13px] font-semibold tabular-nums text-dark-green">
                   {priceLabel(product)}
                 </span>
               </div>
@@ -98,7 +98,7 @@ function ProductThumb({ product }: { product: Product }) {
       <img
         src={product.coverUrl}
         alt=""
-        className="w-20 h-20 shrink-0 rounded-xl object-cover bg-[#f2f6ec] border border-[rgba(14,15,12,0.04)]"
+        className="w-20 h-20 shrink-0 rounded-xl object-cover bg-mint-surface border border-[rgba(14,15,12,0.04)]"
       />
     );
   }
@@ -106,7 +106,7 @@ function ProductThumb({ product }: { product: Product }) {
   return (
     <div
       aria-hidden
-      className="w-20 h-20 shrink-0 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#cdffad] to-[#e2f6d5] text-[#163300] text-[24px] font-bold"
+      className="w-20 h-20 shrink-0 rounded-xl flex items-center justify-center bg-gradient-to-br from-pastel-green to-light-mint text-dark-green text-[24px] font-bold"
     >
       {letter}
     </div>

@@ -241,8 +241,8 @@ export default function ProfileForm({ creator, page }: ProfileFormProps) {
           scrolled into the form. */}
       <div className="sticky bottom-4 z-20">
         <div className="rounded-[20px] bg-white border border-[rgba(14,15,12,0.1)] shadow-[0_2px_0_0_rgba(14,15,12,0.04),0_18px_40px_-18px_rgba(14,15,12,0.25)] px-5 py-3.5 flex items-center justify-between gap-3 flex-wrap">
-          <div className="text-[13px] text-[#454745]">
-            <span className="font-semibold text-[#0e0f0c]">All sections</span>{" "}
+          <div className="text-[13px] text-warm-dark">
+            <span className="font-semibold text-near-black">All sections</span>{" "}
             save together — name, page styling, social links.
           </div>
           <div className="flex items-center gap-3">
@@ -272,8 +272,8 @@ function Toggle({
         defaultChecked={defaultChecked}
         className="peer sr-only"
       />
-      <span className="relative w-10 h-6 rounded-full bg-[#e8ebe6] peer-checked:bg-[#9fe870] transition-colors after:absolute after:top-[3px] after:left-[3px] after:w-[18px] after:h-[18px] after:rounded-full after:bg-white after:shadow-[0_1px_2px_rgba(0,0,0,0.15)] after:transition-transform peer-checked:after:translate-x-4" />
-      <span className="text-[13px] font-medium text-[#0e0f0c]">{label}</span>
+      <span className="relative w-10 h-6 rounded-full bg-light-surface peer-checked:bg-wise-green transition-colors after:absolute after:top-[3px] after:left-[3px] after:w-[18px] after:h-[18px] after:rounded-full after:bg-white after:shadow-[0_1px_2px_rgba(0,0,0,0.15)] after:transition-transform peer-checked:after:translate-x-4" />
+      <span className="text-[13px] font-medium text-near-black">{label}</span>
     </label>
   );
 }

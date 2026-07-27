@@ -107,13 +107,13 @@ export default function TipJar({
         />
       </div>
 
-      <h2 className="text-center text-[18px] font-bold text-[#0e0f0c] mb-1 flex items-center justify-center gap-2">
+      <h2 className="text-center text-[18px] font-bold text-near-black mb-1 flex items-center justify-center gap-2">
         <span aria-hidden className="text-[18px]">
           {chaEmoji}
         </span>
         Buy {displayName} a {chaLabel}
       </h2>
-      <p className="text-center text-[13px] text-[#868685] mb-5">
+      <p className="text-center text-[13px] text-gray mb-5">
         Pick an amount or write your own.
       </p>
 
@@ -134,17 +134,17 @@ export default function TipJar({
               className={[
                 "h-14 rounded-2xl border-[1.5px] text-left px-3 transition-all flex flex-col justify-center",
                 isActive
-                  ? "border-[#0e0f0c] bg-[#f7f9f5] shadow-[0_1px_0_0_rgba(14,15,12,0.06),0_8px_22px_-12px_rgba(14,15,12,0.18)]"
-                  : "border-[rgba(14,15,12,0.10)] bg-white hover:border-[#454745]",
+                  ? "border-near-black bg-off-white shadow-[0_1px_0_0_rgba(14,15,12,0.06),0_8px_22px_-12px_rgba(14,15,12,0.18)]"
+                  : "border-[rgba(14,15,12,0.10)] bg-white hover:border-warm-dark",
               ].join(" ")}
             >
-              <span className="text-[15px] font-semibold text-[#0e0f0c] tabular-nums">
+              <span className="text-[15px] font-semibold text-near-black tabular-nums">
                 {formatTaka(preset.amountPaisa, {
                   bengaliNumerals: bnNumerals,
                 })}
               </span>
               {preset.label && (
-                <span className="text-[11px] font-medium text-[#868685]">
+                <span className="text-[11px] font-medium text-gray">
                   {preset.label}
                 </span>
               )}
@@ -162,11 +162,11 @@ export default function TipJar({
           className={[
             "w-full h-14 rounded-2xl border-[1.5px] flex items-center transition-colors",
             isCustom
-              ? "border-[#0e0f0c] bg-[#f7f9f5]"
-              : "border-[rgba(14,15,12,0.10)] bg-white hover:border-[#454745]",
+              ? "border-near-black bg-off-white"
+              : "border-[rgba(14,15,12,0.10)] bg-white hover:border-warm-dark",
           ].join(" ")}
         >
-          <span className="px-4 text-[#868685]" aria-hidden>
+          <span className="px-4 text-gray" aria-hidden>
             ৳
           </span>
           <input
@@ -179,7 +179,7 @@ export default function TipJar({
             onFocus={pickCustom}
             disabled={isPending}
             aria-label="Custom tip amount in taka"
-            className="flex-1 h-full text-[15px] font-semibold text-[#0e0f0c] placeholder:text-[#868685] bg-transparent outline-none disabled:opacity-60"
+            className="flex-1 h-full text-[15px] font-semibold text-near-black placeholder:text-gray bg-transparent outline-none disabled:opacity-60"
           />
         </button>
       </div>
@@ -192,7 +192,7 @@ export default function TipJar({
           placeholder="Your name (optional)"
           maxLength={60}
           disabled={isPending}
-          className="w-full h-12 px-4 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.10)] bg-white text-[14px] font-medium text-[#0e0f0c] placeholder:text-[#868685] outline-none focus:border-[#0e0f0c] transition-colors disabled:opacity-60"
+          className="w-full h-12 px-4 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.10)] bg-white text-[14px] font-medium text-near-black placeholder:text-gray outline-none focus:border-near-black transition-colors disabled:opacity-60"
         />
         <textarea
           name="message"
@@ -200,15 +200,15 @@ export default function TipJar({
           maxLength={500}
           placeholder="Say something nice (optional)"
           disabled={isPending}
-          className="w-full px-4 py-3 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.10)] bg-white text-[14px] text-[#0e0f0c] placeholder:text-[#868685] outline-none focus:border-[#0e0f0c] transition-colors disabled:opacity-60 resize-none leading-[1.5]"
+          className="w-full px-4 py-3 rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.10)] bg-white text-[14px] text-near-black placeholder:text-gray outline-none focus:border-near-black transition-colors disabled:opacity-60 resize-none leading-[1.5]"
         />
-        <label className="flex items-center gap-2 text-[13px] text-[#454745] select-none cursor-pointer">
+        <label className="flex items-center gap-2 text-[13px] text-warm-dark select-none cursor-pointer">
           <input
             type="checkbox"
             name="message_is_public"
             defaultChecked
             disabled={isPending}
-            className="w-4 h-4 rounded border-[#454745] accent-[#163300]"
+            className="w-4 h-4 rounded border-warm-dark accent-dark-green"
           />
           Show my message on {displayName}&rsquo;s page
         </label>
@@ -217,7 +217,7 @@ export default function TipJar({
       <button
         type="submit"
         disabled={isPending || effectivePaisa <= 0}
-        className="w-full h-12 rounded-full font-semibold text-[15px] text-[#163300] inline-flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] active:scale-[0.99] shadow-[0_1px_0_0_rgba(22,51,0,0.18),0_10px_30px_-14px_rgba(159,232,112,0.7)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+        className="w-full h-12 rounded-full font-semibold text-[15px] text-dark-green inline-flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] active:scale-[0.99] shadow-[0_1px_0_0_rgba(22,51,0,0.18),0_10px_30px_-14px_rgba(159,232,112,0.7)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
         style={{ backgroundColor: themeColor }}
       >
         {isPending ? "Preparing checkout…" : ctaLabel}
@@ -230,8 +230,8 @@ export default function TipJar({
           className={[
             "mt-4 text-[13px] leading-[1.55]",
             state.ok
-              ? "text-[#454745]"
-              : "text-[#da291c] font-medium",
+              ? "text-warm-dark"
+              : "text-heritage-red font-medium",
           ].join(" ")}
         >
           {state.error}

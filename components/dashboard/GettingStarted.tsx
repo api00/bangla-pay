@@ -75,16 +75,16 @@ export default function GettingStarted({
     <div className="rounded-[28px] bg-white border border-[rgba(14,15,12,0.06)] p-6 md:p-7 shadow-[0_1px_0_0_rgba(14,15,12,0.03)]">
       <div className="flex items-center justify-between gap-4 mb-5">
         <div>
-          <h2 className="text-[17px] font-bold tracking-tight text-[#0e0f0c]">
+          <h2 className="text-[17px] font-bold tracking-tight text-near-black">
             Get set up
           </h2>
-          <p className="text-[13px] text-[#868685] mt-0.5 tabular-nums">
+          <p className="text-[13px] text-gray mt-0.5 tabular-nums">
             {doneCount} of {steps.length} complete
           </p>
         </div>
-        <div className="w-28 md:w-36 h-1.5 rounded-full bg-[#e8ebe6] overflow-hidden">
+        <div className="w-28 md:w-36 h-1.5 rounded-full bg-light-surface overflow-hidden">
           <div
-            className="h-full bg-[#9fe870] transition-[width] duration-500"
+            className="h-full bg-wise-green transition-[width] duration-500"
             style={{ width: `${pct}%` }}
             aria-hidden
           />
@@ -97,15 +97,15 @@ export default function GettingStarted({
             key={s.title}
             className={`flex items-start gap-4 rounded-2xl border p-4 ${
               s.done
-                ? "border-[rgba(14,15,12,0.04)] bg-[#f7f9f5]"
+                ? "border-[rgba(14,15,12,0.04)] bg-off-white"
                 : "border-[rgba(14,15,12,0.06)] bg-white"
             }`}
           >
             <div
               className={`w-7 h-7 shrink-0 rounded-full flex items-center justify-center ${
                 s.done
-                  ? "bg-[#9fe870] text-[#163300]"
-                  : "bg-white border-[1.5px] border-[rgba(14,15,12,0.12)] text-[#868685]"
+                  ? "bg-wise-green text-dark-green"
+                  : "bg-white border-[1.5px] border-[rgba(14,15,12,0.12)] text-gray"
               }`}
             >
               {s.done ? (
@@ -120,12 +120,12 @@ export default function GettingStarted({
             <div className="flex-1 min-w-0">
               <div
                 className={`text-[14px] font-semibold ${
-                  s.done ? "text-[#454745] line-through" : "text-[#0e0f0c]"
+                  s.done ? "text-warm-dark line-through" : "text-near-black"
                 }`}
               >
                 {s.title}
               </div>
-              <div className="text-[13px] text-[#868685] mt-0.5">{s.body}</div>
+              <div className="text-[13px] text-gray mt-0.5">{s.body}</div>
             </div>
 
             <Link
@@ -133,8 +133,8 @@ export default function GettingStarted({
               aria-disabled={s.done}
               className={`shrink-0 h-9 px-4 rounded-full text-[13px] font-semibold inline-flex items-center justify-center transition-colors ${
                 s.done
-                  ? "bg-transparent text-[#868685] pointer-events-none"
-                  : "bg-[#9fe870] text-[#163300] hover:bg-[#cdffad]"
+                  ? "bg-transparent text-gray pointer-events-none"
+                  : "bg-wise-green text-dark-green hover:bg-pastel-green"
               }`}
             >
               {s.cta}

@@ -12,17 +12,17 @@ export default function DashboardNewProductPage() {
       <header>
         <Link
           href="/dashboard/shop"
-          className="text-[13px] font-semibold text-[#454745] hover:text-[#0e0f0c]"
+          className="text-[13px] font-semibold text-warm-dark hover:text-near-black"
         >
           ← Back to shop
         </Link>
         <h1
-          className="display mt-3 text-[28px] text-[#0e0f0c] md:text-[36px]"
+          className="display mt-3 text-[28px] text-near-black md:text-[36px]"
           style={{ lineHeight: 1.1, fontWeight: 700 }}
         >
           New product
         </h1>
-        <p className="mt-1 text-[14px] text-[#454745]">
+        <p className="mt-1 text-[14px] text-warm-dark">
           Three steps. Nothing goes live until you publish.
         </p>
       </header>

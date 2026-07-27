@@ -36,15 +36,15 @@ export default function DraftBanner({
 
   if (isPublished) {
     return (
-      <div className="rounded-2xl bg-[#e2f6d5] border border-[#9fe870] px-5 py-4 flex items-center gap-3 flex-wrap">
-        <span className="w-8 h-8 rounded-full bg-[#163300] text-[#9fe870] inline-flex items-center justify-center text-[14px] font-bold shrink-0">
+      <div className="rounded-2xl bg-light-mint border border-wise-green px-5 py-4 flex items-center gap-3 flex-wrap">
+        <span className="w-8 h-8 rounded-full bg-dark-green text-wise-green inline-flex items-center justify-center text-[14px] font-bold shrink-0">
           ✓
         </span>
         <div className="flex-1 min-w-0">
-          <div className="text-[14px] font-bold text-[#163300]">
+          <div className="text-[14px] font-bold text-dark-green">
             Live in your shop
           </div>
-          <div className="text-[12px] text-[#0e0f0c]/70 truncate">
+          <div className="text-[12px] text-near-black/70 truncate">
             Visible at{" "}
             <a
               href={publicUrl}
@@ -60,7 +60,7 @@ export default function DraftBanner({
           href={publicUrl}
           target="_blank"
           rel="noreferrer"
-          className="text-[12px] font-semibold text-[#163300] underline underline-offset-4 decoration-2"
+          className="text-[12px] font-semibold text-dark-green underline underline-offset-4 decoration-2"
         >
           Open ↗
         </a>
@@ -82,7 +82,7 @@ export default function DraftBanner({
           publishing.
         </div>
         {error && (
-          <div className="text-[12px] font-medium text-[#a3221a] mt-1">
+          <div className="text-[12px] font-medium text-heritage-red-ink mt-1">
             {error}
           </div>
         )}
@@ -91,7 +91,7 @@ export default function DraftBanner({
         type="button"
         onClick={publish}
         disabled={pending}
-        className="shrink-0 inline-flex items-center gap-2 rounded-full bg-[#163300] text-white text-[13px] font-semibold px-4 h-10 hover:bg-[#054d28] transition-colors disabled:opacity-60"
+        className="shrink-0 inline-flex items-center gap-2 rounded-full bg-dark-green text-white text-[13px] font-semibold px-4 h-10 hover:bg-positive transition-colors disabled:opacity-60"
       >
         {pending ? "Publishing…" : "Publish now →"}
       </button>

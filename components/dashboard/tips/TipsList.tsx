@@ -12,15 +12,15 @@ export default function TipsList({ title, tips, emptyState }: TipsListProps) {
   return (
     <section className="rounded-[28px] bg-white border border-[rgba(14,15,12,0.06)] p-6 md:p-7 shadow-[0_1px_0_0_rgba(14,15,12,0.03)]">
       <div className="flex items-baseline justify-between mb-5">
-        <h2 className="text-[16px] font-semibold tracking-tight text-[#0e0f0c]">
+        <h2 className="text-[16px] font-semibold tracking-tight text-near-black">
           {title}
         </h2>
-        <span className="text-[12px] font-semibold text-[#868685] tabular-nums">
+        <span className="text-[12px] font-semibold text-gray tabular-nums">
           {tips.length}
         </span>
       </div>
       {tips.length === 0 ? (
-        <p className="text-[13px] text-[#868685] leading-[1.55]">
+        <p className="text-[13px] text-gray leading-[1.55]">
           {emptyState ?? "Nothing here yet."}
         </p>
       ) : (

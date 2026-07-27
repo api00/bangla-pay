@@ -15,7 +15,7 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
 
   return (
     <div className="mb-6">
-      <div className="rounded-[24px] overflow-hidden bg-[#f2f6ec] border border-[rgba(14,15,12,0.06)]">
+      <div className="rounded-[24px] overflow-hidden bg-mint-surface border border-[rgba(14,15,12,0.06)]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={active}
@@ -37,7 +37,7 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
                 className={[
                   "shrink-0 w-20 h-20 rounded-xl overflow-hidden transition-all",
                   isActive
-                    ? "ring-2 ring-[#0e0f0c] ring-offset-2 ring-offset-[#f7f9f5]"
+                    ? "ring-2 ring-near-black ring-offset-2 ring-offset-off-white"
                     : "ring-1 ring-[rgba(14,15,12,0.08)] opacity-80 hover:opacity-100",
                 ].join(" ")}
               >

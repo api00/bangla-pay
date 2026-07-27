@@ -72,7 +72,7 @@ export default function PresetsForm({ presets }: PresetsFormProps) {
                   <button
                     type="button"
                     onClick={() => removeAt(i)}
-                    className="h-11 w-11 shrink-0 rounded-2xl border border-[rgba(14,15,12,0.1)] text-[#454745] hover:border-[#0e0f0c] hover:text-[#0e0f0c] transition-colors"
+                    className="h-11 w-11 shrink-0 rounded-2xl border border-[rgba(14,15,12,0.1)] text-warm-dark hover:border-near-black hover:text-near-black transition-colors"
                     aria-label="Remove preset"
                   >
                     ×
@@ -86,7 +86,7 @@ export default function PresetsForm({ presets }: PresetsFormProps) {
           <button
             type="button"
             onClick={addOne}
-            className="mt-4 text-[13px] font-semibold text-[#163300] underline underline-offset-4 decoration-[#9fe870] decoration-[2px] hover:decoration-[#cdffad]"
+            className="mt-4 text-[13px] font-semibold text-dark-green underline underline-offset-4 decoration-wise-green decoration-[2px] hover:decoration-pastel-green"
           >
             + Add preset
           </button>

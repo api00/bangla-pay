@@ -84,7 +84,7 @@ export default function ProductActionsMenu({
   }
 
   const itemClass =
-    "flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-[13px] font-semibold text-[#0e0f0c] transition-colors hover:bg-[#f7f9f5]";
+    "flex w-full items-center gap-2.5 px-3 py-2.5 text-left text-[13px] font-semibold text-near-black transition-colors hover:bg-off-white";
 
   return (
     <div ref={rootRef} className="relative">
@@ -94,7 +94,7 @@ export default function ProductActionsMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label="Product actions"
-        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(14,15,12,0.12)] bg-white text-[#454745] transition-colors hover:border-[#0e0f0c] hover:text-[#0e0f0c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
+        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[rgba(14,15,12,0.12)] bg-white text-warm-dark transition-colors hover:border-near-black hover:text-near-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-green"
       >
         <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4" aria-hidden>
           <circle cx="4" cy="10" r="1.6" />
@@ -110,10 +110,10 @@ export default function ProductActionsMenu({
         >
           {confirming ? (
             <div className="px-3 py-2">
-              <p className="text-[13px] font-semibold leading-[1.4] text-[#0e0f0c]">
+              <p className="text-[13px] font-semibold leading-[1.4] text-near-black">
                 Delete this product?
               </p>
-              <p className="mt-1 text-[12px] leading-[1.45] text-[#454745]">
+              <p className="mt-1 text-[12px] leading-[1.45] text-warm-dark">
                 It leaves your shop for good. Anyone who already bought it
                 keeps their access.
               </p>
@@ -122,14 +122,14 @@ export default function ProductActionsMenu({
                   type="button"
                   onClick={confirmDelete}
                   disabled={pending}
-                  className="inline-flex h-8 items-center rounded-full bg-[#da291c] px-3 text-[12px] font-semibold text-white disabled:opacity-60"
+                  className="inline-flex h-8 items-center rounded-full bg-heritage-red px-3 text-[12px] font-semibold text-white disabled:opacity-60"
                 >
                   {pending ? "Deleting…" : "Delete"}
                 </button>
                 <button
                   type="button"
                   onClick={() => setConfirming(false)}
-                  className="text-[12px] font-semibold text-[#454745] hover:text-[#0e0f0c]"
+                  className="text-[12px] font-semibold text-warm-dark hover:text-near-black"
                 >
                   Cancel
                 </button>
@@ -192,7 +192,7 @@ export default function ProductActionsMenu({
                 type="button"
                 role="menuitem"
                 onClick={() => setConfirming(true)}
-                className={`${itemClass} text-[#da291c] hover:bg-[#fde2df]`}
+                className={`${itemClass} text-heritage-red hover:bg-danger-surface`}
               >
                 <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4 shrink-0" aria-hidden>
                   <path

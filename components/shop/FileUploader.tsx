@@ -161,21 +161,21 @@ export default function FileUploader({
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745] mb-2">
+        <label className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark mb-2">
           Product files
         </label>
 
         <div className="rounded-2xl border-[1.5px] border-dashed border-[rgba(14,15,12,0.14)] bg-white px-5 py-6 flex items-center justify-between gap-4 flex-wrap">
-          <div className="text-[13px] text-[#454745] leading-[1.5]">
+          <div className="text-[13px] text-warm-dark leading-[1.5]">
             {category
               ? `${category.label}: ${guidance?.formats}. Maximum 50 MB per file.`
               : "Choose a category in Details before adding product files."}
           </div>
           <label
             className={[
-              "inline-flex h-11 items-center justify-center rounded-full bg-[#163300] px-5 text-[13px] font-semibold text-white transition-colors",
+              "inline-flex h-11 items-center justify-center rounded-full bg-dark-green px-5 text-[13px] font-semibold text-white transition-colors",
               productCategory
-                ? "cursor-pointer hover:bg-[#054d28]"
+                ? "cursor-pointer hover:bg-positive"
                 : "cursor-not-allowed opacity-50",
             ].join(" ")}
           >
@@ -193,7 +193,7 @@ export default function FileUploader({
         {error && (
           <p
             role="alert"
-            className="mt-2 text-[13px] font-medium text-[#da291c]"
+            className="mt-2 text-[13px] font-medium text-heritage-red"
           >
             {error}
           </p>
@@ -201,7 +201,7 @@ export default function FileUploader({
         {notice && (
           <p
             role="status"
-            className="mt-2 text-[13px] font-medium text-[#163300]"
+            className="mt-2 text-[13px] font-medium text-dark-green"
           >
             {notice}
           </p>
@@ -216,17 +216,17 @@ export default function FileUploader({
               className="flex items-center gap-3 px-4 py-3 rounded-xl border border-[rgba(14,15,12,0.06)] bg-white"
             >
               <div className="min-w-0 flex-1">
-                <p className="text-[14px] font-semibold text-[#0e0f0c] truncate">
+                <p className="text-[14px] font-semibold text-near-black truncate">
                   {file.filename}
                 </p>
-                <p className="text-[12px] text-[#868685]">
+                <p className="text-[12px] text-gray">
                   {file.mimeType} · {formatBytes(file.sizeBytes)}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => removeFile(file.id)}
-                className="inline-flex h-11 items-center px-2 text-[12px] font-semibold text-[#da291c] underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#da291c]"
+                className="inline-flex h-11 items-center px-2 text-[12px] font-semibold text-heritage-red underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-heritage-red"
               >
                 Remove
               </button>

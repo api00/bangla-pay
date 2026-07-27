@@ -121,12 +121,12 @@ export default function HandleForm() {
       <div>
         <label
           htmlFor="handle-input"
-          className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745] mb-2"
+          className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark mb-2"
         >
           Your handle
         </label>
-        <div className="flex items-stretch rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white focus-within:border-[#0e0f0c] transition-colors overflow-hidden">
-          <span className="px-4 inline-flex items-center text-[15px] font-medium text-[#868685] bg-[#f7f9f5] border-r border-[rgba(14,15,12,0.08)] whitespace-nowrap">
+        <div className="flex items-stretch rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white focus-within:border-near-black transition-colors overflow-hidden">
+          <span className="px-4 inline-flex items-center text-[15px] font-medium text-gray bg-off-white border-r border-[rgba(14,15,12,0.08)] whitespace-nowrap">
             {SITE_HOST}/
           </span>
           <input
@@ -141,7 +141,7 @@ export default function HandleForm() {
             placeholder="yourname"
             disabled={isPending}
             aria-describedby="handle-helper"
-            className="flex-1 px-4 h-12 text-[15px] font-semibold text-[#0e0f0c] placeholder:text-[#868685] outline-none disabled:opacity-60"
+            className="flex-1 px-4 h-12 text-[15px] font-semibold text-near-black placeholder:text-gray outline-none disabled:opacity-60"
           />
         </div>
         <p
@@ -149,10 +149,10 @@ export default function HandleForm() {
           className={[
             "mt-2 text-[13px] leading-[1.5]",
             helper.tone === "error"
-              ? "text-[#da291c]"
+              ? "text-heritage-red"
               : helper.tone === "success"
-                ? "text-[#163300] font-semibold"
-                : "text-[#868685]",
+                ? "text-dark-green font-semibold"
+                : "text-gray",
           ].join(" ")}
           role={helper.tone === "error" ? "alert" : undefined}
         >
@@ -160,20 +160,20 @@ export default function HandleForm() {
         </p>
       </div>
 
-      <div className="rounded-2xl bg-[#f7f9f5] border border-[rgba(14,15,12,0.06)] px-5 py-4">
-        <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#868685] mb-1">
+      <div className="rounded-2xl bg-off-white border border-[rgba(14,15,12,0.06)] px-5 py-4">
+        <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-gray mb-1">
           Preview
         </p>
-        <p className="text-[15px] font-medium text-[#0e0f0c] tabular-nums">
+        <p className="text-[15px] font-medium text-near-black tabular-nums">
           {SITE_HOST}/
-          <span className="text-[#163300]">{previewHandle}</span>
+          <span className="text-dark-green">{previewHandle}</span>
         </p>
       </div>
 
       <button
         type="submit"
         disabled={!canSubmit}
-        className="w-full h-12 rounded-full bg-[#9fe870] text-[#163300] font-semibold text-[15px] inline-flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] active:scale-[0.99] shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-14px_rgba(159,232,112,0.7)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+        className="w-full h-12 rounded-full bg-wise-green text-dark-green font-semibold text-[15px] inline-flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] active:scale-[0.99] shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-14px_rgba(159,232,112,0.7)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
       >
         {isPending ? "Saving…" : "Claim handle"}
         {!isPending && <span aria-hidden>→</span>}

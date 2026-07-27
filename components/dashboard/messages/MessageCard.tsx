@@ -36,7 +36,7 @@ function ReplyButton() {
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex items-center justify-center h-10 px-5 rounded-full bg-[#163300] text-white text-[13px] font-semibold hover:bg-[#054d28] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+      className="inline-flex items-center justify-center h-10 px-5 rounded-full bg-dark-green text-white text-[13px] font-semibold hover:bg-positive transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
     >
       {pending ? "Sending…" : "Send reply"}
     </button>
@@ -66,56 +66,56 @@ export default function MessageCard({ message }: MessageCardProps) {
       className={`rounded-[24px] border p-5 md:p-6 transition-colors ${
         message.isRead
           ? "bg-white border-[rgba(14,15,12,0.06)]"
-          : "bg-[#f7faf3] border-[#cdffad]"
+          : "bg-[#f7faf3] border-pastel-green"
       }`}
     >
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#cdffad] to-[#e2f6d5] flex items-center justify-center shrink-0">
-          <span className="text-[13px] font-semibold text-[#163300]">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-pastel-green to-light-mint flex items-center justify-center shrink-0">
+          <span className="text-[13px] font-semibold text-dark-green">
             {initialOf(message.supporterName, message.supporterEmail)}
           </span>
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div className="min-w-0">
-              <div className="text-[14px] font-semibold text-[#0e0f0c] truncate">
+              <div className="text-[14px] font-semibold text-near-black truncate">
                 {displayName(message)}
               </div>
-              <div className="text-[12px] text-[#868685] tabular-nums">
+              <div className="text-[12px] text-gray tabular-nums">
                 {formatBdtDateTime(message.createdAt)} ·{" "}
                 {timeAgo(message.createdAt)}
               </div>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               {message.kind === "tip" && message.tipAmountPaisa !== null && (
-                <span className="text-[11px] font-bold uppercase tracking-[0.14em] px-2 py-1 rounded-full bg-[#e2f6d5] text-[#163300]">
+                <span className="text-[11px] font-bold uppercase tracking-[0.14em] px-2 py-1 rounded-full bg-light-mint text-dark-green">
                   Tip · {formatTaka(message.tipAmountPaisa)}
                 </span>
               )}
               {message.kind === "order" && (
-                <span className="text-[11px] font-bold uppercase tracking-[0.14em] px-2 py-1 rounded-full bg-[#fff4d9] text-[#7a5b00]">
+                <span className="text-[11px] font-bold uppercase tracking-[0.14em] px-2 py-1 rounded-full bg-warning-surface text-warning-ink">
                   Order
                 </span>
               )}
               {!message.isRead && (
-                <span className="text-[10px] font-bold uppercase tracking-[0.14em] px-2 py-1 rounded-full bg-[#da291c] text-white">
+                <span className="text-[10px] font-bold uppercase tracking-[0.14em] px-2 py-1 rounded-full bg-heritage-red text-white">
                   New
                 </span>
               )}
             </div>
           </div>
 
-          <p className="mt-3 text-[14px] text-[#0e0f0c] leading-[1.6] whitespace-pre-line">
+          <p className="mt-3 text-[14px] text-near-black leading-[1.6] whitespace-pre-line">
             {message.body}
           </p>
 
           {hasReplied ? (
-            <div className="mt-4 pl-4 border-l-2 border-[#9fe870]">
-              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#868685] mb-1">
+            <div className="mt-4 pl-4 border-l-2 border-wise-green">
+              <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray mb-1">
                 Your reply ·{" "}
                 {message.repliedAt ? timeAgo(message.repliedAt) : ""}
               </div>
-              <p className="text-[13px] text-[#454745] leading-[1.6] whitespace-pre-line">
+              <p className="text-[13px] text-warm-dark leading-[1.6] whitespace-pre-line">
                 {message.replyBody}
               </p>
             </div>
@@ -127,11 +127,11 @@ export default function MessageCard({ message }: MessageCardProps) {
                 rows={3}
                 maxLength={1000}
                 placeholder="Write a quick thank-you…"
-                className="w-full px-4 py-3 rounded-2xl border border-[rgba(14,15,12,0.1)] bg-white text-[14px] text-[#0e0f0c] placeholder:text-[#868685] focus:outline-none focus:border-[#163300] focus:ring-2 focus:ring-[#9fe870]/40 resize-y"
+                className="w-full px-4 py-3 rounded-2xl border border-[rgba(14,15,12,0.1)] bg-white text-[14px] text-near-black placeholder:text-gray focus:outline-none focus:border-dark-green focus:ring-2 focus:ring-wise-green/40 resize-y"
                 required
               />
               {state.error && (
-                <p className="text-[12px] text-[#a3221a] font-medium">
+                <p className="text-[12px] text-heritage-red-ink font-medium">
                   {state.error}
                 </p>
               )}
@@ -140,7 +140,7 @@ export default function MessageCard({ message }: MessageCardProps) {
                   <button
                     type="button"
                     onClick={() => setReplyOpen(false)}
-                    className="text-[13px] font-semibold text-[#454745] hover:text-[#0e0f0c] px-3 h-10 rounded-full"
+                    className="text-[13px] font-semibold text-warm-dark hover:text-near-black px-3 h-10 rounded-full"
                   >
                     Cancel
                   </button>
@@ -153,7 +153,7 @@ export default function MessageCard({ message }: MessageCardProps) {
               <button
                 type="button"
                 onClick={() => setReplyOpen(true)}
-                className="text-[13px] font-semibold text-[#163300] underline underline-offset-4 decoration-[#9fe870] decoration-[2px] hover:decoration-[#cdffad]"
+                className="text-[13px] font-semibold text-dark-green underline underline-offset-4 decoration-wise-green decoration-[2px] hover:decoration-pastel-green"
               >
                 Reply
               </button>
@@ -165,7 +165,7 @@ export default function MessageCard({ message }: MessageCardProps) {
                 >
                   <button
                     type="submit"
-                    className="text-[13px] font-semibold text-[#454745] hover:text-[#0e0f0c]"
+                    className="text-[13px] font-semibold text-warm-dark hover:text-near-black"
                   >
                     Mark as read
                   </button>

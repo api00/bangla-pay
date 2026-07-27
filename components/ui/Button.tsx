@@ -17,23 +17,23 @@ export interface ButtonProps {
 }
 
 const base =
-  "inline-flex items-center justify-center gap-2 font-semibold rounded-full whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-[#163300] focus-visible:ring-offset-2 focus-visible:ring-offset-white";
+  "inline-flex items-center justify-center gap-2 font-semibold rounded-full whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-dark-green focus-visible:ring-offset-2 focus-visible:ring-offset-white";
 
 const variants: Record<Variant, { base: string; hover: string }> = {
   primary: {
-    base: "bg-[#9fe870] text-[#163300]",
-    hover: "hover:bg-[#cdffad]",
+    base: "bg-wise-green text-dark-green",
+    hover: "hover:bg-pastel-green",
   },
   secondary: {
-    base: "bg-[rgba(22,51,0,0.08)] text-[#0e0f0c]",
+    base: "bg-[rgba(22,51,0,0.08)] text-near-black",
     hover: "hover:bg-[rgba(22,51,0,0.14)]",
   },
   ghost: {
-    base: "bg-transparent text-[#0e0f0c]",
+    base: "bg-transparent text-near-black",
     hover: "hover:bg-[rgba(22,51,0,0.06)]",
   },
   dark: {
-    base: "bg-[#0e0f0c] text-white",
+    base: "bg-near-black text-white",
     hover: "hover:bg-[#1a1b17]",
   },
 };

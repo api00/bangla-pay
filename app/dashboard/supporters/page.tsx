@@ -71,14 +71,14 @@ function Stat({
 }) {
   return (
     <div className="rounded-2xl bg-white border border-[rgba(14,15,12,0.06)] px-5 py-4">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#868685]">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray">
         {label}
       </div>
-      <div className="mt-1 text-[22px] font-semibold tabular-nums text-[#0e0f0c]">
+      <div className="mt-1 text-[22px] font-semibold tabular-nums text-near-black">
         {value}
       </div>
       {sub && (
-        <div className="text-[12px] text-[#868685] mt-0.5 truncate">{sub}</div>
+        <div className="text-[12px] text-gray mt-0.5 truncate">{sub}</div>
       )}
     </div>
   );

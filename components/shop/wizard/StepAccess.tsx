@@ -28,7 +28,7 @@ interface StepAccessProps {
 }
 
 const labelClass =
-  "mb-2 block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745]";
+  "mb-2 block text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark";
 
 function priceLabel(basics: BasicsValues): string {
   if (basics.pricing === "free") return "Free";
@@ -58,7 +58,7 @@ export default function StepAccess({
           className={[
             "grid gap-2 sm:grid-cols-2",
             errorField === "access"
-              ? "rounded-2xl ring-2 ring-[#da291c] ring-offset-4"
+              ? "rounded-2xl ring-2 ring-heritage-red ring-offset-4"
               : "",
           ].join(" ")}
         >
@@ -71,7 +71,7 @@ export default function StepAccess({
                   className={[
                     "cursor-pointer rounded-2xl border p-4 transition-colors",
                     checked
-                      ? "border-[#163300] bg-[#e2f6d5]"
+                      ? "border-dark-green bg-light-mint"
                       : "border-[rgba(14,15,12,0.12)] bg-white hover:border-[rgba(14,15,12,0.28)]",
                   ].join(" ")}
                 >
@@ -82,13 +82,13 @@ export default function StepAccess({
                       value={mode.value}
                       checked={checked}
                       onChange={() => onChange({ deliveryMode: mode.value })}
-                      className="mt-0.5 h-5 w-5 shrink-0 accent-[#163300] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
+                      className="mt-0.5 h-5 w-5 shrink-0 accent-dark-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-green"
                     />
                     <span>
-                      <span className="block text-[14px] font-semibold text-[#0e0f0c]">
+                      <span className="block text-[14px] font-semibold text-near-black">
                         {mode.label}
                       </span>
-                      <span className="mt-1 block text-[12px] leading-[1.5] text-[#454745]">
+                      <span className="mt-1 block text-[12px] leading-[1.5] text-warm-dark">
                         {mode.description}
                       </span>
                     </span>
@@ -109,17 +109,17 @@ export default function StepAccess({
             onChange={(event) =>
               onChange({ rightsConfirmed: event.target.checked })
             }
-            className="mt-0.5 h-5 w-5 shrink-0 accent-[#163300] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
+            className="mt-0.5 h-5 w-5 shrink-0 accent-dark-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-green"
           />
-          <span className="text-[13px] leading-[1.55] text-[#454745]">
-            <span className="font-semibold text-[#0e0f0c]">
+          <span className="text-[13px] leading-[1.55] text-warm-dark">
+            <span className="font-semibold text-near-black">
               I made this, or I have permission to sell it.
             </span>{" "}
             Selling work you don&rsquo;t own can get your page removed.{" "}
             <Link
               href="/copyright"
               target="_blank"
-              className="font-semibold text-[#163300] underline decoration-[#9fe870] decoration-2 underline-offset-4"
+              className="font-semibold text-dark-green underline decoration-wise-green decoration-2 underline-offset-4"
             >
               Details
             </Link>
@@ -127,32 +127,32 @@ export default function StepAccess({
         </label>
       </section>
 
-      <section className="rounded-[20px] border border-[rgba(14,15,12,0.08)] bg-[#f7f9f5] p-5">
-        <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-[#868685]">
+      <section className="rounded-[20px] border border-[rgba(14,15,12,0.08)] bg-off-white p-5">
+        <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-gray">
           Summary
         </p>
         <dl className="mt-3 grid gap-x-6 gap-y-2 text-[13px] sm:grid-cols-2">
           <div className="flex justify-between gap-3 sm:block">
-            <dt className="text-[#868685]">Title</dt>
-            <dd className="truncate font-semibold text-[#0e0f0c]">
+            <dt className="text-gray">Title</dt>
+            <dd className="truncate font-semibold text-near-black">
               {basics.title || "—"}
             </dd>
           </div>
           <div className="flex justify-between gap-3 sm:block">
-            <dt className="text-[#868685]">Category</dt>
-            <dd className="font-semibold text-[#0e0f0c]">
+            <dt className="text-gray">Category</dt>
+            <dd className="font-semibold text-near-black">
               {getProductCategoryLabel(category)}
             </dd>
           </div>
           <div className="flex justify-between gap-3 sm:block">
-            <dt className="text-[#868685]">Price</dt>
-            <dd className="font-semibold tabular-nums text-[#0e0f0c]">
+            <dt className="text-gray">Price</dt>
+            <dd className="font-semibold tabular-nums text-near-black">
               {priceLabel(basics)}
             </dd>
           </div>
           <div className="flex justify-between gap-3 sm:block">
-            <dt className="text-[#868685]">Link</dt>
-            <dd className="truncate font-semibold text-[#0e0f0c]">
+            <dt className="text-gray">Link</dt>
+            <dd className="truncate font-semibold text-near-black">
               /shop/{basics.slug || "—"}
             </dd>
           </div>

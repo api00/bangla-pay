@@ -18,11 +18,11 @@ const METHOD_BADGE: Record<
   PayoutMethod["method"],
   { label: string; bg: string; fg: string }
 > = {
-  bkash: { label: "bKash", bg: "bg-[#fde2df]", fg: "text-[#a3221a]" },
-  nagad: { label: "Nagad", bg: "bg-[#fff4d9]", fg: "text-[#7a5b00]" },
+  bkash: { label: "bKash", bg: "bg-danger-surface", fg: "text-heritage-red-ink" },
+  nagad: { label: "Nagad", bg: "bg-warning-surface", fg: "text-warning-ink" },
   rocket: { label: "Rocket", bg: "bg-[#e8e1ff]", fg: "text-[#3f2b8c]" },
-  beftn: { label: "Bank · BEFTN", bg: "bg-[#e2f6d5]", fg: "text-[#163300]" },
-  rtgs: { label: "Bank · RTGS", bg: "bg-[#e2f6d5]", fg: "text-[#163300]" },
+  beftn: { label: "Bank · BEFTN", bg: "bg-light-mint", fg: "text-dark-green" },
+  rtgs: { label: "Bank · RTGS", bg: "bg-light-mint", fg: "text-dark-green" },
 };
 
 export default function MethodsList({ methods }: MethodsListProps) {
@@ -53,20 +53,20 @@ export default function MethodsList({ methods }: MethodsListProps) {
                     {badge.label}
                   </span>
                   {m.isDefault && (
-                    <span className="text-[10px] font-bold uppercase tracking-[0.14em] px-2 py-1 rounded-full bg-[#163300] text-white">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.14em] px-2 py-1 rounded-full bg-dark-green text-white">
                       Default
                     </span>
                   )}
                   {m.isVerified && (
-                    <span className="text-[10px] font-bold uppercase tracking-[0.14em] px-2 py-1 rounded-full bg-[#e2f6d5] text-[#163300]">
+                    <span className="text-[10px] font-bold uppercase tracking-[0.14em] px-2 py-1 rounded-full bg-light-mint text-dark-green">
                       Verified
                     </span>
                   )}
                 </div>
-                <div className="text-[14px] font-semibold text-[#0e0f0c] mt-1.5 truncate">
+                <div className="text-[14px] font-semibold text-near-black mt-1.5 truncate">
                   {m.accountLabel}
                 </div>
-                <div className="text-[12px] text-[#868685] mt-0.5">
+                <div className="text-[12px] text-gray mt-0.5">
                   Added {formatBdtDate(m.createdAt)}
                 </div>
               </div>
@@ -80,7 +80,7 @@ export default function MethodsList({ methods }: MethodsListProps) {
                         await setDefaultPayoutMethod(m.id);
                       })
                     }
-                    className="text-[13px] font-semibold text-[#454745] hover:text-[#0e0f0c] h-9 px-3 rounded-full hover:bg-[#f7f9f5] transition-colors disabled:opacity-50"
+                    className="text-[13px] font-semibold text-warm-dark hover:text-near-black h-9 px-3 rounded-full hover:bg-off-white transition-colors disabled:opacity-50"
                   >
                     Make default
                   </button>
@@ -102,7 +102,7 @@ export default function MethodsList({ methods }: MethodsListProps) {
                       });
                     }
                   }}
-                  className="text-[13px] font-semibold text-[#454745] hover:text-[#a3221a] h-9 px-3 rounded-full hover:bg-[#fde2df] transition-colors disabled:opacity-50"
+                  className="text-[13px] font-semibold text-warm-dark hover:text-heritage-red-ink h-9 px-3 rounded-full hover:bg-danger-surface transition-colors disabled:opacity-50"
                 >
                   Remove
                 </button>

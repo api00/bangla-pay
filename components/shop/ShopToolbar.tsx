@@ -33,9 +33,9 @@ export default function ShopToolbar({
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[rgba(14,15,12,0.06)] bg-white px-4 py-3">
-      <p className="text-[13px] font-semibold text-[#454745] tabular-nums">
+      <p className="text-[13px] font-semibold text-warm-dark tabular-nums">
         {total} {total === 1 ? "product" : "products"}
-        <span className="text-[#868685]"> · {published} live</span>
+        <span className="text-gray"> · {published} live</span>
       </p>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -47,7 +47,7 @@ export default function ShopToolbar({
             id="shop-sort"
             value={sort}
             onChange={(event) => setParam("sort", event.target.value)}
-            className="h-10 appearance-none rounded-full border border-[rgba(14,15,12,0.12)] bg-white pl-4 pr-9 text-[13px] font-semibold text-[#0e0f0c] outline-none transition-colors hover:border-[#0e0f0c] focus-visible:border-[#163300] focus-visible:ring-2 focus-visible:ring-[#9fe870]"
+            className="h-10 appearance-none rounded-full border border-[rgba(14,15,12,0.12)] bg-white pl-4 pr-9 text-[13px] font-semibold text-near-black outline-none transition-colors hover:border-near-black focus-visible:border-dark-green focus-visible:ring-2 focus-visible:ring-wise-green"
           >
             {PRODUCT_SORTS.map((option) => (
               <option key={option.value} value={option.value}>
@@ -59,7 +59,7 @@ export default function ShopToolbar({
             aria-hidden
             viewBox="0 0 20 20"
             fill="none"
-            className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#454745]"
+            className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-warm-dark"
           >
             <path
               d="m6 8 4 4 4-4"
@@ -74,7 +74,7 @@ export default function ShopToolbar({
         <div
           role="group"
           aria-label="View"
-          className="inline-flex h-10 items-center gap-0.5 rounded-full border border-[rgba(14,15,12,0.12)] bg-[#f7f9f5] p-1"
+          className="inline-flex h-10 items-center gap-0.5 rounded-full border border-[rgba(14,15,12,0.12)] bg-off-white p-1"
         >
           {(
             [
@@ -93,8 +93,8 @@ export default function ShopToolbar({
                 className={[
                   "inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-[13px] font-semibold transition-colors",
                   active
-                    ? "bg-white text-[#0e0f0c] shadow-[0_1px_0_0_rgba(14,15,12,0.06)]"
-                    : "text-[#868685] hover:text-[#0e0f0c]",
+                    ? "bg-white text-near-black shadow-[0_1px_0_0_rgba(14,15,12,0.06)]"
+                    : "text-gray hover:text-near-black",
                 ].join(" ")}
               >
                 {option.value === "grid" ? (

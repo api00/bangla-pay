@@ -25,22 +25,22 @@ export default function MilestoneBadges({
   if (milestones.length === 0) return null;
   return (
     <section aria-label="Milestones" className="space-y-3">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#868685]">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray">
         Milestones
       </div>
       <ul className="flex flex-wrap gap-2">
         {milestones.map((m) => (
           <li
             key={m.id}
-            className="inline-flex items-center gap-2 rounded-full bg-[#fde2df] border border-[rgba(218,41,28,0.18)] pl-2.5 pr-3.5 py-1.5"
+            className="inline-flex items-center gap-2 rounded-full bg-danger-surface border border-[rgba(218,41,28,0.18)] pl-2.5 pr-3.5 py-1.5"
           >
             <span
-              className="w-5 h-5 rounded-full bg-[#da291c] text-white inline-flex items-center justify-center text-[11px] font-bold"
+              className="w-5 h-5 rounded-full bg-heritage-red text-white inline-flex items-center justify-center text-[11px] font-bold"
               aria-hidden
             >
               ★
             </span>
-            <span className="text-[12px] font-semibold text-[#a3221a] tabular-nums">
+            <span className="text-[12px] font-semibold text-heritage-red-ink tabular-nums">
               {describe(m, bnNumerals)}
             </span>
           </li>

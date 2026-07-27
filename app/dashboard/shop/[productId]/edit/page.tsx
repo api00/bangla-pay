@@ -30,17 +30,17 @@ export default async function DashboardEditProductPage({ params }: PageProps) {
       <header>
         <Link
           href="/dashboard/shop"
-          className="text-[13px] font-semibold text-[#454745] hover:text-[#0e0f0c]"
+          className="text-[13px] font-semibold text-warm-dark hover:text-near-black"
         >
           ← Back to shop
         </Link>
         <h1
-          className="display mt-3 text-[26px] md:text-[34px] text-[#0e0f0c]"
+          className="display mt-3 text-[26px] md:text-[34px] text-near-black"
           style={{ lineHeight: 1.1, fontWeight: 700 }}
         >
           {product.title}
         </h1>
-        <p className="text-[13px] text-[#454745] mt-1 tabular-nums">
+        <p className="text-[13px] text-warm-dark mt-1 tabular-nums">
           /{creator.handle}/shop/{product.slug}
         </p>
       </header>
@@ -65,10 +65,10 @@ export default async function DashboardEditProductPage({ params }: PageProps) {
       {/* Text details — has its own Save button */}
       <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6 md:p-7 space-y-6">
         <header>
-          <h2 className="text-[14px] font-semibold uppercase tracking-[0.18em] text-[#454745]">
+          <h2 className="text-[14px] font-semibold uppercase tracking-[0.18em] text-warm-dark">
             Details
           </h2>
-          <p className="text-[12px] text-[#868685] mt-1">
+          <p className="text-[12px] text-gray mt-1">
             Title, description, and pricing. Save when you&rsquo;re done.
           </p>
         </header>
@@ -86,7 +86,7 @@ export default async function DashboardEditProductPage({ params }: PageProps) {
       </section>
 
       <section className="rounded-[24px] bg-white border border-[rgba(14,15,12,0.06)] p-6 md:p-7">
-        <h2 className="text-[14px] font-semibold text-[#0e0f0c] mb-3">
+        <h2 className="text-[14px] font-semibold text-near-black mb-3">
           Danger zone
         </h2>
         <DeleteProductButton productId={product.id} />

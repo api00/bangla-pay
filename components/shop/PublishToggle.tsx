@@ -40,14 +40,14 @@ export default function PublishToggle({
         className={[
           "inline-flex items-center gap-2 h-10 px-4 rounded-full text-[13px] font-semibold transition-colors disabled:opacity-60 disabled:cursor-not-allowed",
           isPublished
-            ? "bg-[#163300] text-white hover:bg-[#0e2400]"
-            : "bg-[#9fe870] text-[#163300] hover:bg-[#cdffad]",
+            ? "bg-dark-green text-white hover:bg-[#0e2400]"
+            : "bg-wise-green text-dark-green hover:bg-pastel-green",
         ].join(" ")}
       >
         <span
           className={[
             "w-2 h-2 rounded-full",
-            isPublished ? "bg-[#9fe870]" : "bg-[#163300]",
+            isPublished ? "bg-wise-green" : "bg-dark-green",
           ].join(" ")}
           aria-hidden
         />
@@ -56,7 +56,7 @@ export default function PublishToggle({
       {error && (
         <p
           role="alert"
-          className="text-[12px] font-medium text-[#da291c] leading-[1.4] max-w-[280px]"
+          className="text-[12px] font-medium text-heritage-red leading-[1.4] max-w-[280px]"
         >
           {error}
         </p>

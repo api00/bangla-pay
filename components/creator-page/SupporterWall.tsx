@@ -31,11 +31,11 @@ export default function SupporterWall({
       <section aria-labelledby="supporter-wall" className="space-y-4">
         <h2
           id="supporter-wall"
-          className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[#868685]"
+          className="text-[12px] font-semibold uppercase tracking-[0.2em] text-gray"
         >
           Recent supporters
         </h2>
-        <p className="text-[14px] text-[#868685] leading-[1.55]">
+        <p className="text-[14px] text-gray leading-[1.55]">
           No public messages yet. Be the first to leave one.
         </p>
       </section>
@@ -46,7 +46,7 @@ export default function SupporterWall({
     <section aria-labelledby="supporter-wall" className="space-y-4">
       <h2
         id="supporter-wall"
-        className="text-[12px] font-semibold uppercase tracking-[0.2em] text-[#868685]"
+        className="text-[12px] font-semibold uppercase tracking-[0.2em] text-gray"
       >
         Recent supporters
       </h2>
@@ -57,10 +57,10 @@ export default function SupporterWall({
             className="rounded-2xl border border-[rgba(14,15,12,0.06)] bg-white px-5 py-4"
           >
             <div className="flex items-baseline justify-between gap-3">
-              <p className="text-[14px] font-semibold text-[#0e0f0c]">
+              <p className="text-[14px] font-semibold text-near-black">
                 {supporter.supporterName ?? "Anonymous"}
               </p>
-              <p className="text-[12px] text-[#868685] tabular-nums shrink-0">
+              <p className="text-[12px] text-gray tabular-nums shrink-0">
                 {formatTaka(supporter.amountPaisa, {
                   bengaliNumerals: bnNumerals,
                 })}{" "}
@@ -72,7 +72,7 @@ export default function SupporterWall({
                 )}
               </p>
             </div>
-            <p className="mt-2 text-[14px] text-[#454745] leading-[1.55] whitespace-pre-line">
+            <p className="mt-2 text-[14px] text-warm-dark leading-[1.55] whitespace-pre-line">
               {supporter.message}
             </p>
           </li>

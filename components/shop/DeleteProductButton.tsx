@@ -44,7 +44,7 @@ export default function DeleteProductButton({
       <button
         type="button"
         onClick={() => setConfirming(true)}
-        className="text-[13px] font-semibold text-[#da291c] hover:underline underline-offset-4"
+        className="text-[13px] font-semibold text-heritage-red hover:underline underline-offset-4"
       >
         Delete product
       </button>
@@ -53,28 +53,28 @@ export default function DeleteProductButton({
 
   return (
     <div className="flex items-center gap-3">
-      <span className="text-[13px] text-[#454745]">
+      <span className="text-[13px] text-warm-dark">
         Sure? This can&rsquo;t be undone.
       </span>
       <button
         type="button"
         onClick={fire}
         disabled={pending}
-        className="h-9 px-4 rounded-full bg-[#da291c] text-white text-[13px] font-semibold disabled:opacity-60"
+        className="h-9 px-4 rounded-full bg-heritage-red text-white text-[13px] font-semibold disabled:opacity-60"
       >
         {pending ? "Deleting…" : "Yes, delete"}
       </button>
       <button
         type="button"
         onClick={() => setConfirming(false)}
-        className="text-[13px] font-semibold text-[#454745] hover:text-[#0e0f0c]"
+        className="text-[13px] font-semibold text-warm-dark hover:text-near-black"
       >
         Cancel
       </button>
       {error && (
         <p
           role="alert"
-          className="text-[12px] font-medium text-[#da291c]"
+          className="text-[12px] font-medium text-heritage-red"
         >
           {error}
         </p>

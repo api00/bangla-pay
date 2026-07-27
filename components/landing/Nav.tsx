@@ -15,7 +15,7 @@ export default async function Nav() {
           aria-label="BanglaPay home"
         >
           <span className="display text-2xl tracking-tight">banglapay</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#9fe870]" aria-hidden />
+          <span className="w-1.5 h-1.5 rounded-full bg-wise-green" aria-hidden />
         </Link>
 
         <div className="flex items-center gap-6 md:gap-8">

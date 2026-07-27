@@ -53,28 +53,28 @@ async function TipSuccess({ tipId }: { tipId: string | undefined }) {
   }
 
   return (
-    <main className="min-h-screen bg-[#f7f9f5] flex items-center justify-center px-5 sm:px-6 py-10">
+    <main className="min-h-screen bg-off-white flex items-center justify-center px-5 sm:px-6 py-10">
       <div className="w-full max-w-[460px] text-center space-y-6">
         <SuccessTick />
         <div className="space-y-2">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#868685]">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-gray">
             Tip received
           </p>
           <h1
-            className="display text-[36px] sm:text-[44px] text-[#0e0f0c]"
+            className="display text-[36px] sm:text-[44px] text-near-black"
             style={{ lineHeight: 1.05, fontWeight: 700 }}
           >
             Thanks for the cha.
           </h1>
         </div>
         {tipRow ? (
-          <p className="text-[15px] text-[#454745] leading-[1.55]">
+          <p className="text-[15px] text-warm-dark leading-[1.55]">
             You sent{" "}
-            <span className="font-semibold text-[#0e0f0c]">
+            <span className="font-semibold text-near-black">
               {formatTaka(tipRow.amountPaisa)}
             </span>{" "}
             to{" "}
-            <span className="font-semibold text-[#0e0f0c]">
+            <span className="font-semibold text-near-black">
               {tipRow.displayName}
             </span>
             .
@@ -87,14 +87,14 @@ async function TipSuccess({ tipId }: { tipId: string | undefined }) {
             )}
           </p>
         ) : (
-          <p className="text-[15px] text-[#454745] leading-[1.55]">
+          <p className="text-[15px] text-warm-dark leading-[1.55]">
             Your tip has been received. Thanks for showing up.
           </p>
         )}
         <div className="pt-2">
           <Link
             href={tipRow ? `/${tipRow.handle}` : "/"}
-            className="inline-flex h-12 px-6 rounded-full bg-[#0e0f0c] text-white font-semibold text-[14px] items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-transform"
+            className="inline-flex h-12 px-6 rounded-full bg-near-black text-white font-semibold text-[14px] items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-transform"
           >
             {tipRow ? `Back to ${tipRow.displayName}` : "Back to home"}
             <span aria-hidden>→</span>
@@ -107,7 +107,7 @@ async function TipSuccess({ tipId }: { tipId: string | undefined }) {
 
 function SuccessTick() {
   return (
-    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#9fe870]">
+    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-wise-green">
       <svg
         width="28"
         height="28"

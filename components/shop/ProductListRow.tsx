@@ -29,14 +29,14 @@ export default function ProductListRow({
         <img
           src={product.coverUrl}
           alt=""
-          className="h-14 w-20 shrink-0 rounded-xl bg-[#f2f6ec] object-cover"
+          className="h-14 w-20 shrink-0 rounded-xl bg-mint-surface object-cover"
         />
       ) : (
         <div
           aria-hidden
-          className="flex h-14 w-20 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#cdffad] to-[#e2f6d5]"
+          className="flex h-14 w-20 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-pastel-green to-light-mint"
         >
-          <span className="text-[20px] font-bold text-[#163300]">
+          <span className="text-[20px] font-bold text-dark-green">
             {product.title.trim()[0]?.toUpperCase() ?? "•"}
           </span>
         </div>
@@ -44,43 +44,43 @@ export default function ProductListRow({
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <h3 className="truncate text-[15px] font-semibold text-[#0e0f0c]">
+          <h3 className="truncate text-[15px] font-semibold text-near-black">
             {product.title}
           </h3>
           <ProductStatusDot isPublished={product.isPublished} />
           {issue && (
-            <span className="inline-flex min-h-7 items-center rounded-full bg-[#fff4d9] px-2.5 text-[11px] font-semibold text-[#7a5b00]">
+            <span className="inline-flex min-h-7 items-center rounded-full bg-warning-surface px-2.5 text-[11px] font-semibold text-warning-ink">
               {issue}
             </span>
           )}
         </div>
 
-        <p className="mt-1 truncate text-[12px] text-[#868685]">
+        <p className="mt-1 truncate text-[12px] text-gray">
           /{handle}/shop/{product.slug}
         </p>
 
-        <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-[#868685]">
+        <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-gray">
           <span className="tabular-nums">
             {product.fileCount} {product.fileCount === 1 ? "file" : "files"}
             {product.totalBytes > 0 && ` · ${formatBytes(product.totalBytes)}`}
           </span>
-          <span aria-hidden className="h-0.5 w-0.5 rounded-full bg-[#c8c8c7]" />
+          <span aria-hidden className="h-0.5 w-0.5 rounded-full bg-gray-light" />
           <span className="tabular-nums">
             {product.totalSales} {product.totalSales === 1 ? "sale" : "sales"}
           </span>
-          <span aria-hidden className="h-0.5 w-0.5 rounded-full bg-[#c8c8c7]" />
+          <span aria-hidden className="h-0.5 w-0.5 rounded-full bg-gray-light" />
           <span>{timeAgo(product.updatedAt)}</span>
         </p>
       </div>
 
       <div className="hidden shrink-0 flex-wrap gap-2 lg:flex">
         {product.category && <ProductCategoryBadge category={product.category} />}
-        <span className="inline-flex min-h-7 items-center rounded-full border border-[rgba(14,15,12,0.1)] bg-[#f7f9f5] px-3 text-[12px] font-semibold text-[#454745]">
+        <span className="inline-flex min-h-7 items-center rounded-full border border-[rgba(14,15,12,0.1)] bg-off-white px-3 text-[12px] font-semibold text-warm-dark">
           {getDeliveryMode(product.deliveryMode).shortLabel}
         </span>
       </div>
 
-      <span className="shrink-0 text-[14px] font-semibold tabular-nums text-[#163300] sm:w-[110px] sm:text-right">
+      <span className="shrink-0 text-[14px] font-semibold tabular-nums text-dark-green sm:w-[110px] sm:text-right">
         {priceLabel(product)}
       </span>
 
@@ -91,7 +91,7 @@ export default function ProductListRow({
         />
         <Link
           href={`/dashboard/shop/${product.id}/edit`}
-          className="hidden text-[13px] font-semibold text-[#454745] hover:text-[#0e0f0c] sm:inline"
+          className="hidden text-[13px] font-semibold text-warm-dark hover:text-near-black sm:inline"
         >
           Edit →
         </Link>

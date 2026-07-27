@@ -23,7 +23,7 @@ export default async function RealCreatorShowcase() {
       <div className="mx-auto max-w-6xl px-5 lg:px-8">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div className="max-w-2xl">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#454745]">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-warm-dark">
               Creators
             </span>
             <h2
@@ -32,7 +32,7 @@ export default async function RealCreatorShowcase() {
             >
               Already accepting cha.
             </h2>
-            <p className="mt-5 text-lg leading-[1.55] text-[#454745] md:text-xl">
+            <p className="mt-5 text-lg leading-[1.55] text-warm-dark md:text-xl">
               Real pages from real creators. Send a cha in taka, or buy
               something they made.
             </p>
@@ -40,7 +40,7 @@ export default async function RealCreatorShowcase() {
 
           <Link
             href="/creators"
-            className="inline-flex h-12 shrink-0 items-center justify-center rounded-full border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-5 text-[14px] font-semibold text-[#0e0f0c] transition-colors hover:border-[#0e0f0c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
+            className="inline-flex h-12 shrink-0 items-center justify-center rounded-full border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-5 text-[14px] font-semibold text-near-black transition-colors hover:border-near-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-green"
           >
             See all creators →
           </Link>

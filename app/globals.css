@@ -16,6 +16,17 @@
   --color-danger: #d03238;
   --color-warning: #ffd11a;
 
+  /* Surfaces and text derived from the core palette. These were already in
+     use as raw hex across the app; naming them stops the next person
+     inventing a fourteenth shade of amber. */
+  --color-heritage-red-ink: #a3221a;   /* readable red on a light red surface */
+  --color-danger-surface: #fde2df;     /* error banner / destructive hover */
+  --color-warning-surface: #fff4d9;    /* "needs attention" chips */
+  --color-warning-ink: #7a5b00;        /* readable amber on that surface */
+  --color-mint-surface: #f2f6ec;       /* tinted panel, one step off white */
+  --color-gray-light: #c8c8c7;         /* separators, inert dots */
+  --color-gray-ink: #6b6d6b;           /* placeholder text */
+
   /* Neutrals */
   --color-warm-dark: #454745;
   --color-gray: #868685;

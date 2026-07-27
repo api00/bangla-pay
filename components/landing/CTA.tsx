@@ -5,11 +5,11 @@ import { useEffect, useRef, useState } from "react";
 import { SITE_HOST } from "@/lib/site";
 
 const avatars = [
-  { initial: "তা", bg: "from-[#9fe870] to-[#cdffad]", fg: "#163300", bangla: true },
-  { initial: "প", bg: "from-[#e2f6d5] to-[#9fe870]", fg: "#163300", bangla: true },
-  { initial: "N", bg: "from-[#054d28] to-[#163300]", fg: "#ffffff", bangla: false },
-  { initial: "রু", bg: "from-[#cdffad] to-[#e2f6d5]", fg: "#163300", bangla: true },
-  { initial: "M", bg: "from-[#163300] to-[#054d28]", fg: "#9fe870", bangla: false },
+  { initial: "তা", bg: "from-wise-green to-pastel-green", fg: "#163300", bangla: true },
+  { initial: "প", bg: "from-light-mint to-wise-green", fg: "#163300", bangla: true },
+  { initial: "N", bg: "from-positive to-dark-green", fg: "#ffffff", bangla: false },
+  { initial: "রু", bg: "from-pastel-green to-light-mint", fg: "#163300", bangla: true },
+  { initial: "M", bg: "from-dark-green to-positive", fg: "#9fe870", bangla: false },
 ];
 
 const sampleHandles = ["tahsina", "nahiyan", "priya-das", "rakib", "labiba"];
@@ -85,8 +85,8 @@ export default function CTA() {
   return (
     <section className="py-20 md:py-28 bg-white">
       <div className="max-w-5xl mx-auto px-5 lg:px-8">
-        <div className="rounded-[36px] bg-[#f7f9f5] border border-[rgba(14,15,12,0.08)] px-6 md:px-12 py-16 md:py-20 text-center">
-          <span className="text-[11px] font-semibold tracking-[0.22em] uppercase text-[#454745]">
+        <div className="rounded-[36px] bg-off-white border border-[rgba(14,15,12,0.08)] px-6 md:px-12 py-16 md:py-20 text-center">
+          <span className="text-[11px] font-semibold tracking-[0.22em] uppercase text-warm-dark">
             Your cha jar
           </span>
 
@@ -97,16 +97,16 @@ export default function CTA() {
             Start tonight. It takes a <span className="whitespace-nowrap">minute. <span aria-hidden>⏱️</span></span>
           </h2>
 
-          <p className="mt-5 md:mt-6 text-lg md:text-xl text-[#454745] max-w-xl mx-auto leading-[1.5]">
+          <p className="mt-5 md:mt-6 text-lg md:text-xl text-warm-dark max-w-xl mx-auto leading-[1.5]">
             Pick a handle, share the link, and start accepting cha from the people who love your work.
           </p>
 
           {/* Handle claimer */}
           <form
             action="#"
-            className="mt-12 md:mt-14 mx-auto flex items-center gap-2 w-full max-w-[580px] rounded-full bg-white border-[1.5px] border-[#0e0f0c] p-1.5 md:p-2 shadow-[0_1px_0_0_rgba(14,15,12,0.04),0_20px_50px_-24px_rgba(159,232,112,0.45)] focus-within:shadow-[0_1px_0_0_rgba(14,15,12,0.04),0_20px_60px_-20px_rgba(159,232,112,0.7)] transition-shadow"
+            className="mt-12 md:mt-14 mx-auto flex items-center gap-2 w-full max-w-[580px] rounded-full bg-white border-[1.5px] border-near-black p-1.5 md:p-2 shadow-[0_1px_0_0_rgba(14,15,12,0.04),0_20px_50px_-24px_rgba(159,232,112,0.45)] focus-within:shadow-[0_1px_0_0_rgba(14,15,12,0.04),0_20px_60px_-20px_rgba(159,232,112,0.7)] transition-shadow"
           >
-            <span className="pl-4 md:pl-5 text-[14px] md:text-[15px] font-semibold text-[#868685] whitespace-nowrap tabular-nums">
+            <span className="pl-4 md:pl-5 text-[14px] md:text-[15px] font-semibold text-gray whitespace-nowrap tabular-nums">
               {SITE_HOST}/
             </span>
             <div className="relative flex-1 min-w-0">
@@ -119,21 +119,21 @@ export default function CTA() {
                 onBlur={() => setFocused(false)}
                 aria-label="Your handle"
                 autoComplete="off"
-                className="w-full bg-transparent text-[14px] md:text-[15px] font-semibold text-[#0e0f0c] outline-none px-1 py-2 relative z-10"
+                className="w-full bg-transparent text-[14px] md:text-[15px] font-semibold text-near-black outline-none px-1 py-2 relative z-10"
               />
               {showAnimated && (
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 flex items-center px-1 text-[14px] md:text-[15px] font-semibold text-[#868685] whitespace-nowrap overflow-hidden"
+                  className="pointer-events-none absolute inset-0 flex items-center px-1 text-[14px] md:text-[15px] font-semibold text-gray whitespace-nowrap overflow-hidden"
                 >
                   {animatedText}
-                  <span className="ml-[2px] inline-block w-[2px] h-[1em] bg-[#9fe870] align-middle animate-[blink_1s_steps(2,start)_infinite]" />
+                  <span className="ml-[2px] inline-block w-[2px] h-[1em] bg-wise-green align-middle animate-[blink_1s_steps(2,start)_infinite]" />
                 </span>
               )}
             </div>
             <button
               type="submit"
-              className="shrink-0 inline-flex items-center gap-2 rounded-full bg-[#9fe870] text-[#163300] font-semibold text-[14px] md:text-[15px] px-5 md:px-6 h-10 md:h-11 whitespace-nowrap transition-transform hover:scale-[1.03] active:scale-[0.97]"
+              className="shrink-0 inline-flex items-center gap-2 rounded-full bg-wise-green text-dark-green font-semibold text-[14px] md:text-[15px] px-5 md:px-6 h-10 md:h-11 whitespace-nowrap transition-transform hover:scale-[1.03] active:scale-[0.97]"
             >
               Claim it
               <span aria-hidden>→</span>
@@ -156,12 +156,12 @@ export default function CTA() {
                 </span>
               ))}
             </div>
-            <div className="text-[14px] md:text-[15px] text-[#454745]">
-              Join <span className="text-[#0e0f0c] font-semibold tabular-nums">500+</span> creators already on BanglaPay
+            <div className="text-[14px] md:text-[15px] text-warm-dark">
+              Join <span className="text-near-black font-semibold tabular-nums">500+</span> creators already on BanglaPay
             </div>
           </div>
 
-          <div className="mt-6 text-[13px] md:text-[14px] text-[#868685]">
+          <div className="mt-6 text-[13px] md:text-[14px] text-gray">
             Free. No card. No setup fee.
           </div>
         </div>

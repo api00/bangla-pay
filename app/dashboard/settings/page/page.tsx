@@ -19,8 +19,8 @@ export default async function PublicPageSettingsPage() {
       />
 
       <Card title="Your link" description="Tap to copy.">
-        <div className="rounded-2xl bg-[#f7f9f5] border border-[rgba(14,15,12,0.06)] p-4 flex items-center gap-3 flex-wrap">
-          <div className="flex-1 min-w-0 font-mono text-[14px] text-[#0e0f0c] truncate tabular-nums">
+        <div className="rounded-2xl bg-off-white border border-[rgba(14,15,12,0.06)] p-4 flex items-center gap-3 flex-wrap">
+          <div className="flex-1 min-w-0 font-mono text-[14px] text-near-black truncate tabular-nums">
             {url}
           </div>
           <CopyLinkButton value={url} />
@@ -28,7 +28,7 @@ export default async function PublicPageSettingsPage() {
             href={`/${creator.handle}`}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-[#163300] text-white text-[13px] font-semibold hover:bg-[#054d28] transition-colors"
+            className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-dark-green text-white text-[13px] font-semibold hover:bg-positive transition-colors"
           >
             Open page
           </a>
@@ -65,7 +65,7 @@ export default async function PublicPageSettingsPage() {
         title="Embed your link"
         description="Drop this into your bio or signature."
       >
-        <pre className="rounded-2xl bg-[#0e0f0c] text-[#e2f6d5] text-[12px] font-mono p-4 overflow-x-auto leading-[1.6]">
+        <pre className="rounded-2xl bg-near-black text-light-mint text-[12px] font-mono p-4 overflow-x-auto leading-[1.6]">
           {`<a href="${url}" target="_blank" rel="noreferrer">
   Buy me a cha · ${url.replace("https://", "")}
 </a>`}
@@ -81,10 +81,10 @@ function ShareLink({ label, href }: { label: string; href: string }) {
       href={href}
       target="_blank"
       rel="noreferrer"
-      className="inline-flex items-center justify-between h-12 px-4 rounded-2xl bg-white border border-[rgba(14,15,12,0.08)] text-[14px] font-semibold text-[#0e0f0c] hover:border-[#0e0f0c] transition-colors"
+      className="inline-flex items-center justify-between h-12 px-4 rounded-2xl bg-white border border-[rgba(14,15,12,0.08)] text-[14px] font-semibold text-near-black hover:border-near-black transition-colors"
     >
       <span>{label}</span>
-      <span aria-hidden className="text-[#454745]">
+      <span aria-hidden className="text-warm-dark">
         →
       </span>
     </a>

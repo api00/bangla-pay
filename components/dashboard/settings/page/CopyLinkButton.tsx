@@ -19,7 +19,7 @@ export default function CopyLinkButton({ value }: { value: string }) {
     <button
       type="button"
       onClick={copy}
-      className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-white border border-[rgba(14,15,12,0.12)] text-[13px] font-semibold text-[#0e0f0c] hover:border-[#0e0f0c] transition-colors"
+      className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-white border border-[rgba(14,15,12,0.12)] text-[13px] font-semibold text-near-black hover:border-near-black transition-colors"
     >
       {copied ? "Copied!" : "Copy link"}
     </button>

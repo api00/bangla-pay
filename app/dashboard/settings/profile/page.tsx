@@ -33,7 +33,7 @@ export default async function ProfileSettingsPage() {
             href={`/${creator.handle}`}
             target="_blank"
             rel="noreferrer"
-            className="text-[13px] font-semibold text-[#163300] underline underline-offset-4 decoration-[#9fe870] decoration-[2px] hover:decoration-[#cdffad]"
+            className="text-[13px] font-semibold text-dark-green underline underline-offset-4 decoration-wise-green decoration-[2px] hover:decoration-pastel-green"
           >
             View public page →
           </a>

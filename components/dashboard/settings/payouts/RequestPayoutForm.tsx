@@ -93,7 +93,7 @@ export default function RequestPayoutForm({
         </div>
 
         {state.ok && state.savedAt ? (
-          <div className="mt-5 rounded-2xl bg-[#f2f6ec] border border-[#cdffad] px-4 py-3 text-[13px] text-[#163300] font-medium">
+          <div className="mt-5 rounded-2xl bg-mint-surface border border-pastel-green px-4 py-3 text-[13px] text-dark-green font-medium">
             Payout request submitted. We&rsquo;ll process it within 1–3
             business days.
           </div>

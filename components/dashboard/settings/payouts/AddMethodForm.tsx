@@ -170,8 +170,8 @@ export default function AddMethodForm({
               defaultChecked={!hasMethods}
               className="peer sr-only"
             />
-            <span className="relative w-10 h-6 rounded-full bg-[#e8ebe6] peer-checked:bg-[#9fe870] transition-colors after:absolute after:top-[3px] after:left-[3px] after:w-[18px] after:h-[18px] after:rounded-full after:bg-white after:shadow-[0_1px_2px_rgba(0,0,0,0.15)] after:transition-transform peer-checked:after:translate-x-4" />
-            <span className="text-[13px] font-medium text-[#0e0f0c]">
+            <span className="relative w-10 h-6 rounded-full bg-light-surface peer-checked:bg-wise-green transition-colors after:absolute after:top-[3px] after:left-[3px] after:w-[18px] after:h-[18px] after:rounded-full after:bg-white after:shadow-[0_1px_2px_rgba(0,0,0,0.15)] after:transition-transform peer-checked:after:translate-x-4" />
+            <span className="text-[13px] font-medium text-near-black">
               Make this my default payout method
             </span>
           </label>

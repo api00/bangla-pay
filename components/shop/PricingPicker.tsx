@@ -46,10 +46,10 @@ export default function PricingPicker({
             <label
               key={opt.value}
               className={[
-                "flex min-h-12 cursor-pointer flex-col gap-1 rounded-2xl border-[1.5px] px-4 py-4 transition-colors focus-within:ring-2 focus-within:ring-[#9fe870]",
+                "flex min-h-12 cursor-pointer flex-col gap-1 rounded-2xl border-[1.5px] px-4 py-4 transition-colors focus-within:ring-2 focus-within:ring-wise-green",
                 checked
-                  ? "border-[#0e0f0c] bg-[#f7f9f5]"
-                  : "border-[rgba(14,15,12,0.10)] bg-white hover:border-[#454745]",
+                  ? "border-near-black bg-off-white"
+                  : "border-[rgba(14,15,12,0.10)] bg-white hover:border-warm-dark",
               ].join(" ")}
             >
               <input
@@ -60,10 +60,10 @@ export default function PricingPicker({
                 onChange={onChange}
                 className="sr-only"
               />
-              <span className="text-[14px] font-semibold text-[#0e0f0c]">
+              <span className="text-[14px] font-semibold text-near-black">
                 {opt.title}
               </span>
-              <span className="text-[12px] text-[#454745] leading-[1.5]">
+              <span className="text-[12px] text-warm-dark leading-[1.5]">
                 {opt.sub}
               </span>
             </label>
@@ -76,12 +76,12 @@ export default function PricingPicker({
           <div>
             <label
               htmlFor="base_price"
-              className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745] mb-2"
+              className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark mb-2"
             >
               {model === "pay_what_you_want" ? "Suggested price" : "Price"}
             </label>
-            <div className="flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white transition-colors focus-within:border-[#163300] focus-within:ring-2 focus-within:ring-[#9fe870]">
-              <span className="inline-flex items-center border-r border-[rgba(14,15,12,0.08)] bg-[#f7f9f5] px-4 text-[15px] text-[#454745]">
+            <div className="flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white transition-colors focus-within:border-dark-green focus-within:ring-2 focus-within:ring-wise-green">
+              <span className="inline-flex items-center border-r border-[rgba(14,15,12,0.08)] bg-off-white px-4 text-[15px] text-warm-dark">
                 ৳
               </span>
               <input
@@ -92,7 +92,7 @@ export default function PricingPicker({
                 defaultValue={defaultBasePrice}
                 placeholder="500"
                 required
-                className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-[#0e0f0c] outline-none placeholder:text-[#6b6d6b]"
+                className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-near-black outline-none placeholder:text-gray-ink"
               />
             </div>
           </div>
@@ -101,12 +101,12 @@ export default function PricingPicker({
             <div>
               <label
                 htmlFor="min_price"
-                className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745] mb-2"
+                className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark mb-2"
               >
                 Minimum (optional)
               </label>
-              <div className="flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white transition-colors focus-within:border-[#163300] focus-within:ring-2 focus-within:ring-[#9fe870]">
-                <span className="inline-flex items-center border-r border-[rgba(14,15,12,0.08)] bg-[#f7f9f5] px-4 text-[15px] text-[#454745]">
+              <div className="flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white transition-colors focus-within:border-dark-green focus-within:ring-2 focus-within:ring-wise-green">
+                <span className="inline-flex items-center border-r border-[rgba(14,15,12,0.08)] bg-off-white px-4 text-[15px] text-warm-dark">
                   ৳
                 </span>
                 <input
@@ -116,7 +116,7 @@ export default function PricingPicker({
                   name="min_price"
                   defaultValue={defaultMinPrice}
                   placeholder="100"
-                  className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-[#0e0f0c] outline-none placeholder:text-[#6b6d6b]"
+                  className="min-w-0 flex-1 px-4 text-[16px] font-semibold text-near-black outline-none placeholder:text-gray-ink"
                 />
               </div>
             </div>

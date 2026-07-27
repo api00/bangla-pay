@@ -26,12 +26,12 @@ export default async function DashboardTipsPage() {
       <header className="flex items-baseline justify-between flex-wrap gap-3">
         <div>
           <h1
-            className="display text-[28px] md:text-[36px] text-[#0e0f0c]"
+            className="display text-[28px] md:text-[36px] text-near-black"
             style={{ lineHeight: 1.1, fontWeight: 700 }}
           >
             Tips
           </h1>
-          <p className="text-[14px] text-[#454745] mt-1">
+          <p className="text-[14px] text-warm-dark mt-1">
             One-off support from your community.
           </p>
         </div>
@@ -39,7 +39,7 @@ export default async function DashboardTipsPage() {
           href={`/${creator.handle}`}
           target="_blank"
           rel="noreferrer"
-          className="text-[13px] font-semibold text-[#163300] underline underline-offset-4 decoration-[#9fe870] decoration-[2px] hover:decoration-[#cdffad]"
+          className="text-[13px] font-semibold text-dark-green underline underline-offset-4 decoration-wise-green decoration-[2px] hover:decoration-pastel-green"
         >
           View public page →
         </a>
@@ -47,36 +47,36 @@ export default async function DashboardTipsPage() {
 
       <dl className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
         <div className="rounded-2xl bg-white border border-[rgba(14,15,12,0.06)] px-5 py-4">
-          <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#868685]">
+          <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray">
             Total raised
           </dt>
-          <dd className="mt-1 text-[22px] font-semibold tabular-nums text-[#0e0f0c]">
+          <dd className="mt-1 text-[22px] font-semibold tabular-nums text-near-black">
             {formatTaka(stats.totalRaisedPaisa)}
           </dd>
         </div>
         <div className="rounded-2xl bg-white border border-[rgba(14,15,12,0.06)] px-5 py-4">
-          <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#868685]">
+          <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray">
             Supporters
           </dt>
-          <dd className="mt-1 text-[22px] font-semibold tabular-nums text-[#0e0f0c]">
+          <dd className="mt-1 text-[22px] font-semibold tabular-nums text-near-black">
             {stats.supporterCount}
           </dd>
         </div>
         <div className="rounded-2xl bg-white border border-[rgba(14,15,12,0.06)] px-5 py-4">
-          <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#868685]">
+          <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray">
             Average tip
           </dt>
-          <dd className="mt-1 text-[22px] font-semibold tabular-nums text-[#0e0f0c]">
+          <dd className="mt-1 text-[22px] font-semibold tabular-nums text-near-black">
             {stats.averageTipPaisa > 0
               ? formatTaka(stats.averageTipPaisa)
               : "—"}
           </dd>
         </div>
         <div className="rounded-2xl bg-white border border-[rgba(14,15,12,0.06)] px-5 py-4">
-          <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#868685]">
+          <dt className="text-[11px] font-semibold uppercase tracking-[0.18em] text-gray">
             Pending
           </dt>
-          <dd className="mt-1 text-[22px] font-semibold tabular-nums text-[#0e0f0c]">
+          <dd className="mt-1 text-[22px] font-semibold tabular-nums text-near-black">
             {stats.pendingTipCount}
           </dd>
         </div>

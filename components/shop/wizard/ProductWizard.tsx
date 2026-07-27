@@ -187,7 +187,7 @@ export default function ProductWizard() {
         {error && (
           <p
             role="alert"
-            className="mt-5 rounded-2xl bg-[#fde2df] px-4 py-3 text-[13px] font-medium leading-[1.55] text-[#a3221a]"
+            className="mt-5 rounded-2xl bg-danger-surface px-4 py-3 text-[13px] font-medium leading-[1.55] text-heritage-red-ink"
           >
             {error}
           </p>
@@ -200,7 +200,7 @@ export default function ProductWizard() {
             type="button"
             onClick={() => goTo(step - 1)}
             disabled={isPending}
-            className="inline-flex h-12 items-center justify-center rounded-full border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-5 text-[15px] font-semibold text-[#0e0f0c] transition-colors hover:border-[#0e0f0c] disabled:opacity-60"
+            className="inline-flex h-12 items-center justify-center rounded-full border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-5 text-[15px] font-semibold text-near-black transition-colors hover:border-near-black disabled:opacity-60"
           >
             ← Back
           </button>
@@ -211,7 +211,7 @@ export default function ProductWizard() {
             type="button"
             onClick={submitBasics}
             disabled={isPending || !canContinueBasics}
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#9fe870] px-6 text-[15px] font-semibold text-[#163300] shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-14px_rgba(159,232,112,0.7)] transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-wise-green px-6 text-[15px] font-semibold text-dark-green shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-14px_rgba(159,232,112,0.7)] transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
           >
             {isPending ? "Saving…" : "Continue"}
             {!isPending && <span aria-hidden>→</span>}
@@ -223,7 +223,7 @@ export default function ProductWizard() {
             type="button"
             onClick={submitContent}
             disabled={isPending}
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#9fe870] px-6 text-[15px] font-semibold text-[#163300] shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-14px_rgba(159,232,112,0.7)] transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-wise-green px-6 text-[15px] font-semibold text-dark-green shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-14px_rgba(159,232,112,0.7)] transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
           >
             {isPending ? "Saving…" : "Continue"}
             {!isPending && <span aria-hidden>→</span>}
@@ -236,7 +236,7 @@ export default function ProductWizard() {
               type="button"
               onClick={() => submitFinal(true)}
               disabled={isPending}
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-[#9fe870] px-6 text-[15px] font-semibold text-[#163300] shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-14px_rgba(159,232,112,0.7)] transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-wise-green px-6 text-[15px] font-semibold text-dark-green shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_10px_30px_-14px_rgba(159,232,112,0.7)] transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:scale-100"
             >
               {isPending ? "Publishing…" : "Publish"}
               {!isPending && <span aria-hidden>→</span>}
@@ -245,7 +245,7 @@ export default function ProductWizard() {
               type="button"
               onClick={() => submitFinal(false)}
               disabled={isPending}
-              className="inline-flex h-12 items-center justify-center rounded-full border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-5 text-[15px] font-semibold text-[#0e0f0c] transition-colors hover:border-[#0e0f0c] disabled:opacity-60"
+              className="inline-flex h-12 items-center justify-center rounded-full border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-5 text-[15px] font-semibold text-near-black transition-colors hover:border-near-black disabled:opacity-60"
             >
               Save as draft
             </button>
@@ -254,7 +254,7 @@ export default function ProductWizard() {
       </div>
 
       {step === 2 && (
-        <p className="mt-3 text-[12px] text-[#868685]">
+        <p className="mt-3 text-[12px] text-gray">
           Images and files upload as you add them.
         </p>
       )}

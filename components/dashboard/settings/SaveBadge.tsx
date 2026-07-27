@@ -39,7 +39,7 @@ export default function SaveBadge({ savedAt, error }: SaveBadgeProps) {
 
   if (error) {
     return (
-      <span className="text-[12px] font-semibold text-[#a3221a]">{error}</span>
+      <span className="text-[12px] font-semibold text-heritage-red-ink">{error}</span>
     );
   }
   if (!savedAt) return null;
@@ -47,9 +47,9 @@ export default function SaveBadge({ savedAt, error }: SaveBadgeProps) {
   return (
     <span
       key={savedAt}
-      className="save-badge inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#163300]"
+      className="save-badge inline-flex items-center gap-1.5 text-[12px] font-semibold text-dark-green"
     >
-      <span className="h-1.5 w-1.5 rounded-full bg-[#9fe870]" aria-hidden />
+      <span className="h-1.5 w-1.5 rounded-full bg-wise-green" aria-hidden />
       Saved
     </span>
   );

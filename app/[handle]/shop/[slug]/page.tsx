@@ -49,11 +49,11 @@ export default async function PublicProductPage({ params }: PageProps) {
   const delivery = getDeliveryMode(product.deliveryMode);
 
   return (
-    <main className="min-h-screen bg-[#f7f9f5]">
+    <main className="min-h-screen bg-off-white">
       <div className="max-w-[860px] mx-auto px-5 sm:px-6 py-10 md:py-14">
         <Link
           href={`/${handle}/shop`}
-          className="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#868685] hover:text-[#0e0f0c]"
+          className="text-[12px] font-semibold uppercase tracking-[0.22em] text-gray hover:text-near-black"
         >
           ← {creator.displayName}&rsquo;s shop
         </Link>
@@ -71,32 +71,32 @@ export default async function PublicProductPage({ params }: PageProps) {
                 <img
                   src={product.coverUrl}
                   alt=""
-                  className="w-full aspect-[16/9] object-cover rounded-[24px] mb-6 bg-[#f2f6ec] border border-[rgba(14,15,12,0.06)]"
+                  className="w-full aspect-[16/9] object-cover rounded-[24px] mb-6 bg-mint-surface border border-[rgba(14,15,12,0.06)]"
                 />
               )
             )}
             {product.category && (
               <div className="mb-4 flex flex-wrap gap-2">
                 <ProductCategoryBadge category={product.category} />
-                <span className="inline-flex min-h-7 items-center rounded-full border border-[rgba(14,15,12,0.1)] bg-white px-3 text-[12px] font-semibold text-[#454745]">
+                <span className="inline-flex min-h-7 items-center rounded-full border border-[rgba(14,15,12,0.1)] bg-white px-3 text-[12px] font-semibold text-warm-dark">
                   {delivery.label}
                 </span>
               </div>
             )}
             <h1
-              className="display text-[32px] sm:text-[40px] text-[#0e0f0c]"
+              className="display text-[32px] sm:text-[40px] text-near-black"
               style={{ lineHeight: 1.1, fontWeight: 700 }}
             >
               {product.title}
             </h1>
             {product.subtitle && (
-              <p className="mt-3 text-[18px] text-[#454745] leading-[1.5]">
+              <p className="mt-3 text-[18px] text-warm-dark leading-[1.5]">
                 {product.subtitle}
               </p>
             )}
 
             {product.descriptionMd && (
-              <div className="mt-6 text-[15px] text-[#0e0f0c] leading-[1.65] whitespace-pre-line">
+              <div className="mt-6 text-[15px] text-near-black leading-[1.65] whitespace-pre-line">
                 {product.descriptionMd}
               </div>
             )}
@@ -106,11 +106,11 @@ export default async function PublicProductPage({ params }: PageProps) {
 
           <aside className="md:sticky md:top-8 md:self-start">
             <div className="rounded-3xl border border-[rgba(14,15,12,0.08)] bg-white p-5 sm:p-6 shadow-[0_2px_0_0_rgba(14,15,12,0.04),0_30px_80px_-40px_rgba(14,15,12,0.18)]">
-              <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#868685]">
+              <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-gray">
                 Price
               </p>
               <p
-                className="display mt-2 mb-5 text-[30px] sm:text-[36px] tabular-nums text-[#0e0f0c]"
+                className="display mt-2 mb-5 text-[30px] sm:text-[36px] tabular-nums text-near-black"
                 style={{ lineHeight: 1, fontWeight: 700 }}
               >
                 {priceCopy}

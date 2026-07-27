@@ -19,8 +19,8 @@ export default function Mission() {
           />
 
           {/* Framed card (sits in front of the dotted backing) */}
-          <div className="relative rounded-[36px] bg-[#f7f9f5] border-[1.5px] border-[#0e0f0c] p-8 md:p-12 lg:p-14">
-            <span className="text-xs font-semibold tracking-[0.2em] uppercase text-[#454745]">
+          <div className="relative rounded-[36px] bg-off-white border-[1.5px] border-near-black p-8 md:p-12 lg:p-14">
+            <span className="text-xs font-semibold tracking-[0.2em] uppercase text-warm-dark">
               Why BanglaPay
             </span>
 
@@ -31,14 +31,14 @@ export default function Mission() {
               A cha jar of our own.
             </h2>
 
-            <div className="mt-8 space-y-5 text-[23px] leading-[1.5] text-[#454745] max-w-[780px]">
+            <div className="mt-8 space-y-5 text-[23px] leading-[1.5] text-warm-dark max-w-[780px]">
               <p>
                 For too long, creators here have had to use platforms built for someone else&rsquo;s market. Someone else&rsquo;s currency. Someone else&rsquo;s wallet.
               </p>
               <p>
                 BanglaPay is the tip jar, rebuilt for Bangladesh. Your fans pay with the wallets they already have &mdash; bKash, Nagad, Rocket, or card. You keep almost every paisa.
               </p>
-              <p className="text-[#0e0f0c] font-semibold">
+              <p className="text-near-black font-semibold">
                 Just you, your supporters, and the cha they want to buy you.
               </p>
             </div>
@@ -50,7 +50,7 @@ export default function Mission() {
               </Button>
 
               {/* Hand-drawn annotation below CTA — centered, arrow arcs upward */}
-              <div className="mt-6 flex items-center justify-center gap-4 text-[20px] md:text-[22px] font-semibold text-[#454745]">
+              <div className="mt-6 flex items-center justify-center gap-4 text-[20px] md:text-[22px] font-semibold text-warm-dark">
                 <span className="text-6xl md:text-7xl leading-none" aria-hidden>
                   ☕
                 </span>

@@ -20,7 +20,7 @@ const points: Point[] = [
     ),
     body: (
       <>
-        <strong className="text-[#0e0f0c] font-semibold">Supporters, not users.</strong> No customers, no conversion funnels &mdash; just the fans who love your work, and the cha they want to send you.
+        <strong className="text-near-black font-semibold">Supporters, not users.</strong> No customers, no conversion funnels &mdash; just the fans who love your work, and the cha they want to send you.
       </>
     ),
   },
@@ -33,7 +33,7 @@ const points: Point[] = [
     ),
     body: (
       <>
-        <strong className="text-[#0e0f0c] font-semibold">Your list, your rules.</strong> We&rsquo;ll never email your supporters. Export the whole list &mdash; names, messages, everything &mdash; whenever you like.
+        <strong className="text-near-black font-semibold">Your list, your rules.</strong> We&rsquo;ll never email your supporters. Export the whole list &mdash; names, messages, everything &mdash; whenever you like.
       </>
     ),
   },
@@ -45,7 +45,7 @@ const points: Point[] = [
     ),
     body: (
       <>
-        <strong className="text-[#0e0f0c] font-semibold">Real humans, real replies.</strong> Write to us and someone who actually uses the product writes back. No bots, no ticket queues.
+        <strong className="text-near-black font-semibold">Real humans, real replies.</strong> Write to us and someone who actually uses the product writes back. No bots, no ticket queues.
       </>
     ),
   },
@@ -57,7 +57,7 @@ const points: Point[] = [
     ),
     body: (
       <>
-        <strong className="text-[#0e0f0c] font-semibold">Paid in hours, not weeks.</strong> Cash out to bKash, Nagad, Rocket, or any Bangladeshi bank. No 30-day holds, no surprise fees.
+        <strong className="text-near-black font-semibold">Paid in hours, not weeks.</strong> Cash out to bKash, Nagad, Rocket, or any Bangladeshi bank. No 30-day holds, no surprise fees.
       </>
     ),
   },
@@ -68,7 +68,7 @@ export default function FAQ() {
     <section id="faq" className="py-24 md:py-32 bg-white">
       <div className="max-w-5xl mx-auto px-5 lg:px-10">
         <h2
-          className="display text-center text-[#0e0f0c] text-[36px] sm:text-[44px] md:text-[54px] lg:text-[60px]"
+          className="display text-center text-near-black text-[36px] sm:text-[44px] md:text-[54px] lg:text-[60px]"
           style={{ lineHeight: 1.1, fontWeight: 700 }}
         >
           Creators first. Everything else follows.
@@ -78,12 +78,12 @@ export default function FAQ() {
           {points.map((p, i) => (
             <div key={i} className="flex items-start gap-4">
               <span
-                className="shrink-0 w-10 h-10 rounded-full border-[1.5px] border-[#0e0f0c] flex items-center justify-center mt-1 bg-white"
+                className="shrink-0 w-10 h-10 rounded-full border-[1.5px] border-near-black flex items-center justify-center mt-1 bg-white"
                 aria-hidden
               >
                 {p.icon}
               </span>
-              <p className="text-[18px] md:text-[20px] leading-[1.55] text-[#454745]">
+              <p className="text-[18px] md:text-[20px] leading-[1.55] text-warm-dark">
                 {p.body}
               </p>
             </div>

@@ -177,10 +177,10 @@ export default function ProductImagesUploader({
       {/* COVER IMAGE — distinct, primary slot */}
       <div>
         <div className="flex items-baseline justify-between mb-2">
-          <label className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745]">
+          <label className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark">
             Cover image
           </label>
-          <span className="text-[11px] text-[#868685]">
+          <span className="text-[11px] text-gray">
             Shown everywhere your product appears
           </span>
         </div>
@@ -191,10 +191,10 @@ export default function ProductImagesUploader({
             <img
               src={`${cover}?v=${urls.length}`}
               alt=""
-              className="w-full max-w-[480px] aspect-[16/10] rounded-2xl object-cover border border-[rgba(14,15,12,0.06)] bg-[#f2f6ec]"
+              className="w-full max-w-[480px] aspect-[16/10] rounded-2xl object-cover border border-[rgba(14,15,12,0.06)] bg-mint-surface"
             />
             <div className="mt-3 flex items-center gap-2 flex-wrap">
-              <label className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-[#163300] text-white text-[13px] font-semibold cursor-pointer hover:bg-[#054d28] transition-colors">
+              <label className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-dark-green text-white text-[13px] font-semibold cursor-pointer hover:bg-positive transition-colors">
                 Replace cover
                 <input
                   ref={coverInputRef}
@@ -207,22 +207,22 @@ export default function ProductImagesUploader({
               <button
                 type="button"
                 onClick={() => removeAt(cover)}
-                className="inline-flex items-center justify-center h-10 px-4 rounded-full border border-[rgba(14,15,12,0.12)] bg-white text-[#454745] text-[13px] font-semibold hover:border-[#a3221a] hover:text-[#a3221a] transition-colors"
+                className="inline-flex items-center justify-center h-10 px-4 rounded-full border border-[rgba(14,15,12,0.12)] bg-white text-warm-dark text-[13px] font-semibold hover:border-heritage-red-ink hover:text-heritage-red-ink transition-colors"
               >
                 Remove
               </button>
-              <span className="text-[12px] text-[#163300] font-semibold ml-1">
+              <span className="text-[12px] text-dark-green font-semibold ml-1">
                 ✓ Saved
               </span>
             </div>
           </div>
         ) : (
           <div className="rounded-2xl border-[1.5px] border-dashed border-[rgba(14,15,12,0.14)] bg-white px-5 py-6 flex items-center justify-between gap-4 flex-wrap">
-            <div className="text-[13px] text-[#454745] leading-[1.5]">
+            <div className="text-[13px] text-warm-dark leading-[1.5]">
               The hero image for your product. JPEG, PNG, WebP, GIF, AVIF —
               up to 5 MB. 16:10 looks best.
             </div>
-            <label className="inline-flex items-center justify-center h-10 px-5 rounded-full bg-[#9fe870] text-[#163300] text-[13px] font-semibold cursor-pointer hover:bg-[#cdffad] transition-colors shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_8px_22px_-12px_rgba(159,232,112,0.7)]">
+            <label className="inline-flex items-center justify-center h-10 px-5 rounded-full bg-wise-green text-dark-green text-[13px] font-semibold cursor-pointer hover:bg-pastel-green transition-colors shadow-[0_1px_0_0_rgba(22,51,0,0.15),0_8px_22px_-12px_rgba(159,232,112,0.7)]">
               Upload cover
               <input
                 ref={coverInputRef}
@@ -239,10 +239,10 @@ export default function ProductImagesUploader({
       {/* ADDITIONAL IMAGES — secondary, multi */}
       <div>
         <div className="flex items-baseline justify-between mb-2">
-          <label className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-[#454745]">
+          <label className="block text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark">
             Additional images
           </label>
-          <span className="text-[11px] tabular-nums text-[#868685]">
+          <span className="text-[11px] tabular-nums text-gray">
             {rest.length + galleryPending.length}/{MAX_GALLERY - 1}
           </span>
         </div>
@@ -255,20 +255,20 @@ export default function ProductImagesUploader({
                 <img
                   src={url}
                   alt=""
-                  className="w-full aspect-square rounded-xl object-cover border border-[rgba(14,15,12,0.06)] bg-[#f2f6ec]"
+                  className="w-full aspect-square rounded-xl object-cover border border-[rgba(14,15,12,0.06)] bg-mint-surface"
                 />
                 <div className="absolute inset-0 bg-[rgba(14,15,12,0.55)] opacity-0 group-hover:opacity-100 transition-opacity rounded-xl flex flex-col items-center justify-center gap-1.5 p-2">
                   <button
                     type="button"
                     onClick={() => makeCover(url)}
-                    className="text-[11px] font-semibold text-[#163300] bg-[#9fe870] hover:bg-[#cdffad] h-7 px-3 rounded-full transition-colors"
+                    className="text-[11px] font-semibold text-dark-green bg-wise-green hover:bg-pastel-green h-7 px-3 rounded-full transition-colors"
                   >
                     Make cover
                   </button>
                   <button
                     type="button"
                     onClick={() => removeAt(url)}
-                    className="text-[11px] font-semibold text-white hover:text-[#fde2df] h-7 px-3 rounded-full"
+                    className="text-[11px] font-semibold text-white hover:text-danger-surface h-7 px-3 rounded-full"
                   >
                     Remove
                   </button>
@@ -278,7 +278,7 @@ export default function ProductImagesUploader({
             {galleryPending.map((p) => (
               <div
                 key={p.id}
-                className="relative aspect-square rounded-xl overflow-hidden border border-[rgba(14,15,12,0.06)] bg-[#f2f6ec]"
+                className="relative aspect-square rounded-xl overflow-hidden border border-[rgba(14,15,12,0.06)] bg-mint-surface"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -288,7 +288,7 @@ export default function ProductImagesUploader({
                 />
                 {p.status === "uploading" ? (
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-[11px] font-semibold text-[#163300] bg-white/90 px-2 py-1 rounded-full">
+                    <div className="text-[11px] font-semibold text-dark-green bg-white/90 px-2 py-1 rounded-full">
                       Uploading…
                     </div>
                   </div>
@@ -311,12 +311,12 @@ export default function ProductImagesUploader({
 
         {remainingSlots > 0 && (
           <div className="rounded-2xl border-[1.5px] border-dashed border-[rgba(14,15,12,0.14)] bg-white px-5 py-4 flex items-center justify-between gap-4 flex-wrap">
-            <div className="text-[13px] text-[#454745] leading-[1.5]">
+            <div className="text-[13px] text-warm-dark leading-[1.5]">
               {rest.length === 0
                 ? "Show extra angles, samples, or detail shots."
                 : `Add up to ${remainingSlots} more.`}
             </div>
-            <label className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-white border border-[rgba(14,15,12,0.12)] text-[#0e0f0c] text-[13px] font-semibold cursor-pointer hover:border-[#0e0f0c] transition-colors">
+            <label className="inline-flex items-center justify-center h-10 px-4 rounded-full bg-white border border-[rgba(14,15,12,0.12)] text-near-black text-[13px] font-semibold cursor-pointer hover:border-near-black transition-colors">
               {rest.length === 0 || galleryPending.length === 0
                 ? "Add images"
                 : "Add more"}
@@ -334,10 +334,10 @@ export default function ProductImagesUploader({
       </div>
 
       {bulkError && (
-        <p className="text-[13px] font-medium text-[#da291c]">{bulkError}</p>
+        <p className="text-[13px] font-medium text-heritage-red">{bulkError}</p>
       )}
 
-      <p className="text-[12px] text-[#868685] leading-[1.55]">
+      <p className="text-[12px] text-gray leading-[1.55]">
         Images upload and save automatically — no need to click any other
         save button.
       </p>

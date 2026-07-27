@@ -53,7 +53,7 @@ export default async function DashboardLayout({
 
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-[#f7f9f5] flex">
+      <div className="min-h-screen bg-off-white flex">
         <Sidebar user={sidebarUser} unreadMessages={unreadMessages} />
         <div className="flex-1 flex flex-col min-w-0">
           <main className="flex-1 px-6 md:px-8 py-6 md:py-8">

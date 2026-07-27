@@ -30,20 +30,20 @@ export default async function LibraryPage() {
   const orders = await listOrdersForBuyerOrGrants(email, grants);
 
   return (
-    <main className="min-h-screen bg-[#f7f9f5]">
+    <main className="min-h-screen bg-off-white">
       <header className="border-b border-[rgba(14,15,12,0.06)] bg-white">
         <div className="mx-auto flex max-w-[920px] items-center justify-between px-5 py-5 sm:px-6">
           <Link
             href="/"
-            className="inline-flex min-h-11 items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
+            className="inline-flex min-h-11 items-center gap-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-green"
           >
             <span className="display text-2xl tracking-tight">banglapay</span>
-            <span className="h-1.5 w-1.5 rounded-full bg-[#9fe870]" aria-hidden />
+            <span className="h-1.5 w-1.5 rounded-full bg-wise-green" aria-hidden />
           </Link>
           <form action="/auth/signout" method="post">
             <button
               type="submit"
-              className="inline-flex min-h-11 items-center text-[13px] font-semibold text-[#454745] hover:text-[#0e0f0c] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
+              className="inline-flex min-h-11 items-center text-[13px] font-semibold text-warm-dark hover:text-near-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-green"
             >
               Sign out
             </button>
@@ -53,16 +53,16 @@ export default async function LibraryPage() {
 
       <div className="mx-auto max-w-[920px] px-5 py-10 sm:px-6 md:py-14">
         <div className="max-w-[620px]">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-[#454745]">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-warm-dark">
             Private library
           </p>
           <h1
-            className="display mt-3 text-[36px] text-[#0e0f0c] sm:text-[48px]"
+            className="display mt-3 text-[36px] text-near-black sm:text-[48px]"
             style={{ lineHeight: 1, fontWeight: 700 }}
           >
             Everything you bought, in one calm place.
           </h1>
-          <p className="mt-4 text-[15px] leading-[1.6] text-[#454745]">
+          <p className="mt-4 text-[15px] leading-[1.6] text-warm-dark">
             Signed in as {email ?? "your BanglaPay account"}. Open an order to
             read, listen, or download according to the creator&rsquo;s licence.
           </p>
@@ -78,18 +78,18 @@ export default async function LibraryPage() {
                 <li key={order.id}>
                   <Link
                     href={`/library/${order.orderCode}`}
-                    className="grid min-h-20 grid-cols-[1fr_auto] items-center gap-4 px-5 py-4 transition-colors hover:bg-[#f7f9f5] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#163300] sm:px-6"
+                    className="grid min-h-20 grid-cols-[1fr_auto] items-center gap-4 px-5 py-4 transition-colors hover:bg-off-white focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-dark-green sm:px-6"
                   >
                     <span className="min-w-0">
-                      <span className="block text-[15px] font-semibold text-[#0e0f0c]">
+                      <span className="block text-[15px] font-semibold text-near-black">
                         Order {order.orderCode}
                       </span>
-                      <span className="mt-1 block text-[12px] text-[#454745]">
+                      <span className="mt-1 block text-[12px] text-warm-dark">
                         {DATE_FORMAT.format(order.paidAt ?? order.createdAt)} ·{" "}
                         {formatTaka(order.totalPaisa)}
                       </span>
                     </span>
-                    <span className="text-[13px] font-semibold text-[#163300]">
+                    <span className="text-[13px] font-semibold text-dark-green">
                       Open <span aria-hidden>→</span>
                     </span>
                   </Link>
@@ -99,15 +99,15 @@ export default async function LibraryPage() {
           </section>
         ) : (
           <section className="mt-10 rounded-[24px] border border-dashed border-[rgba(14,15,12,0.14)] bg-white px-6 py-10 text-center">
-            <h2 className="text-[17px] font-semibold text-[#0e0f0c]">
+            <h2 className="text-[17px] font-semibold text-near-black">
               Your library is ready for its first product.
             </h2>
-            <p className="mx-auto mt-2 max-w-[420px] text-[14px] leading-[1.55] text-[#454745]">
+            <p className="mx-auto mt-2 max-w-[420px] text-[14px] leading-[1.55] text-warm-dark">
               Buy with this email and the order will appear here after payment.
             </p>
             <Link
               href="/"
-              className="mt-5 inline-flex min-h-11 items-center rounded-full bg-[#163300] px-5 text-[13px] font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#163300]"
+              className="mt-5 inline-flex min-h-11 items-center rounded-full bg-dark-green px-5 text-[13px] font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-green"
             >
               Explore BanglaPay
             </Link>

@@ -77,8 +77,8 @@ export default function ThemeColorPicker({
           />
         </label>
 
-        <div className="flex-1 flex items-center gap-2 h-12 px-3 rounded-2xl border border-[rgba(14,15,12,0.1)] bg-white focus-within:border-[#163300] transition-colors">
-          <span className="text-[#868685] tabular-nums text-[13px] font-mono">
+        <div className="flex-1 flex items-center gap-2 h-12 px-3 rounded-2xl border border-[rgba(14,15,12,0.1)] bg-white focus-within:border-dark-green transition-colors">
+          <span className="text-gray tabular-nums text-[13px] font-mono">
             HEX
           </span>
           <input
@@ -87,14 +87,14 @@ export default function ThemeColorPicker({
             onChange={onTextChange}
             onBlur={() => setBoth(text)}
             maxLength={7}
-            className="flex-1 h-full bg-transparent text-[14px] font-mono text-[#0e0f0c] outline-none uppercase tabular-nums"
+            className="flex-1 h-full bg-transparent text-[14px] font-mono text-near-black outline-none uppercase tabular-nums"
           />
         </div>
       </div>
 
       {/* Curated palette */}
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-[#868685] mb-2">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-gray mb-2">
           Suggested
         </p>
         <div className="grid grid-cols-6 sm:grid-cols-12 gap-2">
@@ -110,7 +110,7 @@ export default function ThemeColorPicker({
                 className={[
                   "relative w-9 h-9 rounded-full transition-transform",
                   isActive
-                    ? "ring-2 ring-[#0e0f0c] ring-offset-2 ring-offset-white scale-105"
+                    ? "ring-2 ring-near-black ring-offset-2 ring-offset-white scale-105"
                     : "ring-1 ring-[rgba(14,15,12,0.08)] hover:scale-110",
                 ].join(" ")}
                 style={{ backgroundColor: preset.value }}

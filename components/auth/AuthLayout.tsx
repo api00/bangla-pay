@@ -22,7 +22,7 @@ export default function AuthLayout({
         aria-label="BanglaPay home"
       >
         <span className="display text-2xl tracking-tight">banglapay</span>
-        <span className="w-1.5 h-1.5 rounded-full bg-[#9fe870]" aria-hidden />
+        <span className="w-1.5 h-1.5 rounded-full bg-wise-green" aria-hidden />
       </Link>
 
       <div className="flex-1 flex items-center justify-center py-10 md:py-12">
@@ -33,7 +33,7 @@ export default function AuthLayout({
           >
             {title}
           </h1>
-          <p className="mt-3 text-[#454745] text-[17px] md:text-[18px] leading-[1.4]">
+          <p className="mt-3 text-warm-dark text-[17px] md:text-[18px] leading-[1.4]">
             {subtitle}
           </p>
 
@@ -45,13 +45,13 @@ export default function AuthLayout({
         </div>
       </div>
 
-      <div className="text-[12px] text-[#868685] flex items-center gap-3 justify-center">
+      <div className="text-[12px] text-gray flex items-center gap-3 justify-center">
         <span>© BanglaPay</span>
-        <span aria-hidden className="w-0.5 h-0.5 rounded-full bg-[#c8c8c7]" />
-        <a href="#" className="hover:text-[#0e0f0c] transition-colors">
+        <span aria-hidden className="w-0.5 h-0.5 rounded-full bg-gray-light" />
+        <a href="#" className="hover:text-near-black transition-colors">
           Privacy
         </a>
-        <a href="#" className="hover:text-[#0e0f0c] transition-colors">
+        <a href="#" className="hover:text-near-black transition-colors">
           Terms
         </a>
       </div>

@@ -58,14 +58,14 @@ export default function ProductFilesPreview({
       aria-labelledby="what-you-get"
       className="mt-8 rounded-[20px] border border-[rgba(14,15,12,0.06)] bg-white overflow-hidden"
     >
-      <header className="px-5 py-4 border-b border-[rgba(14,15,12,0.05)] bg-[#f7f9f5]">
+      <header className="px-5 py-4 border-b border-[rgba(14,15,12,0.05)] bg-off-white">
         <p
           id="what-you-get"
-          className="text-[12px] font-bold uppercase tracking-[0.2em] text-[#454745]"
+          className="text-[12px] font-bold uppercase tracking-[0.2em] text-warm-dark"
         >
           Included content
         </p>
-        <p className="text-[12px] text-[#868685] mt-0.5 tabular-nums">
+        <p className="text-[12px] text-gray mt-0.5 tabular-nums">
           {summary(files)}
         </p>
       </header>
@@ -85,10 +85,10 @@ export default function ProductFilesPreview({
                 <FileTypeIcon kind={style.kind} />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-[14px] font-semibold text-[#0e0f0c] truncate">
+                <div className="text-[14px] font-semibold text-near-black truncate">
                   {niceName}
                 </div>
-                <div className="text-[12px] text-[#868685] tabular-nums">
+                <div className="text-[12px] text-gray tabular-nums">
                   {style.label}
                   {!hideSizes && file.sizeBytes
                     ? ` · ${formatBytes(file.sizeBytes)}`
