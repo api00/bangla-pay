@@ -194,13 +194,24 @@ function LibraryAccess({
             View only
           </span>
         </div>
+        {/*
+          No `sandbox` here, deliberately. Chromium renders PDFs through an
+          internal extension-backed viewer and refuses to instantiate it inside
+          a sandboxed frame — no combination of allow-* tokens lifts that, which
+          is why Chrome and Edge both showed "This page has been blocked".
+
+          Dropping it is safe: this is our own same-origin response, served as
+          application/pdf with X-Content-Type-Options: nosniff, so it cannot be
+          reinterpreted as HTML and has no script to run.
+
+          `#toolbar=0` hides the viewer's download and print buttons. Treat that
+          as friction, not enforcement — no browser can stop a determined user
+          saving bytes it has rendered. The real protections are the short-lived
+          hashed token, the absence of any durable URL, and the access log.
+        */}
         <iframe
-          src={accessHref}
+          src={`${accessHref}#toolbar=0&navpanes=0`}
           title={`Read ${filename}`}
-          // Chrome refuses to start its PDF viewer inside a sandboxed frame
-          // without allow-scripts and blocks the frame outright. Downloads and
-          // popups remain disallowed, so view-only still cannot save the file.
-          sandbox="allow-same-origin allow-scripts"
           className="h-[70vh] min-h-[520px] w-full bg-[#e8ebe6]"
         />
       </div>
