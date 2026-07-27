@@ -42,19 +42,29 @@ This file is the single source of truth for project context. Everything an agent
 - **Payout** — creator withdraws balance to their bank or MFS wallet.
 - **Milestone** — supporter-count or total-raised threshold (e.g. 100 supporters, ৳10,000 raised); renders a Heritage Red badge.
 
-### MVP (keep minimal until confirmed)
+### Status (see `docs/PHASES.md` for the authoritative table)
 
-- [ ] Creator signup + public profile page (`banglapay.com/{handle}`)
-- [ ] Supporter tips a creator (one-off, no account required)
-- [ ] Payment via bKash (MFS order TBD)
-- [ ] Payment via card (SSLCOMMERZ candidate)
-- [ ] Creator dashboard: tips received, total raised, message inbox
-- [ ] Payout request flow
+Shipped:
+
+- [x] Creator signup + onboarding + public page (`/{handle}`)
+- [x] Supporter tips a creator (one-off, no account required)
+- [x] Creator dashboard: tips, supporters, message inbox, milestones
+- [x] Shop: digital products, uploads, signed/gated delivery, orders
+- [x] Buyer library with per-order access
+- [x] Payout methods (bKash/Nagad/Rocket/bank) + request flow
+
+Not built:
+
+- [ ] Real payment providers. Checkout is a **stub** at `/checkout/stub/*`
+      that simulates success/failure. `webhooks_log` and the provider enums
+      exist, but no webhook route does. This is phase 5, deferred until
+      provider accounts are live.
+- [ ] Email (receipts, magic links, notifications) — nothing is wired.
+- [ ] Rate limiting, OG images, automated tests.
 
 ### Out of scope (v1)
 
 - Recurring memberships (Patreon-style)
-- Digital product sales / paywalled content
 - Creator-to-creator transfers
 - Multi-currency (USD, INR, EUR) — BDT only for v1
 - Mobile app — web only, mobile-optimized
@@ -66,11 +76,9 @@ Answer inline as decisions land:
 
 - **Payment provider**: bKash direct API vs. SSLCOMMERZ aggregator vs. both? → TBD
 - **Platform fee**: flat %, fixed fee, freemium with paid tier? → TBD
-- **Payout minimum**: ৳100? ৳500? ৳1,000? → TBD
-- **Payout cadence**: on-demand vs. weekly vs. monthly? → TBD
+- **Payout minimum / cadence** → TBD
 - **KYC**: what's legally required for creators in Bangladesh? → research needed
-- **Auth**: email + OTP? phone + OTP? OAuth (Google)? → TBD
-- **Domain**: `banglapay.com`? `banglapay.bd`? → TBD
+- **Domain**: `banglapay.com`? `banglapay.bd`? → TBD (currently `bangla-pay-nine.vercel.app`)
 
 ### Not competitors — references
 
@@ -84,31 +92,41 @@ Answer inline as decisions land:
 
 ## 3. Folder structure
 
+~200 TS/TSX files, 35 routes, 20 tables. Keep this in sync — a stale map here
+misleads every future change.
+
 ```text
 bangla-pay/
-├── app/                       # Next.js App Router
-│   ├── layout.tsx             # root layout (fonts, html, body)
-│   ├── page.tsx               # landing (currently default boilerplate)
-│   ├── globals.css            # Tailwind v4 @import + @theme tokens
-│   └── [handle]/              # creator pages (planned)
-├── components/                # shared UI (planned)
-│   ├── ui/                    # primitives: Button, Card, Input, etc.
-│   ├── creator/               # creator-domain components
-│   └── tip/                   # tip-flow components
-├── lib/                       # utilities, helpers (planned)
-│   ├── money.ts               # formatTaka, parsePaisa helpers
-│   └── i18n.ts                # locale helpers (planned)
-├── public/                    # static assets
-├── .claude/
-│   └── settings.json          # permissions allowlist
-├── CLAUDE.md                  # this file (single source of truth)
-├── DESIGN.md                  # design system reference
-├── README.md
-├── next.config.ts
-├── postcss.config.mjs
-├── eslint.config.mjs
-├── tsconfig.json
-└── package.json
+├── app/
+│   ├── page.tsx                   # landing (real creator directory, not mock)
+│   ├── layout.tsx  globals.css    # fonts + @theme design tokens
+│   ├── creators/                  # public creator directory
+│   ├── [handle]/                  # public creator page
+│   │   └── shop/[slug]/           # public product page + purchase action
+│   ├── dashboard/                 # creator app (sidebar layout, ToastProvider)
+│   │   ├── shop/                  # listing, 3-step new-product wizard, edit
+│   │   │   └── _actions/          # server actions, one concern per file
+│   │   ├── settings/              # profile, payouts, public page
+│   │   ├── messages/ orders/ supporters/ tips/
+│   ├── library/                   # buyer's purchases (order grants + email)
+│   │   ├── [orderCode]/           # one purchase
+│   │   ├── access/[downloadId]/   # mints a short-lived media token
+│   │   └── media/[token]/         # streams the file
+│   ├── checkout/stub/             # MOCK provider — phase 5 replaces this
+│   ├── onboarding/ auth/ login/ signup/
+│   └── d/[token]/                 # legacy bearer download link
+├── components/                    # grouped by domain, not by type
+│   ├── ui/                        # Button, Toast, LangToggle
+│   ├── shop/ · shop/wizard/       # product surfaces
+│   ├── creator-page/ creators/ dashboard/ landing/ onboarding/ auth/
+├── db/
+│   ├── schema/                    # 20 tables, one file per domain
+│   └── queries/                   # all reads; every file is `server-only`
+├── lib/                           # pure-ish helpers (money, auth, crypto…)
+├── utils/supabase/                # browser, server, admin, proxy clients
+├── drizzle/                       # SQL migrations (0000–0008) + meta
+├── scripts/                       # apply-sql, ensure-storage, list-tables
+└── docs/PHASES.md                 # authoritative build status
 ```
 
 Rules for adding folders/files:
@@ -126,13 +144,15 @@ Rules for adding folders/files:
 | Package | Version | Notes |
 |---------|---------|-------|
 | `next` | 16.2.4 | Major version with breaking changes — read `node_modules/next/dist/docs/` before writing Next-specific code. |
-| `react` / `react-dom` | 19.2.4 | Server Actions, `useActionState`, `useFormStatus`, `useOptimistic`. Refs are props. |
-| `tailwindcss` | ^4 | v4 uses `@import "tailwindcss"` + `@theme` in CSS. No `tailwind.config.js`. |
-| `@tailwindcss/postcss` | ^4 | PostCSS plugin — see `postcss.config.mjs`. |
-| `typescript` | ^5 | Strict mode. No `any` in app code; use `unknown` and narrow. |
-| `eslint` + `eslint-config-next` | ^9 / 16.2.4 | Flat config in `eslint.config.mjs`. |
+| `react` / `react-dom` | 19.2.4 | Server Actions, `useActionState`, `useFormStatus`. Refs are props. |
+| `tailwindcss` | ^4 | `@import "tailwindcss"` + `@theme` in CSS. No `tailwind.config.js`. |
+| `drizzle-orm` + `postgres` | ^0.45 / ^3.4 | Supabase Postgres. Schema in `db/schema/`, migrations in `drizzle/`. |
+| `@supabase/ssr` + `supabase-js` | ^0.10 / ^2.104 | Auth (email OTP), Storage. |
+| `typescript` | ^5 | Strict. No `any` in app code. |
 
-No state library, no data-fetching library, no test runner, no validation library installed. Propose before adding.
+Still **not** installed: no state library, no data-fetching library, no test
+runner, no validation library (Zod is proposed, not present — server actions
+validate by hand). Propose before adding.
 
 ### Commands
 
@@ -165,22 +185,15 @@ npx tsc --noEmit # type-check without emitting
 - Tokens defined in a `@theme { ... }` block in CSS — not JS config.
 - Current tokens are boilerplate (`--background`, `--foreground`). **Replace with the tokens codified in `DESIGN.md`** when wiring the design system.
 
-### Tokens to wire into `app/globals.css` (from `DESIGN.md`)
+### Design tokens — wired, but under-used
 
-```css
-@theme {
-  --color-near-black: #0e0f0c;
-  --color-wise-green: #9fe870;
-  --color-dark-green: #163300;
-  --color-light-mint: #e2f6d5;
-  --color-pastel-green: #cdffad;
-  --color-heritage-red: #da291c;
-  --color-warm-dark: #454745;
-  --color-gray: #868685;
-  --color-light-surface: #e8ebe6;
-  /* + semantic + radius scale — see DESIGN.md §2, §5 */
-}
-```
+`app/globals.css` defines the full palette, radii and font tokens in `@theme`,
+so `bg-wise-green`, `text-near-black` etc. all work.
+
+**Most components don't use them.** Historic code hardcodes hex through
+Tailwind arbitrary values (`text-[#0e0f0c]`). Treat that as drift, not house
+style: when you touch a component's colours, move it onto the token classes.
+Don't add new arbitrary hex.
 
 ### Planned additions (ask before installing)
 
