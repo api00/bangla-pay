@@ -23,7 +23,7 @@ export default function ProductListRow({
   const issue = readinessIssue(product);
 
   return (
-    <article className="flex flex-wrap items-center gap-4 border-b border-[rgba(14,15,12,0.06)] bg-white px-4 py-4 last:border-b-0 sm:flex-nowrap sm:px-5">
+    <article className="flex flex-wrap items-center gap-4 border-b border-[rgba(14,15,12,0.06)] bg-white px-4 py-4 first:rounded-t-[24px] last:border-b-0 last:rounded-b-[24px] sm:flex-nowrap sm:px-5">
       {product.coverUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img

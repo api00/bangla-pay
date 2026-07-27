@@ -54,6 +54,10 @@ export const products = pgTable(
     rightsConfirmedAt: timestamp("rights_confirmed_at", {
       withTimezone: true,
     }),
+    // Set when a sold product is retired. Hiding it everywhere is the only
+    // safe removal — deleting the row would cascade its files away and take
+    // buyers' access with them.
+    archivedAt: timestamp("archived_at", { withTimezone: true }),
     totalSales: integer("total_sales").notNull().default(0),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()

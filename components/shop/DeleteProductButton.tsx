@@ -30,7 +30,11 @@ export default function DeleteProductButton({
         setConfirming(false);
         return;
       }
-      toast.success("Product deleted");
+      toast.success(
+        result.archived
+          ? "Removed from your shop. Buyers keep the copy they paid for."
+          : "Product deleted",
+      );
       router.push("/dashboard/shop");
     });
   }

@@ -19,7 +19,7 @@ export interface DeleteProductInput {
  *  a product has any orders attached. */
 export async function deleteProduct(
   input: DeleteProductInput,
-): Promise<{ ok: boolean; error?: string }> {
+): Promise<{ ok: boolean; error?: string; archived?: boolean }> {
   const creator = await requireCreator();
   const product = await getProductById(input.productId, creator.id);
   if (!product) return { ok: false, error: "Product not found." };
@@ -33,11 +33,24 @@ export async function deleteProduct(
     .where(eq(orderItems.productId, product.id))
     .limit(1);
   if (attached) {
-    return {
-      ok: false,
-      error:
-        "This product has orders attached and can't be deleted. Unpublish it instead.",
-    };
+    // Someone has bought this. Removing the row would cascade its files away
+    // and break access the buyer paid for, so retire it instead: gone from the
+    // shop and every public surface, entitlements untouched.
+    await db
+      .update(products)
+      .set({ isPublished: false, archivedAt: new Date(), updatedAt: new Date() })
+      .where(
+        and(
+          eq(products.id, input.productId),
+          eq(products.creatorId, creator.id),
+        ),
+      );
+
+    revalidatePath("/dashboard/shop");
+    revalidatePath(`/${creator.handle}/shop`);
+    revalidatePath(`/${creator.handle}`);
+
+    return { ok: true, archived: true };
   }
 
   const files = await getProductFiles(product.id);

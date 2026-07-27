@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, asc, desc, eq, isNotNull, sql } from "drizzle-orm";
+import { and, asc, desc, eq, isNotNull, isNull, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import type { ProductSort } from "@/lib/product-sort";
@@ -26,7 +26,7 @@ export async function listProductsForCreator(
   return db
     .select()
     .from(products)
-    .where(eq(products.creatorId, creatorId))
+    .where(and(eq(products.creatorId, creatorId), isNull(products.archivedAt)))
     .orderBy(orderBy);
 }
 
@@ -63,7 +63,7 @@ export async function listProductsWithStats(
     })
     .from(products)
     .leftJoin(productFiles, eq(productFiles.productId, products.id))
-    .where(eq(products.creatorId, creatorId))
+    .where(and(eq(products.creatorId, creatorId), isNull(products.archivedAt)))
     .groupBy(products.id)
     .orderBy(orderBy);
 
@@ -106,6 +106,7 @@ export async function listPublishedProducts(
       and(
         eq(products.creatorId, creatorId),
         eq(products.isPublished, true),
+        isNull(products.archivedAt),
         isNotNull(products.category),
         isNotNull(products.rightsConfirmedAt),
       ),
@@ -131,6 +132,7 @@ export async function getPublicProduct(
         eq(products.creatorId, creatorId),
         eq(products.slug, slug),
         eq(products.isPublished, true),
+        isNull(products.archivedAt),
         isNotNull(products.category),
         isNotNull(products.rightsConfirmedAt),
       ),

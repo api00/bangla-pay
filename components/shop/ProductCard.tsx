@@ -38,19 +38,19 @@ export default function ProductCard({ product, handle }: ProductCardProps) {
   const issue = readinessIssue(product);
 
   return (
-    <article className="flex flex-col overflow-hidden rounded-[24px] border border-[rgba(14,15,12,0.06)] bg-white shadow-[0_1px_0_0_rgba(14,15,12,0.03)] transition-shadow hover:shadow-[0_18px_40px_-28px_rgba(14,15,12,0.35)]">
+    <article className="flex flex-col rounded-[24px] border border-[rgba(14,15,12,0.06)] bg-white shadow-[0_1px_0_0_rgba(14,15,12,0.03)] transition-shadow hover:shadow-[0_18px_40px_-28px_rgba(14,15,12,0.35)]">
       <div className="relative">
         {product.coverUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={product.coverUrl}
             alt=""
-            className="aspect-[16/10] w-full border-b border-[rgba(14,15,12,0.04)] bg-[#f2f6ec] object-cover"
+            className="aspect-[16/10] w-full rounded-t-[24px] border-b border-[rgba(14,15,12,0.04)] bg-[#f2f6ec] object-cover"
           />
         ) : (
           <div
             aria-hidden
-            className="flex aspect-[16/10] w-full items-center justify-center border-b border-[rgba(14,15,12,0.04)] bg-gradient-to-br from-[#cdffad] to-[#e2f6d5]"
+            className="flex aspect-[16/10] w-full items-center justify-center rounded-t-[24px] border-b border-[rgba(14,15,12,0.04)] bg-gradient-to-br from-[#cdffad] to-[#e2f6d5]"
           >
             <span className="text-[40px] font-bold text-[#163300]">
               {product.title.trim()[0]?.toUpperCase() ?? "•"}

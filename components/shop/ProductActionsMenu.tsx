@@ -71,7 +71,11 @@ export default function ProductActionsMenu({
         setOpen(false);
         return;
       }
-      toast.success("Product deleted");
+      toast.success(
+        result.archived
+          ? "Removed from your shop. Buyers keep the copy they paid for."
+          : "Product deleted",
+      );
       setOpen(false);
       // revalidatePath alone does not repaint this client tree — without the
       // refresh the deleted card stays on screen and delete looks broken.
@@ -110,7 +114,8 @@ export default function ProductActionsMenu({
                 Delete this product?
               </p>
               <p className="mt-1 text-[12px] leading-[1.45] text-[#454745]">
-                This can&rsquo;t be undone.
+                It leaves your shop for good. Anyone who already bought it
+                keeps their access.
               </p>
               <div className="mt-3 flex items-center gap-2">
                 <button

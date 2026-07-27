@@ -85,7 +85,7 @@ export default async function DashboardShopPage({ searchParams }: PageProps) {
               ))}
             </div>
           ) : (
-            <div className="overflow-hidden rounded-[24px] border border-[rgba(14,15,12,0.06)] bg-white">
+            <div className="rounded-[24px] border border-[rgba(14,15,12,0.06)] bg-white">
               {products.map((product) => (
                 <ProductListRow
                   key={product.id}
