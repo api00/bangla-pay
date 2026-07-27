@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Creator, CreatorPage } from "@/db/schema";
 
 interface CreatorHeaderProps {
@@ -46,10 +47,16 @@ export default function CreatorHeader({ creator, page }: CreatorHeaderProps) {
         }}
       >
         {page.avatarUrl ? (
-          <img
+          <Image
             src={page.avatarUrl}
             alt={`${creator.displayName} avatar`}
-            className="w-full h-full rounded-full object-cover"
+            width={96}
+            height={96}
+            // Above the fold on every creator page — the one image worth
+            // loading eagerly at high priority.
+            priority
+            sizes="(min-width: 640px) 96px, 80px"
+            className="h-full w-full rounded-full object-cover"
           />
         ) : (
           <span className="text-[24px] sm:text-[28px] font-semibold text-[#163300] tabular-nums">

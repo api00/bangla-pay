@@ -1,11 +1,42 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
+import { useToast } from "@/components/ui/Toast";
+
 interface SaveBadgeProps {
   savedAt?: number;
   error?: string;
 }
 
+/**
+ * Inline save feedback, plus a toast when something fails.
+ *
+ * The badge sits beside the submit button and is enough to confirm a success.
+ * Failures are different: the form is often scrolled out of view by the time
+ * the server answers, and a line of small red text beside a button nobody is
+ * looking at reads as "nothing happened". Errors therefore also raise a toast,
+ * which cannot be missed.
+ *
+ * Every form already rendering this component gets both behaviours.
+ */
 export default function SaveBadge({ savedAt, error }: SaveBadgeProps) {
+  const toast = useToast();
+  const lastReported = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!error) {
+      lastReported.current = null;
+      return;
+    }
+    // Re-submitting and failing the same way again should surface again, but a
+    // plain re-render with unchanged props must not stack duplicate toasts.
+    const signature = `${error}|${savedAt ?? ""}`;
+    if (lastReported.current === signature) return;
+    lastReported.current = signature;
+    toast.error(error);
+  }, [error, savedAt, toast]);
+
   if (error) {
     return (
       <span className="text-[12px] font-semibold text-[#a3221a]">{error}</span>
@@ -16,9 +47,9 @@ export default function SaveBadge({ savedAt, error }: SaveBadgeProps) {
   return (
     <span
       key={savedAt}
-      className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#163300] save-badge"
+      className="save-badge inline-flex items-center gap-1.5 text-[12px] font-semibold text-[#163300]"
     >
-      <span className="w-1.5 h-1.5 rounded-full bg-[#9fe870]" aria-hidden />
+      <span className="h-1.5 w-1.5 rounded-full bg-[#9fe870]" aria-hidden />
       Saved
     </span>
   );

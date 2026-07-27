@@ -2,7 +2,6 @@
 
 import {
   useActionState,
-  useEffect,
   useMemo,
   useState,
   type ChangeEvent,
@@ -62,12 +61,12 @@ export default function TipJar({
   const isCustom = selectedPaisa === 0;
   const effectivePaisa = isCustom ? customPaisa ?? 0 : selectedPaisa;
 
-  useEffect(() => {
-    if (!isCustom) setCustomRaw("");
-  }, [isCustom]);
-
   function pickPreset(amountPaisa: number) {
     setSelectedPaisa(amountPaisa);
+    // Clearing here rather than in an effect keyed on isCustom: the field is
+    // only ever emptied by choosing a preset, so the event is the honest place
+    // for it and it avoids a second render pass.
+    setCustomRaw("");
     flashInteraction();
   }
 

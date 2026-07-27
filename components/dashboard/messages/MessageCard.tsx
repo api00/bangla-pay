@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 
 import {
@@ -8,6 +8,7 @@ import {
   replyToMessage,
   type ReplyState,
 } from "@/app/dashboard/messages/_actions";
+import { useToast } from "@/components/ui/Toast";
 import type { MessageWithTip } from "@/db/queries/messages";
 import { formatBdtDateTime, timeAgo } from "@/lib/dates";
 import { formatTaka } from "@/lib/money";
@@ -43,7 +44,19 @@ function ReplyButton() {
 }
 
 export default function MessageCard({ message }: MessageCardProps) {
+  const toast = useToast();
   const [state, formAction] = useActionState(replyToMessage, initialState);
+  const reported = useRef<ReplyState | null>(null);
+
+  // Sending a reply re-renders the card with the reply in place, which is easy
+  // to miss on a long inbox. Announce both outcomes.
+  useEffect(() => {
+    if (reported.current === state) return;
+    reported.current = state;
+    if (state.ok) toast.success("Reply sent");
+    else if (state.error) toast.error(state.error);
+  }, [state, toast]);
+
   const [replyOpen, setReplyOpen] = useState(false);
   const hasReplied = Boolean(message.replyBody);
   const showReplyForm = !hasReplied && (replyOpen || !message.isRead);

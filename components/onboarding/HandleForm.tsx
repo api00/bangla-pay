@@ -44,13 +44,22 @@ export default function HandleForm() {
     initialState,
   );
   const [value, setValue] = useState("");
-  const [status, setStatus] = useState<LiveStatus>({ kind: "idle" });
+  // Only the *server* answer lives in state. The local verdict (too short,
+  // bad characters, reserved) is a pure function of `value`, so deriving it
+  // during render keeps the two from fighting and removes a render cascade:
+  // the old effect pushed the local verdict into state on every keystroke.
+  const [remoteStatus, setRemoteStatus] = useState<LiveStatus | null>(null);
 
   const normalized = useMemo(() => normalizeHandle(value), [value]);
+  const localStatus = useMemo(() => deriveLocalStatus(value), [value]);
+
+  // A server answer only counts while the local verdict still says "checking";
+  // any edit that changes the local verdict supersedes it immediately.
+  const status: LiveStatus =
+    localStatus.kind === "checking" ? remoteStatus ?? localStatus : localStatus;
 
   useEffect(() => {
     const local = deriveLocalStatus(value);
-    setStatus(local);
     if (local.kind !== "checking") return;
 
     let cancelled = false;
@@ -59,9 +68,12 @@ export default function HandleForm() {
         const result: CheckHandleResult = await checkHandle(value);
         if (cancelled) return;
         if (result.available) {
-          setStatus({ kind: "available", normalized: result.normalized });
+          setRemoteStatus({
+            kind: "available",
+            normalized: result.normalized,
+          });
         } else {
-          setStatus({
+          setRemoteStatus({
             kind: "unavailable",
             reason: result.reason ?? "Not available.",
           });
@@ -77,6 +89,8 @@ export default function HandleForm() {
 
   function onChange(event: ChangeEvent<HTMLInputElement>) {
     setValue(event.target.value);
+    // Drop the previous server answer — it described the old handle.
+    setRemoteStatus(null);
   }
 
   const previewHandle = normalized || "yourname";

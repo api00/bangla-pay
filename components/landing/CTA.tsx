@@ -19,11 +19,14 @@ function useTypingHandle(paused: boolean) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    // Reduced motion: skip the typing animation and settle on the final
+    // string. Deferring by a frame keeps it out of the effect's synchronous
+    // body, which would otherwise force an immediate second render.
     if (typeof window !== "undefined") {
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (reduced) {
-        setText("your-handle");
-        return;
+        const frame = requestAnimationFrame(() => setText("your-handle"));
+        return () => cancelAnimationFrame(frame);
       }
     }
 

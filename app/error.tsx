@@ -1,6 +1,6 @@
 "use client"; // Error boundaries must be Client Components
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 
 import {
@@ -15,19 +15,18 @@ interface ErrorPageProps {
 }
 
 export default function RootError({ error, unstable_retry }: ErrorPageProps) {
-  const [recovering, setRecovering] = useState(false);
 
   useEffect(() => {
     if (process.env.NODE_ENV === "development") {
       console.error("[root error boundary]", error);
     }
-    // Aggressive: any first error triggers a silent reload (30s cooldown).
-    const triggered = tryAutoRecover();
-    if (triggered) setRecovering(true);
+    // Any first error triggers a silent reload (30s cooldown). Once this
+    // returns true the browser is already navigating away, so there is
+    // nothing left for this tree to decide.
+    tryAutoRecover();
     void looksLikeDeploymentSkew;
   }, [error]);
 
-  if (recovering) return null;
 
   return (
     <main className="min-h-screen bg-[#f7f9f5] flex items-center justify-center px-6">

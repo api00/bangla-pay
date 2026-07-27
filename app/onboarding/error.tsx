@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import {
   looksLikeDeploymentSkew,
@@ -16,15 +16,12 @@ export default function OnboardingError({
   error,
   unstable_retry,
 }: OnboardingErrorProps) {
-  const [recovering, setRecovering] = useState(false);
 
   useEffect(() => {
-    const triggered = tryAutoRecover();
-    if (triggered) setRecovering(true);
+    tryAutoRecover();
     void looksLikeDeploymentSkew;
   }, [error]);
 
-  if (recovering) return null;
 
   return (
     <main className="min-h-screen bg-[#f7f9f5] flex items-center justify-center px-6">

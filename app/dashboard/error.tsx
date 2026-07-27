@@ -1,6 +1,6 @@
 "use client"; // Error boundaries must be Client Components
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import { tryAutoRecover } from "@/lib/error-recovery";
 
@@ -13,7 +13,6 @@ export default function DashboardError({
   error,
   unstable_retry,
 }: DashboardErrorProps) {
-  const [recovering, setRecovering] = useState(false);
 
   useEffect(() => {
     if (process.env.NODE_ENV === "development") {
@@ -22,11 +21,9 @@ export default function DashboardError({
     // Aggressive policy: any first error in this tab's session triggers a
     // silent reload. tryAutoRecover's 30s sessionStorage cooldown prevents
     // loops if the error is a real bug — the second occurrence shows UI.
-    const triggered = tryAutoRecover();
-    if (triggered) setRecovering(true);
+    tryAutoRecover();
   }, [error]);
 
-  if (recovering) return null;
 
   return (
     <div className="rounded-[28px] bg-white border border-[rgba(14,15,12,0.06)] p-8 md:p-10 shadow-[0_1px_0_0_rgba(14,15,12,0.03)] text-center max-w-[560px] mx-auto">
