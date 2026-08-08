@@ -12,7 +12,11 @@ import {
   isDeliveryMode,
   isDeliveryModeAllowed,
   isProductCategory,
+  PRODUCT_DESCRIPTION_MAX,
+  PRODUCT_SUBTITLE_MAX,
+  PRODUCT_TITLE_MAX,
   validateDeliveryFile,
+  validatePublishablePrice,
 } from "@/lib/product-catalog";
 import { isValidSlug, slugify } from "@/lib/slug";
 
@@ -26,9 +30,9 @@ import { requireCreator } from "./_helpers";
 // until the row is there. Step 1 therefore creates an unpublished draft. That
 // is invisible plumbing — the creator never sees a "save".
 
-const TITLE_MAX = 80;
-const SUBTITLE_MAX = 140;
-const DESCRIPTION_MAX = 4_000;
+const TITLE_MAX = PRODUCT_TITLE_MAX;
+const SUBTITLE_MAX = PRODUCT_SUBTITLE_MAX;
+const DESCRIPTION_MAX = PRODUCT_DESCRIPTION_MAX;
 
 const VALID_PRICING = new Set(pricingModel.enumValues);
 type PricingModel = (typeof pricingModel.enumValues)[number];
@@ -299,6 +303,15 @@ export async function finalizeProduct(
   const files = await getProductFiles(product.id);
 
   if (input.publish) {
+    // A draft can reach this step priced at 0 when it started as a quick-start
+    // shell, so the price has to be re-checked here and not just in step 1.
+    const priceError = validatePublishablePrice({
+      pricingModel: product.pricingModel,
+      basePricePaisa: product.basePricePaisa,
+    });
+    if (priceError) {
+      return { ok: false, error: priceError, field: "price" };
+    }
     if (files.length === 0) {
       return {
         ok: false,

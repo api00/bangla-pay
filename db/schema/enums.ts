@@ -70,6 +70,15 @@ export const accessEventKind = pgEnum("access_event_kind", [
   "download",
 ]);
 
+// Outcome of reading an uploaded file to pre-fill a product listing.
+// `unreadable` is a real answer, not a failure: audio and archives carry no
+// text or imagery a model can read, and a blank scan carries nothing either.
+export const aiSuggestionStatus = pgEnum("ai_suggestion_status", [
+  "ok",
+  "unreadable",
+  "failed",
+]);
+
 // ---------- Profile enums ----------
 
 export const creatorCategory = pgEnum("creator_category", [

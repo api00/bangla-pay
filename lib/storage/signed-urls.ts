@@ -74,6 +74,28 @@ export async function signedProductFileAccess(
 }
 
 /** Remove a stored object — safe to call even if the object is already gone. */
+/**
+ * Pull a product file into memory on the server.
+ *
+ * Uploads go browser → Storage directly, so the server has never seen these
+ * bytes. Anything that needs to inspect a file has to fetch it back.
+ * Callers must bound the size themselves — this loads the whole object.
+ */
+export async function downloadProductFile(
+  storagePath: string,
+): Promise<Uint8Array> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase.storage
+    .from(BUCKETS.PRODUCT_FILES)
+    .download(storagePath);
+  if (error || !data) {
+    throw new Error(
+      `Storage download failed: ${error?.message ?? "unknown error"}`,
+    );
+  }
+  return new Uint8Array(await data.arrayBuffer());
+}
+
 export async function removeStorageObject(storagePath: string): Promise<void> {
   const supabase = createAdminClient();
   await supabase.storage.from(BUCKETS.PRODUCT_FILES).remove([storagePath]);

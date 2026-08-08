@@ -1,5 +1,6 @@
 "use client";
 
+import type { ProductFile } from "@/db/schema";
 import type { DeliveryMode, ProductCategory } from "@/lib/product-catalog";
 
 import FileUploader from "../FileUploader";
@@ -14,6 +15,8 @@ interface StepContentProps {
   productId: string;
   category: ProductCategory;
   deliveryMode: DeliveryMode;
+  /** Files already attached — a quick-start drop lands here pre-uploaded. */
+  files: ProductFile[];
   values: ContentValues;
   onChange: (patch: Partial<ContentValues>) => void;
 }
@@ -25,6 +28,7 @@ export default function StepContent({
   productId,
   category,
   deliveryMode,
+  files,
   values,
   onChange,
 }: StepContentProps) {
@@ -39,7 +43,7 @@ export default function StepContent({
       <section>
         <FileUploader
           productId={productId}
-          files={[]}
+          files={files}
           productCategory={category}
           deliveryMode={deliveryMode}
         />

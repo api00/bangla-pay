@@ -1,7 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
+
+import { analyzeProductUpload } from "@/app/dashboard/shop/_actions/analyze-upload";
+import { slugify } from "@/lib/slug";
 
 import {
   finalizeProduct,
@@ -9,14 +12,19 @@ import {
   saveProductContent,
   type WizardField,
 } from "@/app/dashboard/shop/_actions/wizard-steps";
+import type { ProductFile } from "@/db/schema";
 import {
   getDefaultDeliveryMode,
   type DeliveryMode,
   type ProductCategory,
 } from "@/lib/product-catalog";
 
+import type { QuickStartResult } from "./QuickStartDropzone";
 import StepAccess, { type AccessValues } from "./StepAccess";
-import StepBasics, { type BasicsValues } from "./StepBasics";
+import StepBasics, {
+  type AutofilledField,
+  type BasicsValues,
+} from "./StepBasics";
 import StepContent, { type ContentValues } from "./StepContent";
 import WizardProgress, { type WizardStepMeta } from "./WizardProgress";
 
@@ -35,6 +43,20 @@ export default function ProductWizard() {
   const [productId, setProductId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [errorField, setErrorField] = useState<WizardField | undefined>();
+
+  // Quick start: a dropped file can create the draft and fill step 1 before
+  // the creator types anything. Both are empty on the manual path.
+  const [uploadedFiles, setUploadedFiles] = useState<ProductFile[]>([]);
+  const [autofilled, setAutofilled] = useState<readonly AutofilledField[]>([]);
+  const [quickStartFilename, setQuickStartFilename] = useState<string | null>(
+    null,
+  );
+  const [reading, setReading] = useState(false);
+  /**
+   * Set once the creator types their own title. The file read can land
+   * seconds after the drop, and it must never overwrite what they wrote.
+   */
+  const titleEditedRef = useRef(false);
 
   const [basics, setBasics] = useState<BasicsValues>({
     category: "",
@@ -63,6 +85,66 @@ export default function ProductWizard() {
     clearError();
     setStep(next);
     setFurthest((prev) => Math.max(prev, next));
+  }
+
+  /**
+   * A quick-start drop has created the draft and uploaded the file. Seed the
+   * fields it could derive; the creator reviews them like any other value.
+   */
+  function handleQuickStart(result: QuickStartResult) {
+    clearError();
+    setProductId(result.productId);
+    setBasics((prev) => ({
+      ...prev,
+      category: result.category,
+      title: result.title,
+      slug: result.slug,
+      slugDirty: false,
+    }));
+    setAccess((prev) => ({ ...prev, deliveryMode: result.deliveryMode }));
+    setUploadedFiles((prev) => [...prev, result.file]);
+    setAutofilled(["category", "title", "slug"]);
+    setQuickStartFilename(result.file.filename);
+    titleEditedRef.current = false;
+    void readFile(result.productId, result.file.id);
+  }
+
+  /**
+   * Second pass: read the file's contents for a better title and a
+   * description. Deliberately not awaited by the drop — the fields are already
+   * usable, and the creator can start editing or continue while this lands.
+   */
+  async function readFile(nextProductId: string, fileId: string) {
+    setReading(true);
+    try {
+      const result = await analyzeProductUpload({
+        productId: nextProductId,
+        fileId,
+      });
+      if (!result.ok || !result.suggestion) return;
+
+      const { title, subtitle, description } = result.suggestion;
+
+      // Only fill what the creator hasn't written themselves. Anything they
+      // typed while this was in flight wins.
+      if (!titleEditedRef.current && title) {
+        setBasics((prev) => ({
+          ...prev,
+          title,
+          slug: prev.slugDirty ? prev.slug : slugify(title),
+        }));
+        setAutofilled((prev) =>
+          prev.includes("title") ? prev : [...prev, "title"],
+        );
+      }
+
+      setContent((prev) => ({
+        subtitle: prev.subtitle || subtitle,
+        description: prev.description || description,
+      }));
+    } finally {
+      setReading(false);
+    }
   }
 
   function submitBasics() {
@@ -149,9 +231,19 @@ export default function ProductWizard() {
           <StepBasics
             values={basics}
             errorField={errorField}
+            productId={productId}
+            quickStartFilename={quickStartFilename}
+            autofilled={autofilled}
+            reading={reading}
+            onQuickStart={handleQuickStart}
             onChange={(patch) => {
               clearError();
+              if (patch.title !== undefined) titleEditedRef.current = true;
               setBasics((prev) => ({ ...prev, ...patch }));
+              // Editing a field makes it the creator's own — drop the marker.
+              setAutofilled((prev) =>
+                prev.filter((field) => !(field in patch)),
+              );
             }}
           />
         )}
@@ -166,6 +258,7 @@ export default function ProductWizard() {
                   basics.category as ProductCategory,
                 )) as DeliveryMode
             }
+            files={uploadedFiles}
             values={content}
             onChange={(patch) => setContent((prev) => ({ ...prev, ...patch }))}
           />

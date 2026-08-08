@@ -1,3 +1,5 @@
+import { fileExtension } from "./filename";
+
 export const PRODUCT_CATEGORIES = [
   {
     value: "ebook",
@@ -68,6 +70,13 @@ const DEFAULT_DELIVERY: Record<ProductCategory, DeliveryMode> = {
 
 export const MAX_PRODUCT_FILE_BYTES = 50 * 1024 * 1024;
 export const MAX_PRODUCT_FILENAME_LENGTH = 200;
+
+// Field limits for the product record. They live here rather than beside the
+// wizard because uploads, the edit screen, and machine-generated suggestions
+// all have to clamp to the same numbers.
+export const PRODUCT_TITLE_MAX = 80;
+export const PRODUCT_SUBTITLE_MAX = 140;
+export const PRODUCT_DESCRIPTION_MAX = 4_000;
 
 const CATEGORY_VALUES = new Set<string>(
   PRODUCT_CATEGORIES.map((category) => category.value),
@@ -205,12 +214,7 @@ export function validateProductFile(input: {
     return "Files must be 50 MB or smaller.";
   }
 
-  const normalizedFilename = filename.trim().toLowerCase();
-  const finalDot = normalizedFilename.lastIndexOf(".");
-  const extension =
-    finalDot > 0 && finalDot < normalizedFilename.length - 1
-      ? normalizedFilename.slice(finalDot + 1)
-      : null;
+  const extension = fileExtension(filename);
   const categoryConfig = getProductCategory(category);
   if (
     !extension ||
@@ -227,4 +231,76 @@ export function validateProductFile(input: {
   }
 
   return null;
+}
+
+// ---------- quick start ----------
+// Deriving the category from the file itself is what lets a creator drop a
+// file before filling anything in. `.zip` is deliberately absent: it is legal
+// in all three categories, so it identifies none of them.
+const CATEGORY_BY_EXTENSION: Record<string, ProductCategory> = {
+  pdf: "ebook",
+  epub: "ebook",
+  mp3: "audio",
+  wav: "audio",
+  m4a: "audio",
+  png: "design_asset",
+  jpg: "design_asset",
+  jpeg: "design_asset",
+  webp: "design_asset",
+  svg: "design_asset",
+};
+
+/** Every extension a quick-start drop can identify, as an `accept` string. */
+export const QUICK_START_ACCEPT = Object.keys(CATEGORY_BY_EXTENSION)
+  .map((extension) => `.${extension}`)
+  .join(",");
+
+/** Category implied by the extension, or null when it can't be pinned down. */
+export function inferCategoryFromFilename(
+  filename: string,
+): ProductCategory | null {
+  const extension = fileExtension(filename);
+  if (!extension) return null;
+  return CATEGORY_BY_EXTENSION[extension] ?? null;
+}
+
+/**
+ * Pick the delivery mode that actually accepts this file.
+ *
+ * The category default is preferred, but it can reject a legal file — an
+ * `.epub` is a valid e-book while `view_only` takes PDFs only. Falling through
+ * to the next allowed mode keeps the drop working instead of erroring on a
+ * file the shop can sell.
+ */
+export function pickDeliveryModeForFile(input: {
+  category: ProductCategory;
+  filename: string;
+  mimeType: string;
+  sizeBytes: number;
+}): DeliveryMode | null {
+  const preferred = getDefaultDeliveryMode(input.category);
+  const ordered = [
+    preferred,
+    ...getAllowedDeliveryModes(input.category).filter(
+      (mode) => mode !== preferred,
+    ),
+  ];
+
+  for (const deliveryMode of ordered) {
+    if (!validateDeliveryFile({ ...input, deliveryMode })) return deliveryMode;
+  }
+  return null;
+}
+
+/**
+ * A `fixed` product priced at 0 paisa renders a permanently unbuyable page.
+ * Every path that can publish has to run this — the wizard is not the only one.
+ */
+export function validatePublishablePrice(input: {
+  pricingModel: string;
+  basePricePaisa: number;
+}): string | null {
+  if (input.pricingModel === "free") return null;
+  if (input.basePricePaisa > 0) return null;
+  return "Set a price above ৳0, or change this product to Free.";
 }

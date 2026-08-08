@@ -6,7 +6,10 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { getProductById, getProductFiles } from "@/db/queries/products";
 import { products } from "@/db/schema";
-import { validateDeliveryFile } from "@/lib/product-catalog";
+import {
+  validateDeliveryFile,
+  validatePublishablePrice,
+} from "@/lib/product-catalog";
 
 import { requireCreator } from "./_helpers";
 
@@ -31,6 +34,11 @@ export async function setProductPublished(
       };
     }
     const category = product.category;
+    const priceError = validatePublishablePrice({
+      pricingModel: product.pricingModel,
+      basePricePaisa: product.basePricePaisa,
+    });
+    if (priceError) return { ok: false, error: priceError };
     if (!product.rightsConfirmedAt) {
       return {
         ok: false,

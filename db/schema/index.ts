@@ -6,6 +6,7 @@ export * from "./creators";
 export * from "./supporters";
 export * from "./tips";
 export * from "./products";
+export * from "./ai-suggestions";
 export * from "./orders";
 export * from "./messages";
 export * from "./milestones";

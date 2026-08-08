@@ -5,7 +5,12 @@ import { slugify } from "@/lib/slug";
 
 import type { WizardField } from "@/app/dashboard/shop/_actions/wizard-steps";
 
+import QuickStartDropzone, { type QuickStartResult } from "./QuickStartDropzone";
+
 export type PricingModel = "fixed" | "pay_what_you_want" | "free";
+
+/** Fields the quick-start drop can fill in on the creator's behalf. */
+export type AutofilledField = "category" | "title" | "slug";
 
 export interface BasicsValues {
   category: ProductCategory | "";
@@ -21,6 +26,14 @@ interface StepBasicsProps {
   values: BasicsValues;
   errorField?: WizardField;
   onChange: (patch: Partial<BasicsValues>) => void;
+  /** Null until a draft exists — the dropzone shows only before that. */
+  productId: string | null;
+  /** Filename the current values were derived from, when there was one. */
+  quickStartFilename: string | null;
+  autofilled: readonly AutofilledField[];
+  /** The file's contents are still being read for a better title/description. */
+  reading: boolean;
+  onQuickStart: (result: QuickStartResult) => void;
 }
 
 const PRICING_OPTIONS: { value: PricingModel; title: string; sub: string }[] = [
@@ -47,17 +60,72 @@ function borderFor(invalid: boolean): string {
 const labelClass =
   "mb-2 block text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark";
 
+const labelRowClass = "mb-2 flex flex-wrap items-center gap-2";
+const labelInlineClass =
+  "text-[12px] font-semibold uppercase tracking-[0.18em] text-warm-dark";
+
+/**
+ * Marks a value the creator did not type. Deliberately quiet — this is a note,
+ * not a status, and it disappears the moment they edit the field.
+ */
+function FromFileTag() {
+  return (
+    <span className="inline-flex items-center rounded-pill bg-mint-surface px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-warm-dark">
+      From your file
+    </span>
+  );
+}
+
 export default function StepBasics({
   values,
   errorField,
   onChange,
+  productId,
+  quickStartFilename,
+  autofilled,
+  reading,
+  onQuickStart,
 }: StepBasicsProps) {
+  const filled = (field: AutofilledField) => autofilled.includes(field);
+
   return (
     <div className="space-y-6">
+      {!productId && (
+        <QuickStartDropzone onReady={onQuickStart} />
+      )}
+
+      {quickStartFilename && (
+        <p
+          role="status"
+          className="rounded-card bg-mint-surface px-4 py-3 text-[13px] leading-[1.55] text-warm-dark"
+        >
+          {reading ? (
+            <>
+              Reading{" "}
+              <span className="font-semibold text-near-black">
+                {quickStartFilename}
+              </span>
+              … you can keep typing; anything you change is kept.
+            </>
+          ) : (
+            <>
+              Filled in from{" "}
+              <span className="font-semibold text-near-black">
+                {quickStartFilename}
+              </span>
+              . Check everything below and change anything that looks wrong.
+            </>
+          )}
+        </p>
+      )}
+
       <div>
-        <label htmlFor="category" className={labelClass}>
-          Product category
-        </label>
+        <div className={labelRowClass}>
+          <label htmlFor="category" className={labelInlineClass}>
+            Product category
+          </label>
+          {filled("category") && <FromFileTag />}
+        </div>
         <div className="relative">
           <select
             id="category"
@@ -98,9 +166,12 @@ export default function StepBasics({
       </div>
 
       <div>
-        <label htmlFor="title" className={labelClass}>
-          Title
-        </label>
+        <div className={labelRowClass}>
+          <label htmlFor="title" className={labelInlineClass}>
+            Title
+          </label>
+          {filled("title") && <FromFileTag />}
+        </div>
         <input
           id="title"
           type="text"
@@ -120,9 +191,12 @@ export default function StepBasics({
       </div>
 
       <div>
-        <label htmlFor="slug" className={labelClass}>
-          Link
-        </label>
+        <div className={labelRowClass}>
+          <label htmlFor="slug" className={labelInlineClass}>
+            Link
+          </label>
+          {filled("slug") && <FromFileTag />}
+        </div>
         <div
           className={`flex h-12 items-stretch overflow-hidden rounded-2xl border-[1.5px] bg-white transition-colors focus-within:border-dark-green focus-within:ring-2 focus-within:ring-wise-green ${borderFor(errorField === "slug")}`}
         >
