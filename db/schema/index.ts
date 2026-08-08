@@ -7,6 +7,7 @@ export * from "./supporters";
 export * from "./tips";
 export * from "./products";
 export * from "./ai-suggestions";
+export * from "./fan-insights";
 export * from "./orders";
 export * from "./messages";
 export * from "./milestones";

@@ -79,6 +79,15 @@ export const aiSuggestionStatus = pgEnum("ai_suggestion_status", [
   "failed",
 ]);
 
+// Overall temperature of a creator's supporter messages. Ordered worst to
+// best so a comparison reads naturally.
+export const fanMood = pgEnum("fan_mood", [
+  "concerned",
+  "mixed",
+  "positive",
+  "delighted",
+]);
+
 // ---------- Profile enums ----------
 
 export const creatorCategory = pgEnum("creator_category", [

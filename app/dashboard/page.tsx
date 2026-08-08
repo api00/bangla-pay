@@ -1,4 +1,5 @@
 import EarningsCard from "@/components/dashboard/EarningsCard";
+import FanInsightsCard from "@/components/dashboard/FanInsightsCard";
 import GettingStarted from "@/components/dashboard/GettingStarted";
 import MilestonesCard from "@/components/dashboard/MilestonesCard";
 import ProfileCard from "@/components/dashboard/ProfileCard";
@@ -6,6 +7,11 @@ import RecentActivity from "@/components/dashboard/RecentActivity";
 import SetupBanner from "@/components/dashboard/SetupBanner";
 import StatsGrid from "@/components/dashboard/StatsGrid";
 import { getDailyActivity } from "@/db/queries/activity";
+import {
+  getFanMessageState,
+  getLatestFanInsight,
+  isInsightStale,
+} from "@/db/queries/fan-insights";
 import { listMilestonesForCreator } from "@/db/queries/milestones";
 import { getCreatorPage } from "@/db/queries/page";
 import {
@@ -17,6 +23,7 @@ import {
   getCreatorTipStats,
   recentSucceededTips,
 } from "@/db/queries/tips";
+import { MIN_MESSAGES_FOR_INSIGHT } from "@/lib/ai/fan-insights";
 import { requireCreator } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +52,8 @@ export default async function DashboardHomePage() {
     balance,
     milestones,
     shopStats,
+    fanInsight,
+    fanMessageState,
   ] = await Promise.all([
     getCreatorTipStats(creator.id),
     recentSucceededTips(creator.id, 5),
@@ -54,6 +63,8 @@ export default async function DashboardHomePage() {
     getCreatorBalance(creator.id),
     listMilestonesForCreator(creator.id),
     getCreatorShopStats(creator.id),
+    getLatestFanInsight(creator.id),
+    getFanMessageState(creator.id),
   ]);
 
   const hasPayoutMethod = payoutMethods.length > 0;
@@ -90,6 +101,13 @@ export default async function DashboardHomePage() {
         averageTipPaisa={stats.averageTipPaisa}
         paidOrderCount={shopStats.paidOrderCount}
         shopRevenuePaisa={shopStats.shopRevenuePaisa}
+      />
+
+      <FanInsightsCard
+        insight={fanInsight}
+        messageCount={fanMessageState.total}
+        isStale={isInsightStale(fanInsight, fanMessageState)}
+        minMessages={MIN_MESSAGES_FOR_INSIGHT}
       />
 
       {milestones.length > 0 && <MilestonesCard milestones={milestones} />}
