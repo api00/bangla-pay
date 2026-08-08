@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 
 import { analyzeProductUpload } from "@/app/dashboard/shop/_actions/analyze-upload";
+import { formatTagsInput } from "@/lib/product-tags";
 import { slugify } from "@/lib/slug";
 
 import {
@@ -57,6 +58,8 @@ export default function ProductWizard() {
    * seconds after the drop, and it must never overwrite what they wrote.
    */
   const titleEditedRef = useRef(false);
+  /** Same guard for tags: the creator's own list is never overwritten. */
+  const tagsEditedRef = useRef(false);
 
   const [basics, setBasics] = useState<BasicsValues>({
     category: "",
@@ -70,7 +73,9 @@ export default function ProductWizard() {
   const [content, setContent] = useState<ContentValues>({
     subtitle: "",
     description: "",
+    tags: "",
   });
+  const [tagsSuggested, setTagsSuggested] = useState(false);
   const [access, setAccess] = useState<AccessValues>({
     deliveryMode: "",
     rightsConfirmed: false,
@@ -123,7 +128,7 @@ export default function ProductWizard() {
       });
       if (!result.ok || !result.suggestion) return;
 
-      const { title, subtitle, description } = result.suggestion;
+      const { title, subtitle, description, tags } = result.suggestion;
 
       // Only fill what the creator hasn't written themselves. Anything they
       // typed while this was in flight wins.
@@ -141,7 +146,9 @@ export default function ProductWizard() {
       setContent((prev) => ({
         subtitle: prev.subtitle || subtitle,
         description: prev.description || description,
+        tags: tagsEditedRef.current ? prev.tags : formatTagsInput(tags),
       }));
+      if (!tagsEditedRef.current && tags.length > 0) setTagsSuggested(true);
     } finally {
       setReading(false);
     }
@@ -186,6 +193,7 @@ export default function ProductWizard() {
         productId,
         subtitle: content.subtitle,
         description: content.description,
+        tags: content.tags,
       });
       if (!result.ok) {
         setError(result.error ?? "Something went wrong.");
@@ -260,7 +268,14 @@ export default function ProductWizard() {
             }
             files={uploadedFiles}
             values={content}
-            onChange={(patch) => setContent((prev) => ({ ...prev, ...patch }))}
+            tagsSuggested={tagsSuggested}
+            onChange={(patch) => {
+              if (patch.tags !== undefined) {
+                tagsEditedRef.current = true;
+                setTagsSuggested(false);
+              }
+              setContent((prev) => ({ ...prev, ...patch }));
+            }}
           />
         )}
 

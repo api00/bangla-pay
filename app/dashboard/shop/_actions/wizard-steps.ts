@@ -7,6 +7,7 @@ import { db } from "@/db";
 import { getProductById, getProductFiles } from "@/db/queries/products";
 import { pricingModel, products } from "@/db/schema";
 import { parseTakaInput } from "@/lib/money";
+import { parseTagsInput } from "@/lib/product-tags";
 import {
   getDefaultDeliveryMode,
   isDeliveryMode,
@@ -221,9 +222,11 @@ export interface ContentInput {
   productId: string;
   subtitle: string;
   description: string;
+  /** Comma-separated; normalised server-side. */
+  tags: string;
 }
 
-/** Step 2 — subtitle and description. Images and files save as they upload. */
+/** Step 2 — subtitle, description, tags. Images and files save as uploaded. */
 export async function saveProductContent(
   input: ContentInput,
 ): Promise<WizardResult> {
@@ -242,6 +245,7 @@ export async function saveProductContent(
         descriptionMd: description
           ? description.slice(0, DESCRIPTION_MAX)
           : null,
+        tags: parseTagsInput(String(input.tags ?? "")),
         updatedAt: new Date(),
       })
       .where(

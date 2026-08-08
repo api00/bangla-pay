@@ -9,9 +9,11 @@ import {
 } from "@/app/dashboard/shop/_actions/update-product";
 import type { Product } from "@/db/schema";
 import { paisaToTaka } from "@/lib/money";
+import { formatTagsInput } from "@/lib/product-tags";
 
 import PricingPicker from "./PricingPicker";
 import ProductDeliveryFields from "./ProductDeliveryFields";
+import TagsField from "./TagsField";
 
 const initial: UpdateProductState = { ok: false };
 
@@ -89,6 +91,8 @@ export default function EditProductForm({ product }: EditProductFormProps) {
           className="w-full resize-y rounded-2xl border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-4 py-3 text-[16px] leading-[1.6] text-near-black outline-none transition-colors placeholder:text-gray-ink focus-visible:border-dark-green focus-visible:ring-2 focus-visible:ring-wise-green"
         />
       </div>
+
+      <TagsField defaultValue={formatTagsInput(product.tags ?? [])} />
 
       <PricingPicker
         defaultValue={product.pricingModel}

@@ -39,6 +39,11 @@ export const products = pgTable(
       .array()
       .notNull()
       .default(sql`'{}'::text[]`),
+    /** Search tags — written by upload analysis, editable by the creator. */
+    tags: text("tags")
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
     productType: productType("product_type")
       .notNull()
       .default("digital_download"),

@@ -8,6 +8,7 @@ import {
   PRODUCT_TITLE_MAX,
   type ProductCategory,
 } from "@/lib/product-catalog";
+import { MAX_PRODUCT_TAGS, normaliseTags } from "@/lib/product-tags";
 import { clampText } from "@/lib/text";
 
 import {
@@ -59,11 +60,16 @@ export function isAnalysableFile(input: {
 const RESPONSE_SCHEMA = {
   type: "object",
   additionalProperties: false,
-  required: ["title", "subtitle", "description", "language", "readable"],
+  required: ["title", "subtitle", "description", "tags", "language", "readable"],
   properties: {
     title: { type: "string" },
     subtitle: { type: "string" },
     description: { type: "string" },
+    tags: {
+      type: "array",
+      maxItems: MAX_PRODUCT_TAGS,
+      items: { type: "string" },
+    },
     language: { type: "string", enum: ["en", "bn", "mixed", "unknown"] },
     readable: { type: "boolean" },
   },
@@ -75,6 +81,9 @@ const suggestionSchema = z.object({
   title: z.string().trim().min(1).max(PRODUCT_TITLE_MAX * 2),
   subtitle: z.string().trim().max(PRODUCT_SUBTITLE_MAX * 2),
   description: z.string().trim().max(PRODUCT_DESCRIPTION_MAX * 2),
+  // Length is not capped here: an extra tag is a formatting overrun, not a
+  // reason to discard the whole read. normaliseTags trims and de-duplicates.
+  tags: z.array(z.string()),
   language: z.enum(["en", "bn", "mixed", "unknown"]),
   readable: z.boolean(),
 });
@@ -83,6 +92,7 @@ export interface ProductSuggestion {
   title: string;
   subtitle: string;
   description: string;
+  tags: string[];
   language: "en" | "bn" | "mixed" | "unknown";
 }
 
@@ -109,7 +119,8 @@ function buildPrompt(category: ProductCategory, filename: string): string {
     "You are drafting a shop listing for a Bangladeshi creator selling on BanglaPay.",
     `The uploaded file is ${CATEGORY_CONTEXT[category]}. Its filename is "${filename}".`,
     "",
-    "Write a title, a one-line tagline, and a short description of what a buyer gets.",
+    "Write a title, a one-line tagline, a short description of what a buyer gets,",
+    "and search tags a supporter would plausibly type to find it.",
     "",
     "Rules:",
     "- Use ONLY what is actually visible in the file.",
@@ -120,6 +131,9 @@ function buildPrompt(category: ProductCategory, filename: string): string {
     `- Title: under ${PRODUCT_TITLE_MAX} characters. Do not repeat the tagline in it.`,
     `- Tagline: under ${PRODUCT_SUBTITLE_MAX} characters, no trailing full stop.`,
     "- Description: 2 to 4 sentences.",
+    `- Tags: up to ${MAX_PRODUCT_TAGS}, lowercase, one or two words each. Subject`,
+    "  matter and format only — never the creator's name, never 'best' or",
+    "  'free'. If the file is in Bangla, Bangla tags are correct.",
     "",
     "If the file is blank, corrupt, or shows nothing you can describe, set",
     "readable to false and leave the three text fields empty. Guessing is worse",
@@ -203,6 +217,7 @@ export async function analyseProductFile(input: {
         parsed.data.description,
         PRODUCT_DESCRIPTION_MAX,
       ).trim(),
+      tags: normaliseTags(parsed.data.tags),
       language: parsed.data.language,
     },
     ...tokens,

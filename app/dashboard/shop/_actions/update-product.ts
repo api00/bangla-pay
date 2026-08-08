@@ -13,6 +13,7 @@ import {
   isProductCategory,
   validateDeliveryFile,
 } from "@/lib/product-catalog";
+import { parseTagsInput } from "@/lib/product-tags";
 
 import { requireCreator } from "./_helpers";
 
@@ -69,6 +70,9 @@ export async function updateProduct(
     typeof descriptionRaw === "string" && descriptionRaw.trim()
       ? descriptionRaw.trim().slice(0, DESCRIPTION_MAX)
       : null;
+
+  const tagsRaw = formData.get("tags");
+  const tags = parseTagsInput(typeof tagsRaw === "string" ? tagsRaw : "");
 
   const rightsConfirmed = formData.get("rights_confirmed") === "yes";
   const rightsConfirmedAt =
@@ -142,6 +146,7 @@ export async function updateProduct(
         title,
         subtitle,
         descriptionMd,
+        tags,
         category: categoryRaw,
         deliveryMode: deliveryModeRaw,
         pricingModel: pricing,

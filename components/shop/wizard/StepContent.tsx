@@ -5,10 +5,13 @@ import type { DeliveryMode, ProductCategory } from "@/lib/product-catalog";
 
 import FileUploader from "../FileUploader";
 import ProductImagesUploader from "../ProductImagesUploader";
+import TagsField from "../TagsField";
 
 export interface ContentValues {
   subtitle: string;
   description: string;
+  /** Comma-separated; normalised on save. */
+  tags: string;
 }
 
 interface StepContentProps {
@@ -18,6 +21,8 @@ interface StepContentProps {
   /** Files already attached — a quick-start drop lands here pre-uploaded. */
   files: ProductFile[];
   values: ContentValues;
+  /** Tags came from the file read and haven't been edited yet. */
+  tagsSuggested: boolean;
   onChange: (patch: Partial<ContentValues>) => void;
 }
 
@@ -30,6 +35,7 @@ export default function StepContent({
   deliveryMode,
   files,
   values,
+  tagsSuggested,
   onChange,
 }: StepContentProps) {
   return (
@@ -84,6 +90,12 @@ export default function StepContent({
             {values.description.length}/4000
           </p>
         </div>
+
+        <TagsField
+          value={values.tags}
+          suggested={tagsSuggested}
+          onChange={(tags) => onChange({ tags })}
+        />
       </section>
     </div>
   );

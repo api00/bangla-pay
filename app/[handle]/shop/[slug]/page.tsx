@@ -101,6 +101,22 @@ export default async function PublicProductPage({ params }: PageProps) {
               </div>
             )}
 
+            {product.tags && product.tags.length > 0 && (
+              <ul
+                aria-label="Tags"
+                className="mt-6 flex flex-wrap gap-2 border-t border-[rgba(14,15,12,0.06)] pt-5"
+              >
+                {product.tags.map((tag) => (
+                  <li
+                    key={tag}
+                    className="inline-flex min-h-7 items-center rounded-pill bg-off-white px-3 text-[12px] font-semibold text-warm-dark"
+                  >
+                    {tag}
+                  </li>
+                ))}
+              </ul>
+            )}
+
             <ProductFilesPreview files={files} />
           </article>
 

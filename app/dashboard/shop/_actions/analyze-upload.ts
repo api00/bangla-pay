@@ -79,7 +79,19 @@ export async function analyzeProductUpload(
   // same file must not be billed twice.
   const cached = await getCachedSuggestion(file.id);
   if (cached?.suggestion) {
-    return { ok: true, suggestion: cached.suggestion as ProductSuggestion };
+    // Rows written before a field existed simply lack it. Fill the gap here
+    // rather than letting `undefined` reach a caller that expects an array.
+    const stored = cached.suggestion as Partial<ProductSuggestion>;
+    return {
+      ok: true,
+      suggestion: {
+        title: stored.title ?? "",
+        subtitle: stored.subtitle ?? "",
+        description: stored.description ?? "",
+        tags: Array.isArray(stored.tags) ? stored.tags : [],
+        language: stored.language ?? "unknown",
+      },
+    };
   }
 
   const recent = await countRecentAnalyses(
