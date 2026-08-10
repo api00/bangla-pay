@@ -7,8 +7,8 @@ import { listDirectoryCreators } from "@/db/queries/creators";
 import { creatorCategory } from "@/db/schema";
 import { SITE_NAME } from "@/lib/site";
 
-// Fresh-ish without hammering the DB: the directory changes slowly.
-export const revalidate = 300;
+// Creator removals and profile changes must appear immediately.
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: `Discover creators · ${SITE_NAME}`,
