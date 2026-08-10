@@ -12,6 +12,7 @@ import {
   products,
 } from "@/db/schema";
 import { hashMediaToken } from "@/lib/media-access";
+import { readLibrarySupporterGrant } from "@/lib/library-codes";
 import { readOrderGrants } from "@/lib/order-grants";
 import { signedProductFileAccess } from "@/lib/storage/signed-urls";
 import { createClient } from "@/utils/supabase/server";
@@ -31,12 +32,13 @@ export async function GET(
   if (!token) return textResponse("Invalid access token.", 400);
 
   const grants = await readOrderGrants();
+  const librarySupporterId = await readLibrarySupporterGrant();
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user?.email && grants.length === 0) {
-    return textResponse("Sign in to access this product.", 401);
+  if (!user?.email && grants.length === 0 && !librarySupporterId) {
+    return textResponse("Enter your Library Code to access this product.", 401);
   }
 
   const ownership = [];
@@ -46,6 +48,9 @@ export async function GET(
     );
   }
   if (grants.length > 0) ownership.push(inArray(orders.id, grants));
+  if (librarySupporterId) {
+    ownership.push(eq(orders.supporterId, librarySupporterId));
+  }
 
   const [access] = await db
     .select({

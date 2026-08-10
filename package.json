@@ -12,6 +12,7 @@
     "db:studio": "node --env-file=.env.local node_modules/drizzle-kit/bin.cjs studio",
     "db:check": "node --env-file=.env.local node_modules/drizzle-kit/bin.cjs check",
     "db:apply": "node --env-file=.env.local scripts/apply-sql.mjs",
+    "db:backfill-library-codes": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env.local scripts/backfill-library-codes.mjs",
     "db:storage": "node --env-file=.env.local scripts/ensure-storage.mjs"
   },
   "dependencies": {

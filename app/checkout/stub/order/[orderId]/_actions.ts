@@ -16,6 +16,7 @@ import {
   products,
 } from "@/db/schema";
 import { shortId } from "@/lib/ids";
+import { ensureLibraryCodeForSupporter } from "@/lib/library-codes";
 import { grantOrderAccess } from "@/lib/order-grants";
 
 interface ActionInput {
@@ -37,8 +38,11 @@ export async function markOrderPaid({ orderId }: ActionInput): Promise<void> {
   if (!orderRow) redirect("/");
 
   if (orderRow.status === "paid") {
+    if (orderRow.supporterId) {
+      await ensureLibraryCodeForSupporter(orderRow.supporterId);
+    }
     await grantOrderAccess(orderRow.id);
-    redirect(`/library/${orderRow.orderCode}`);
+    redirect(`/library/${orderRow.orderCode}?new=1`);
   }
   if (orderRow.status !== "pending") redirect("/");
   if (!orderRow.licenseAcceptedAt || !orderRow.licenseVersion) redirect("/");
@@ -100,6 +104,7 @@ export async function markOrderPaid({ orderId }: ActionInput): Promise<void> {
   });
 
   if (paidNow) {
+    await ensureLibraryCodeForSupporter(supporter.id);
     await evaluateMilestonesForCreator(orderRow.creatorId);
 
     const [creator] = await db
@@ -118,11 +123,11 @@ export async function markOrderPaid({ orderId }: ActionInput): Promise<void> {
     revalidatePath("/dashboard");
   }
 
-  // The buyer typed an email that may not match any account — this cookie is
-  // what lets them open the purchase immediately instead of hitting a wall.
+  // This checkout grant opens the purchase immediately. The permanent Library
+  // Code created above then gives the buyer cross-device, no-account access.
   await grantOrderAccess(orderRow.id);
 
-  redirect(`/library/${orderRow.orderCode}`);
+  redirect(`/library/${orderRow.orderCode}?new=1`);
 }
 
 export async function markOrderFailed({ orderId }: ActionInput): Promise<void> {

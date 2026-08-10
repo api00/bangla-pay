@@ -117,13 +117,14 @@ export async function getPaidOrderByCode(
   return loadOrderDetail(order);
 }
 
-/** Paid orders for a signed-in email plus any granted to this browser. */
+/** Paid orders for an account, checkout grants, or a Library Code session. */
 export async function listOrdersForBuyerOrGrants(
   buyerEmail: string | null,
   grantedOrderIds: string[],
+  supporterId: string | null,
   limit = 50,
 ): Promise<Order[]> {
-  if (!buyerEmail && grantedOrderIds.length === 0) return [];
+  if (!buyerEmail && grantedOrderIds.length === 0 && !supporterId) return [];
 
   const clauses = [];
   if (buyerEmail) {
@@ -134,6 +135,7 @@ export async function listOrdersForBuyerOrGrants(
   if (grantedOrderIds.length > 0) {
     clauses.push(inArray(orders.id, grantedOrderIds));
   }
+  if (supporterId) clauses.push(eq(orders.supporterId, supporterId));
 
   return db
     .select()

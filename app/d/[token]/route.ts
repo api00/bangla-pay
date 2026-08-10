@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { db } from "@/db";
 import { orderDownloads, orderItems, orders } from "@/db/schema";
+import { readLibrarySupporterGrant } from "@/lib/library-codes";
 import { readOrderGrants } from "@/lib/order-grants";
 import { createClient } from "@/utils/supabase/server";
 
@@ -20,15 +21,16 @@ export async function GET(
   }
 
   const grants = await readOrderGrants();
+  const librarySupporterId = await readLibrarySupporterGrant();
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user?.email && grants.length === 0) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("next", request.nextUrl.pathname);
-    return NextResponse.redirect(loginUrl);
+  if (!user?.email && grants.length === 0 && !librarySupporterId) {
+    const libraryUrl = new URL("/library", request.url);
+    libraryUrl.searchParams.set("next", request.nextUrl.pathname);
+    return NextResponse.redirect(libraryUrl);
   }
 
   const ownership = [];
@@ -38,6 +40,9 @@ export async function GET(
     );
   }
   if (grants.length > 0) ownership.push(inArray(orders.id, grants));
+  if (librarySupporterId) {
+    ownership.push(eq(orders.supporterId, librarySupporterId));
+  }
 
   // Legacy links are recovery pointers only. Buyer identity is still checked,
   // then the private library creates a fresh, short-lived access session.

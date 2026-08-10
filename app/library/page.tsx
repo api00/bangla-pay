@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
+import { forgetLibraryCode } from "@/app/library/_actions";
+import { LibraryCodeGate } from "@/components/library/LibraryCodeGate";
 import { listOrdersForBuyerOrGrants } from "@/db/queries/orders";
 import { getAuthedUserOptional } from "@/lib/auth";
+import { readLibrarySupporterGrant } from "@/lib/library-codes";
 import { readOrderGrants } from "@/lib/order-grants";
 import { formatTaka } from "@/lib/money";
 
@@ -16,18 +18,41 @@ const DATE_FORMAT = new Intl.DateTimeFormat("en-BD", {
   dateStyle: "medium",
 });
 
-export default async function LibraryPage() {
-  // A guest buyer has no account, so this page must work from browser grants
-  // alone. Only send someone to sign in when there is nothing to show at all.
+interface PageProps {
+  searchParams: Promise<{ code?: string; next?: string }>;
+}
+
+function safeNext(value: string | undefined): string | undefined {
+  if (
+    !value?.startsWith("/library") ||
+    value.startsWith("//") ||
+    value.includes("\\")
+  ) {
+    return undefined;
+  }
+  return value;
+}
+
+export default async function LibraryPage({ searchParams }: PageProps) {
+  const query = await searchParams;
+  if (query.code === "1") {
+    return <LibraryCodeGate nextPath={safeNext(query.next)} />;
+  }
+
   const grants = await readOrderGrants();
+  const librarySupporterId = await readLibrarySupporterGrant();
   const user = await getAuthedUserOptional();
   const email = user?.email?.trim().toLowerCase() ?? null;
 
-  if (!email && grants.length === 0) {
-    redirect(`/login?next=${encodeURIComponent("/library")}`);
+  if (!email && grants.length === 0 && !librarySupporterId) {
+    return <LibraryCodeGate nextPath={safeNext(query.next)} />;
   }
 
-  const orders = await listOrdersForBuyerOrGrants(email, grants);
+  const orders = await listOrdersForBuyerOrGrants(
+    librarySupporterId ? null : email,
+    librarySupporterId ? [] : grants,
+    librarySupporterId,
+  );
 
   return (
     <main className="min-h-screen bg-off-white">
@@ -40,14 +65,23 @@ export default async function LibraryPage() {
             <span className="display text-2xl tracking-tight">banglapay</span>
             <span className="h-1.5 w-1.5 rounded-full bg-wise-green" aria-hidden />
           </Link>
-          <form action="/auth/signout" method="post">
-            <button
-              type="submit"
+          {librarySupporterId ? (
+            <form action={forgetLibraryCode}>
+              <button
+                type="submit"
+                className="inline-flex min-h-11 items-center text-[13px] font-semibold text-warm-dark hover:text-near-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-green"
+              >
+                Use another code
+              </button>
+            </form>
+          ) : user ? (
+            <Link
+              href="/library?code=1"
               className="inline-flex min-h-11 items-center text-[13px] font-semibold text-warm-dark hover:text-near-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-green"
             >
-              Sign out
-            </button>
-          </form>
+              Use Library Code
+            </Link>
+          ) : null}
         </div>
       </header>
 
@@ -63,8 +97,13 @@ export default async function LibraryPage() {
             Everything you bought, in one calm place.
           </h1>
           <p className="mt-4 text-[15px] leading-[1.6] text-warm-dark">
-            Signed in as {email ?? "your BanglaPay account"}. Open an order to
-            read, listen, or download according to the creator&rsquo;s licence.
+            {librarySupporterId
+              ? "Opened with your Library Code. "
+              : email
+                ? `Signed in as ${email}. `
+                : "Available on this checkout browser. "}
+            Open an order to read, listen, or download according to the
+            creator&rsquo;s licence.
           </p>
         </div>
 

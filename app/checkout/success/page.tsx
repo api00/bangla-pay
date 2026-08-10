@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import { db } from "@/db";
 import { creators, orders, tips } from "@/db/schema";
+import { ensureLibraryCodeForSupporter } from "@/lib/library-codes";
 import { formatTaka } from "@/lib/money";
 
 export const dynamic = "force-dynamic";
@@ -20,11 +21,19 @@ export default async function CheckoutSuccessPage({ searchParams }: PageProps) {
 
   if (orderId) {
     const [order] = await db
-      .select({ orderCode: orders.orderCode })
+      .select({
+        orderCode: orders.orderCode,
+        supporterId: orders.supporterId,
+      })
       .from(orders)
       .where(eq(orders.id, orderId))
       .limit(1);
-    if (order) redirect(`/library/${order.orderCode}`);
+    if (order) {
+      if (order.supporterId) {
+        await ensureLibraryCodeForSupporter(order.supporterId);
+      }
+      redirect(`/library/${order.orderCode}?new=1`);
+    }
   }
   return <TipSuccess tipId={tipId} />;
 }

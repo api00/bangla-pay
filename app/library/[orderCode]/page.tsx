@@ -1,11 +1,16 @@
 import { eq } from "drizzle-orm";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
+import { LibraryCodeCard } from "@/components/library/LibraryCodeCard";
 import { db } from "@/db";
 import { getPaidOrderByCode } from "@/db/queries/orders";
 import { creators } from "@/db/schema";
-import { requireLibraryUser } from "@/lib/auth";
+import { getAuthedUserOptional } from "@/lib/auth";
+import {
+  libraryCodeForEmail,
+  readLibrarySupporterGrant,
+} from "@/lib/library-codes";
 import { hasOrderGrant } from "@/lib/order-grants";
 import { formatTaka } from "@/lib/money";
 import { getDeliveryMode } from "@/lib/product-catalog";
@@ -14,6 +19,7 @@ export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ orderCode: string }>;
+  searchParams: Promise<{ new?: string }>;
 }
 
 const DATE_FORMAT = new Intl.DateTimeFormat("en-BD", {
@@ -21,29 +27,46 @@ const DATE_FORMAT = new Intl.DateTimeFormat("en-BD", {
   timeStyle: "short",
 });
 
-export default async function OrderLibraryPage({ params }: PageProps) {
+export default async function OrderLibraryPage({
+  params,
+  searchParams,
+}: PageProps) {
   const { orderCode } = await params;
   const nextPath = `/library/${encodeURIComponent(orderCode)}`;
 
-  // Two ways in, checked before any sign-in wall:
+  // Three ways in, checked before any sign-in wall:
   //  1. this browser completed the checkout (cookie grant), or
-  //  2. the visitor is signed in with the email used at checkout.
+  //  2. a valid Library Code session belongs to the order's supporter, or
+  //  3. the visitor is signed in with the email used at checkout.
   // Without (1) a buyer who typed an email they cannot log in as would be
   // permanently locked out of something they already paid for.
   const detail = await getPaidOrderByCode(orderCode);
   if (!detail) notFound();
 
   const granted = await hasOrderGrant(detail.order.id);
+  const librarySupporterId = await readLibrarySupporterGrant();
+  const libraryGranted = Boolean(
+    librarySupporterId && detail.order.supporterId === librarySupporterId,
+  );
 
-  if (!granted) {
-    const user = await requireLibraryUser(nextPath);
+  if (!granted && !libraryGranted) {
+    const user = await getAuthedUserOptional();
+    if (!user) {
+      redirect(`/library?next=${encodeURIComponent(nextPath)}`);
+    }
     const email = user.email?.trim().toLowerCase();
     if (email !== detail.order.supporterEmail.trim().toLowerCase()) {
-      return <WrongAccount orderEmail={detail.order.supporterEmail} />;
+      return (
+        <WrongAccount
+          orderEmail={detail.order.supporterEmail}
+          nextPath={nextPath}
+        />
+      );
     }
   }
 
   const { order, items, downloads } = detail;
+  const { new: isNewPurchase } = await searchParams;
 
   const [creator] = await db
     .select({ handle: creators.handle, displayName: creators.displayName })
@@ -72,6 +95,12 @@ export default async function OrderLibraryPage({ params }: PageProps) {
       </header>
 
       <div className="mx-auto max-w-[1080px] px-5 py-9 sm:px-6 md:py-12">
+        {(isNewPurchase === "1" || granted) && order.supporterId && (
+          <LibraryCodeCard
+            code={libraryCodeForEmail(order.supporterEmail)}
+            email={maskEmail(order.supporterEmail)}
+          />
+        )}
         <header className="border-b border-[rgba(14,15,12,0.08)] pb-7">
           <p className="text-[12px] font-semibold uppercase tracking-[0.22em] text-warm-dark">
             Paid · {order.orderCode}
@@ -142,8 +171,9 @@ export default async function OrderLibraryPage({ params }: PageProps) {
         </div>
 
         <footer className="mt-12 border-t border-[rgba(14,15,12,0.08)] pt-6 text-[12px] leading-[1.6] text-warm-dark">
-          Access is limited to the buyer account for this order. BanglaPay uses
-          short-lived links and records access events to protect creator rights.{" "}
+          Access is limited to the buyer&rsquo;s private Library Code or account.
+          BanglaPay uses short-lived links and records access events to protect
+          creator rights.{" "}
           <Link
             href="/copyright"
             className="font-semibold text-dark-green underline decoration-wise-green decoration-2 underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dark-green"
@@ -271,7 +301,13 @@ function maskEmail(email: string): string {
   return `${head}${"•".repeat(Math.max(local.length - 2, 1))}@${domain}`;
 }
 
-function WrongAccount({ orderEmail }: { orderEmail: string }) {
+function WrongAccount({
+  orderEmail,
+  nextPath,
+}: {
+  orderEmail: string;
+  nextPath: string;
+}) {
   return (
     <main className="flex min-h-screen items-center justify-center bg-off-white px-5 py-10 sm:px-6">
       <div className="w-full max-w-[460px] space-y-5 text-center">
@@ -286,17 +322,15 @@ function WrongAccount({ orderEmail }: { orderEmail: string }) {
           <span className="font-semibold text-near-black">
             {maskEmail(orderEmail)}
           </span>
-          . Sign in with that email to open it.
+          . Enter that buyer&rsquo;s Library Code to open it.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
-          <form action="/auth/signout" method="post">
-            <button
-              type="submit"
-              className="inline-flex h-12 items-center justify-center rounded-full bg-near-black px-6 text-[14px] font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] motion-reduce:transform-none"
-            >
-              Switch account
-            </button>
-          </form>
+          <Link
+            href={`/library?code=1&next=${encodeURIComponent(nextPath)}`}
+            className="inline-flex h-12 items-center justify-center rounded-full bg-near-black px-6 text-[14px] font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-near-black motion-reduce:transform-none"
+          >
+            Enter Library Code
+          </Link>
           <Link
             href="/library"
             className="inline-flex h-12 items-center justify-center rounded-full border-[1.5px] border-[rgba(14,15,12,0.14)] bg-white px-5 text-[14px] font-semibold text-near-black transition-colors hover:border-near-black"
