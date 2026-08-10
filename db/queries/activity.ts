@@ -34,6 +34,7 @@ export async function getDailyActivity(
 ): Promise<DailyActivity[]> {
   const safeDays = Math.min(Math.max(Math.trunc(days), 1), 365);
   const since = new Date(Date.now() - (safeDays - 1) * 24 * 60 * 60 * 1000);
+  const sinceIso = since.toISOString();
 
   const rows = await db.execute<ActivityRow>(sql`
     WITH contributions AS (
@@ -43,7 +44,7 @@ export async function getDailyActivity(
       FROM tips
       WHERE creator_id = ${creatorId}
         AND status = 'succeeded'
-        AND COALESCE(paid_at, created_at) >= ${since}
+        AND COALESCE(paid_at, created_at) >= ${sinceIso}::timestamptz
 
       UNION ALL
 
@@ -53,7 +54,7 @@ export async function getDailyActivity(
       FROM orders
       WHERE creator_id = ${creatorId}
         AND status = 'paid'
-        AND COALESCE(paid_at, created_at) >= ${since}
+        AND COALESCE(paid_at, created_at) >= ${sinceIso}::timestamptz
     )
     SELECT
       TO_CHAR(day, 'YYYY-MM-DD') AS day,
