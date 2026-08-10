@@ -186,7 +186,12 @@ export async function analyzeProductUpload(
     return { ok: true, skipped: "disabled" };
   }
 
-  if (!isAnalysableFile({ mimeType: file.mimeType, sizeBytes: file.sizeBytes })) {
+  if (!isAnalysableFile({
+    category,
+    filename: file.filename,
+    mimeType: file.mimeType,
+    sizeBytes: file.sizeBytes,
+  })) {
     return { ok: true, skipped: "unsupported" };
   }
 

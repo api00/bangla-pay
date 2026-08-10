@@ -1,54 +1,79 @@
 import "server-only";
 
-import { and, asc, eq, gte, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 
 import { db } from "@/db";
-import { tips } from "@/db/schema";
 
 export interface DailyActivity {
   /** ISO YYYY-MM-DD in Asia/Dhaka. */
   date: string;
   totalPaisa: number;
-  tipCount: number;
+  contributionCount: number;
 }
 
+interface ActivityRow extends Record<string, unknown> {
+  day: string;
+  total_paisa: number;
+  contribution_count: number;
+}
+
+const DHAKA_DATE = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Dhaka",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
 /**
- * 30-day rolling activity for the dashboard sparkline.
- * Bucketed by Asia/Dhaka day so the chart matches the creator's local mental model.
+ * Rolling earnings activity from successful tips and paid shop orders.
+ * Bucketed by Asia/Dhaka day so the chart matches the creator's local time.
  */
 export async function getDailyActivity(
   creatorId: string,
   days = 30,
 ): Promise<DailyActivity[]> {
-  const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+  const safeDays = Math.min(Math.max(Math.trunc(days), 1), 365);
+  const since = new Date(Date.now() - (safeDays - 1) * 24 * 60 * 60 * 1000);
 
-  const rows = await db
-    .select({
-      day: sql<string>`to_char((${tips.createdAt} AT TIME ZONE 'Asia/Dhaka')::date, 'YYYY-MM-DD')`,
-      totalPaisa: sql<number>`COALESCE(SUM(${tips.amountPaisa}), 0)::int`,
-      tipCount: sql<number>`COUNT(*)::int`,
-    })
-    .from(tips)
-    .where(
-      and(
-        eq(tips.creatorId, creatorId),
-        eq(tips.status, "succeeded"),
-        gte(tips.createdAt, since),
-      ),
+  const rows = await db.execute<ActivityRow>(sql`
+    WITH contributions AS (
+      SELECT
+        (COALESCE(paid_at, created_at) AT TIME ZONE 'Asia/Dhaka')::date AS day,
+        amount_paisa
+      FROM tips
+      WHERE creator_id = ${creatorId}
+        AND status = 'succeeded'
+        AND COALESCE(paid_at, created_at) >= ${since}
+
+      UNION ALL
+
+      SELECT
+        (COALESCE(paid_at, created_at) AT TIME ZONE 'Asia/Dhaka')::date AS day,
+        total_paisa AS amount_paisa
+      FROM orders
+      WHERE creator_id = ${creatorId}
+        AND status = 'paid'
+        AND COALESCE(paid_at, created_at) >= ${since}
     )
-    .groupBy(sql`(${tips.createdAt} AT TIME ZONE 'Asia/Dhaka')::date`)
-    .orderBy(asc(sql`(${tips.createdAt} AT TIME ZONE 'Asia/Dhaka')::date`));
+    SELECT
+      TO_CHAR(day, 'YYYY-MM-DD') AS day,
+      COALESCE(SUM(amount_paisa), 0)::int AS total_paisa,
+      COUNT(*)::int AS contribution_count
+    FROM contributions
+    GROUP BY day
+    ORDER BY day ASC
+  `);
 
   // Fill missing days so the sparkline has a continuous x-axis.
   const filled: DailyActivity[] = [];
   const cursor = new Date(since);
-  for (let i = 0; i < days; i += 1) {
-    const iso = cursor.toISOString().slice(0, 10);
+  for (let i = 0; i < safeDays; i += 1) {
+    const iso = DHAKA_DATE.format(cursor);
     const match = rows.find((r) => r.day === iso);
     filled.push({
       date: iso,
-      totalPaisa: Number(match?.totalPaisa ?? 0),
-      tipCount: Number(match?.tipCount ?? 0),
+      totalPaisa: Number(match?.total_paisa ?? 0),
+      contributionCount: Number(match?.contribution_count ?? 0),
     });
     cursor.setUTCDate(cursor.getUTCDate() + 1);
   }

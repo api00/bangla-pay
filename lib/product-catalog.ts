@@ -25,6 +25,15 @@ export const PRODUCT_CATEGORIES = [
     formats: "PNG, JPG, WebP, SVG, or ZIP",
     accept: ".png,.jpg,.jpeg,.webp,.svg,.zip",
   },
+  {
+    value: "developer_tool",
+    label: "MCP servers & developer tools",
+    shortLabel: "Developer tool",
+    description: "MCP bundles, source code, configs, and developer resources.",
+    formats: "MCPB, ZIP, JSON, YAML, Markdown, JS, TS, or Python",
+    accept:
+      ".mcpb,.dxt,.zip,.json,.yaml,.yml,.toml,.md,.txt,.js,.mjs,.cjs,.jsx,.ts,.tsx,.py",
+  },
 ] as const;
 
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number]["value"];
@@ -60,12 +69,14 @@ const DELIVERY_BY_CATEGORY: Record<
   ebook: ["view_only", "download"],
   audio: ["stream_only", "download"],
   design_asset: ["download"],
+  developer_tool: ["download"],
 };
 
 const DEFAULT_DELIVERY: Record<ProductCategory, DeliveryMode> = {
   ebook: "view_only",
   audio: "stream_only",
   design_asset: "download",
+  developer_tool: "download",
 };
 
 export const MAX_PRODUCT_FILE_BYTES = 50 * 1024 * 1024;
@@ -86,12 +97,40 @@ const ALLOWED_EXTENSIONS: Record<ProductCategory, ReadonlySet<string>> = {
   ebook: new Set(["pdf", "epub", "zip"]),
   audio: new Set(["mp3", "wav", "m4a", "zip"]),
   design_asset: new Set(["png", "jpg", "jpeg", "webp", "svg", "zip"]),
+  developer_tool: new Set([
+    "mcpb",
+    "dxt",
+    "zip",
+    "json",
+    "yaml",
+    "yml",
+    "toml",
+    "md",
+    "txt",
+    "js",
+    "mjs",
+    "cjs",
+    "jsx",
+    "ts",
+    "tsx",
+    "py",
+  ]),
 };
 
 const ALLOWED_MIME_TYPES: Record<string, ReadonlySet<string>> = {
   pdf: new Set(["application/pdf"]),
   epub: new Set(["application/epub+zip", "application/octet-stream"]),
   zip: new Set([
+    "application/zip",
+    "application/x-zip-compressed",
+    "application/octet-stream",
+  ]),
+  mcpb: new Set([
+    "application/zip",
+    "application/x-zip-compressed",
+    "application/octet-stream",
+  ]),
+  dxt: new Set([
     "application/zip",
     "application/x-zip-compressed",
     "application/octet-stream",
@@ -109,6 +148,73 @@ const ALLOWED_MIME_TYPES: Record<string, ReadonlySet<string>> = {
   jpeg: new Set(["image/jpeg"]),
   webp: new Set(["image/webp"]),
   svg: new Set(["image/svg+xml"]),
+  json: new Set([
+    "application/json",
+    "text/json",
+    "text/plain",
+    "application/octet-stream",
+  ]),
+  yaml: new Set([
+    "application/yaml",
+    "application/x-yaml",
+    "text/yaml",
+    "text/x-yaml",
+    "text/plain",
+    "application/octet-stream",
+  ]),
+  yml: new Set([
+    "application/yaml",
+    "application/x-yaml",
+    "text/yaml",
+    "text/x-yaml",
+    "text/plain",
+    "application/octet-stream",
+  ]),
+  toml: new Set([
+    "application/toml",
+    "text/toml",
+    "text/plain",
+    "application/octet-stream",
+  ]),
+  md: new Set(["text/markdown", "text/plain", "application/octet-stream"]),
+  txt: new Set(["text/plain", "application/octet-stream"]),
+  js: new Set([
+    "text/javascript",
+    "application/javascript",
+    "text/plain",
+    "application/octet-stream",
+  ]),
+  mjs: new Set([
+    "text/javascript",
+    "application/javascript",
+    "text/plain",
+    "application/octet-stream",
+  ]),
+  cjs: new Set([
+    "text/javascript",
+    "application/javascript",
+    "text/plain",
+    "application/octet-stream",
+  ]),
+  jsx: new Set([
+    "text/jsx",
+    "text/javascript",
+    "text/plain",
+    "application/octet-stream",
+  ]),
+  ts: new Set([
+    "text/typescript",
+    "application/typescript",
+    "text/plain",
+    "application/octet-stream",
+  ]),
+  tsx: new Set([
+    "text/tsx",
+    "text/typescript",
+    "text/plain",
+    "application/octet-stream",
+  ]),
+  py: new Set(["text/x-python", "text/plain", "application/octet-stream"]),
 };
 
 export function isProductCategory(value: unknown): value is ProductCategory {
@@ -236,7 +342,7 @@ export function validateProductFile(input: {
 // ---------- quick start ----------
 // Deriving the category from the file itself is what lets a creator drop a
 // file before filling anything in. `.zip` is deliberately absent: it is legal
-// in all three categories, so it identifies none of them.
+// in several categories, so it identifies none of them.
 const CATEGORY_BY_EXTENSION: Record<string, ProductCategory> = {
   pdf: "ebook",
   epub: "ebook",
@@ -248,6 +354,21 @@ const CATEGORY_BY_EXTENSION: Record<string, ProductCategory> = {
   jpeg: "design_asset",
   webp: "design_asset",
   svg: "design_asset",
+  mcpb: "developer_tool",
+  dxt: "developer_tool",
+  json: "developer_tool",
+  yaml: "developer_tool",
+  yml: "developer_tool",
+  toml: "developer_tool",
+  md: "developer_tool",
+  txt: "developer_tool",
+  js: "developer_tool",
+  mjs: "developer_tool",
+  cjs: "developer_tool",
+  jsx: "developer_tool",
+  ts: "developer_tool",
+  tsx: "developer_tool",
+  py: "developer_tool",
 };
 
 /** Every extension a quick-start drop can identify, as an `accept` string. */

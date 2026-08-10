@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, countDistinct, desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 
 import { db } from "@/db";
 import { tips, type Tip } from "@/db/schema";
@@ -30,7 +30,15 @@ export async function getCreatorTipStats(
       .select({
         total: sql<number>`COALESCE(SUM(${tips.amountPaisa}), 0)::int`,
         count: sql<number>`COUNT(*)::int`,
-        supporters: countDistinct(tips.supporterEmail),
+        supporters: sql<number>`COUNT(DISTINCT COALESCE(
+          CASE WHEN NULLIF(TRIM(${tips.supporterEmail}), '') IS NOT NULL
+            THEN 'email:' || LOWER(TRIM(${tips.supporterEmail})) END,
+          CASE WHEN ${tips.supporterId} IS NOT NULL
+            THEN 'supporter:' || ${tips.supporterId}::text END,
+          CASE WHEN NULLIF(TRIM(${tips.supporterName}), '') IS NOT NULL
+            THEN 'name:' || LOWER(TRIM(${tips.supporterName})) END,
+          'tip:' || ${tips.id}::text
+        ))::int`,
       })
       .from(tips)
       .where(
@@ -52,7 +60,8 @@ export async function getCreatorTipStats(
     supporterCount: Number(succeededRow.supporters) || 0,
     succeededTipCount: successCount,
     pendingTipCount: Number(pendingRow.count) || 0,
-    averageTipPaisa: successCount > 0 ? Math.round(totalRaisedPaisa / successCount) : 0,
+    averageTipPaisa:
+      successCount > 0 ? Math.round(totalRaisedPaisa / successCount) : 0,
   };
 }
 

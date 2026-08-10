@@ -17,9 +17,9 @@ export default function Shop() {
         </h2>
 
         <p className="mt-6 text-lg md:text-xl text-warm-dark leading-[1.5] max-w-2xl mx-auto">
-          Sell original e-books, audio, and design packs straight from your
-          page &mdash; priced in taka and delivered securely after purchase.
-          Think Kindle or Spotify, but direct from creator to supporter.
+          Sell original e-books, audio, design packs, and MCP developer tools
+          straight from your page &mdash; priced in taka and delivered securely
+          after purchase.
         </p>
 
         {/* Visual — product card with supporting floating cards */}

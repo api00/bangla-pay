@@ -94,6 +94,7 @@ export async function markTipPaid({
   revalidatePath("/dashboard/tips");
   revalidatePath("/dashboard/supporters");
   revalidatePath("/dashboard/messages");
+  revalidatePath("/dashboard/settings/payouts");
 
   redirect(`/checkout/success?tip=${tip.id}`);
 }

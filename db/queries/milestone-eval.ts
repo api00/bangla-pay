@@ -1,9 +1,10 @@
 import "server-only";
 
-import { and, countDistinct, eq, isNull, lte, sql } from "drizzle-orm";
+import { and, eq, isNull, lte, sql } from "drizzle-orm";
 
 import { db } from "@/db";
-import { milestones, tips } from "@/db/schema";
+import { getCreatorSupporterStats } from "@/db/queries/dashboard-supporters";
+import { milestones } from "@/db/schema";
 
 // Default milestone thresholds — auto-seeded the first time we evaluate.
 // Values are paisa for `total_raised`; counts otherwise.
@@ -80,24 +81,17 @@ async function ensureSeeded(creatorId: string): Promise<void> {
 }
 
 /**
- * After a tip is marked succeeded, check whether any unreached milestone
- * threshold has now been crossed and stamp `reachedAt`. Idempotent.
+ * After any payment completes, check whether an unreached supporter or
+ * earnings milestone has been crossed and stamp `reachedAt`. Idempotent.
  */
 export async function evaluateMilestonesForCreator(
   creatorId: string,
 ): Promise<void> {
   await ensureSeeded(creatorId);
 
-  const [stats] = await db
-    .select({
-      totalRaisedPaisa: sql<number>`COALESCE(SUM(${tips.amountPaisa}), 0)::int`,
-      supporterCount: countDistinct(tips.supporterEmail),
-    })
-    .from(tips)
-    .where(and(eq(tips.creatorId, creatorId), eq(tips.status, "succeeded")));
-
-  const totalRaisedPaisa = Number(stats?.totalRaisedPaisa ?? 0);
-  const supporterCount = Number(stats?.supporterCount ?? 0);
+  const stats = await getCreatorSupporterStats(creatorId);
+  const totalRaisedPaisa = stats.totalContributedPaisa;
+  const supporterCount = stats.supporterCount;
 
   await db.transaction(async (tx) => {
     if (supporterCount > 0) {

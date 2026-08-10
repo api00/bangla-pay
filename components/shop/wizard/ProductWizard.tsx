@@ -56,7 +56,7 @@ function skippedFeedback(reason: AnalysisSkipReason): Pick<
       return {
         kind: "notice",
         message:
-          "This format cannot be read automatically. Use a PDF or image up to 12 MB, or continue manually.",
+          "This format cannot be read automatically. Use a PDF, image, MCPB, README, config, or source file within the shown size limit.",
       };
     case "rate_limited":
       return {

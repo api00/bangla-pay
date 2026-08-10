@@ -12,7 +12,7 @@ const PAD = 4;
 
 export default function Sparkline({
   data,
-  ariaLabel = "Daily tip total over the last 30 days",
+  ariaLabel = "Daily earnings from tips and shop sales over the last 30 days",
 }: SparklineProps) {
   if (data.length === 0) {
     return (

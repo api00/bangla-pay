@@ -6,6 +6,7 @@ import { db } from "@/db";
 import {
   creatorPages,
   creators,
+  orders,
   products,
   tips,
   type Creator,
@@ -77,9 +78,34 @@ export async function listDirectoryCreators(
       and ${products.isPublished} = true
   )`;
   const supporters = sql<number>`(
-    select count(distinct ${tips.supporterEmail})::int from ${tips}
-    where ${tips.creatorId} = ${creators.id}
-      and ${tips.status} = 'succeeded'
+    SELECT COUNT(*)::int
+    FROM (
+      SELECT COALESCE(
+        CASE WHEN NULLIF(TRIM(${tips.supporterEmail}), '') IS NOT NULL
+          THEN 'email:' || LOWER(TRIM(${tips.supporterEmail})) END,
+        CASE WHEN ${tips.supporterId} IS NOT NULL
+          THEN 'supporter:' || ${tips.supporterId}::text END,
+        CASE WHEN NULLIF(TRIM(${tips.supporterName}), '') IS NOT NULL
+          THEN 'name:' || LOWER(TRIM(${tips.supporterName})) END,
+        'tip:' || ${tips.id}::text
+      ) AS supporter_key
+      FROM ${tips}
+      WHERE ${tips.creatorId} = ${creators.id}
+        AND ${tips.status} = 'succeeded'
+
+      UNION
+
+      SELECT COALESCE(
+        CASE WHEN NULLIF(TRIM(${orders.supporterEmail}), '') IS NOT NULL
+          THEN 'email:' || LOWER(TRIM(${orders.supporterEmail})) END,
+        CASE WHEN ${orders.supporterId} IS NOT NULL
+          THEN 'supporter:' || ${orders.supporterId}::text END,
+        'order:' || ${orders.id}::text
+      ) AS supporter_key
+      FROM ${orders}
+      WHERE ${orders.creatorId} = ${creators.id}
+        AND ${orders.status} = 'paid'
+    ) AS creator_supporters
   )`;
 
   const rows = await db

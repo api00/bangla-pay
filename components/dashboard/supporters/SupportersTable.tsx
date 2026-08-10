@@ -22,9 +22,9 @@ export default function SupportersTable({ supporters }: SupportersTableProps) {
     <div className="rounded-[28px] bg-white border border-[rgba(14,15,12,0.06)] overflow-hidden shadow-[0_1px_0_0_rgba(14,15,12,0.03)]">
       <div className="hidden md:grid grid-cols-[2fr_1fr_1fr_1fr] px-6 py-3 border-b border-[rgba(14,15,12,0.06)] text-[11px] font-semibold uppercase tracking-[0.16em] text-gray">
         <div>Supporter</div>
-        <div className="text-right tabular-nums">Tips</div>
+        <div className="text-right tabular-nums">Payments</div>
         <div className="text-right tabular-nums">Total</div>
-        <div className="text-right">Last tip</div>
+        <div className="text-right">Last support</div>
       </div>
       <ul className="divide-y divide-[rgba(14,15,12,0.05)]">
         {supporters.map((s, idx) => (
@@ -50,13 +50,13 @@ export default function SupportersTable({ supporters }: SupportersTableProps) {
               </div>
             </div>
             <div className="text-right tabular-nums text-[13px] text-warm-dark hidden md:block">
-              {s.tipCount}
+              {s.contributionCount}
             </div>
             <div className="text-right tabular-nums text-[14px] font-semibold text-dark-green">
               {formatTaka(s.totalPaisa)}
             </div>
             <div className="text-right tabular-nums text-[12px] text-gray hidden md:block">
-              {formatBdtDate(s.lastTipAt)}
+              {formatBdtDate(s.lastContributionAt)}
             </div>
           </li>
         ))}

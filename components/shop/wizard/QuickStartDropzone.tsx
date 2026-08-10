@@ -154,7 +154,8 @@ export default function QuickStartDropzone({
         </p>
         <p className="mx-auto mt-1 max-w-[38ch] text-[13px] leading-[1.55] text-warm-dark">
           We&rsquo;ll work out the category and title for supported shop files.
-          PDFs and images up to 12 MB can also draft your listing copy.
+          PDFs, images, MCP bundles, configs, and code can also draft your
+          listing copy.
         </p>
 
         <label

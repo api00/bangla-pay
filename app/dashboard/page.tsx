@@ -7,6 +7,7 @@ import RecentActivity from "@/components/dashboard/RecentActivity";
 import SetupBanner from "@/components/dashboard/SetupBanner";
 import StatsGrid from "@/components/dashboard/StatsGrid";
 import { getDailyActivity } from "@/db/queries/activity";
+import { getCreatorSupporterStats } from "@/db/queries/dashboard-supporters";
 import {
   getFanMessageState,
   getLatestFanInsight,
@@ -54,6 +55,7 @@ export default async function DashboardHomePage() {
     shopStats,
     fanInsight,
     fanMessageState,
+    supporterStats,
   ] = await Promise.all([
     getCreatorTipStats(creator.id),
     recentSucceededTips(creator.id, 5),
@@ -65,12 +67,13 @@ export default async function DashboardHomePage() {
     getCreatorShopStats(creator.id),
     getLatestFanInsight(creator.id),
     getFanMessageState(creator.id),
+    getCreatorSupporterStats(creator.id),
   ]);
 
   const hasPayoutMethod = payoutMethods.length > 0;
   const hasBio = Boolean(page?.bio?.trim());
   const hasAvatar = Boolean(page?.avatarUrl);
-  const hasFirstTip = stats.succeededTipCount > 0;
+  const hasFirstSupport = supporterStats.supporterCount > 0;
 
   return (
     <div className="space-y-6">
@@ -87,16 +90,15 @@ export default async function DashboardHomePage() {
 
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         <EarningsCard
-          totalRaisedPaisa={stats.totalRaisedPaisa}
-          succeededTipCount={stats.succeededTipCount}
-          averageTipPaisa={stats.averageTipPaisa}
+          tipRevenuePaisa={stats.totalRaisedPaisa}
+          shopRevenuePaisa={shopStats.shopRevenuePaisa}
           daily={daily}
         />
         <RecentActivity tips={recent} />
       </div>
 
       <StatsGrid
-        supporterCount={stats.supporterCount}
+        supporterCount={supporterStats.supporterCount}
         pendingTipCount={stats.pendingTipCount}
         averageTipPaisa={stats.averageTipPaisa}
         paidOrderCount={shopStats.paidOrderCount}
@@ -117,7 +119,7 @@ export default async function DashboardHomePage() {
         hasBio={hasBio}
         hasAvatar={hasAvatar}
         hasPayoutMethod={hasPayoutMethod}
-        hasFirstTip={hasFirstTip}
+        hasFirstSupport={hasFirstSupport}
       />
     </div>
   );

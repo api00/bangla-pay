@@ -6,22 +6,21 @@ import { formatTaka, formatTakaCompact } from "@/lib/money";
 import Sparkline from "./Sparkline";
 
 interface EarningsCardProps {
-  totalRaisedPaisa: number;
-  succeededTipCount: number;
-  averageTipPaisa: number;
+  tipRevenuePaisa: number;
+  shopRevenuePaisa: number;
   daily: DailyActivity[];
 }
 
 export default function EarningsCard({
-  totalRaisedPaisa,
-  succeededTipCount,
-  averageTipPaisa,
+  tipRevenuePaisa,
+  shopRevenuePaisa,
   daily,
 }: EarningsCardProps) {
+  const totalEarningsPaisa = tipRevenuePaisa + shopRevenuePaisa;
   const display =
-    totalRaisedPaisa >= 100_00_00
-      ? formatTakaCompact(totalRaisedPaisa)
-      : formatTaka(totalRaisedPaisa);
+    totalEarningsPaisa >= 100_00_00
+      ? formatTakaCompact(totalEarningsPaisa)
+      : formatTaka(totalEarningsPaisa);
 
   return (
     <div className="rounded-[28px] bg-white border border-[rgba(14,15,12,0.06)] p-6 md:p-7 shadow-[0_1px_0_0_rgba(14,15,12,0.03)]">
@@ -45,7 +44,7 @@ export default function EarningsCard({
           {display}
         </div>
         <div className="mt-3 text-[13px] text-warm-dark">
-          Lifetime tips received.
+          Lifetime tips and shop sales.
         </div>
       </div>
 
@@ -59,15 +58,15 @@ export default function EarningsCard({
             Tips
           </div>
           <div className="text-[18px] font-bold tabular-nums text-near-black mt-1">
-            {succeededTipCount}
+            {formatTaka(tipRevenuePaisa)}
           </div>
         </div>
         <div>
           <div className="text-[12px] font-semibold text-gray uppercase tracking-[0.14em]">
-            Average
+            Shop
           </div>
           <div className="text-[18px] font-bold tabular-nums text-near-black mt-1">
-            {averageTipPaisa > 0 ? formatTaka(averageTipPaisa) : "—"}
+            {formatTaka(shopRevenuePaisa)}
           </div>
         </div>
       </div>

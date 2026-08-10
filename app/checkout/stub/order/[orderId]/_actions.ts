@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
+import { evaluateMilestonesForCreator } from "@/db/queries/milestone-eval";
 import { upsertSupporterByEmail } from "@/db/queries/supporters";
 import {
   creators,
@@ -99,6 +100,8 @@ export async function markOrderPaid({ orderId }: ActionInput): Promise<void> {
   });
 
   if (paidNow) {
+    await evaluateMilestonesForCreator(orderRow.creatorId);
+
     const [creator] = await db
       .select({ handle: creators.handle })
       .from(creators)
@@ -110,6 +113,8 @@ export async function markOrderPaid({ orderId }: ActionInput): Promise<void> {
       revalidatePath(`/${creator.handle}`);
     }
     revalidatePath("/dashboard/orders");
+    revalidatePath("/dashboard/supporters");
+    revalidatePath("/dashboard/settings/payouts");
     revalidatePath("/dashboard");
   }
 

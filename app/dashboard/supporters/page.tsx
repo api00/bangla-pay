@@ -2,8 +2,10 @@ import EmptyState from "@/components/dashboard/EmptyState";
 import { PeopleIcon } from "@/components/dashboard/icons";
 import PageHeader from "@/components/dashboard/PageHeader";
 import SupportersTable from "@/components/dashboard/supporters/SupportersTable";
-import { listSupportersForCreator } from "@/db/queries/dashboard-supporters";
-import { getCreatorTipStats } from "@/db/queries/tips";
+import {
+  getCreatorSupporterStats,
+  listSupportersForCreator,
+} from "@/db/queries/dashboard-supporters";
 import { requireCreator } from "@/lib/auth";
 import { formatTaka } from "@/lib/money";
 
@@ -15,7 +17,7 @@ export default async function DashboardSupportersPage() {
 
   const [supporters, stats] = await Promise.all([
     listSupportersForCreator(creator.id, 200),
-    getCreatorTipStats(creator.id),
+    getCreatorSupporterStats(creator.id),
   ]);
 
   const topSupporter = supporters[0];
@@ -24,12 +26,15 @@ export default async function DashboardSupportersPage() {
     <div className="space-y-6">
       <PageHeader
         title="Supporters"
-        subtitle="Everyone who's tipped you. Sorted by total contribution."
+        subtitle="Everyone who's tipped you or bought from your shop, sorted by total support."
       />
 
       <dl className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
         <Stat label="Supporters" value={String(stats.supporterCount)} />
-        <Stat label="Total raised" value={formatTaka(stats.totalRaisedPaisa)} />
+        <Stat
+          label="Total contributed"
+          value={formatTaka(stats.totalContributedPaisa)}
+        />
         <Stat
           label="Top supporter"
           value={
@@ -51,7 +56,7 @@ export default async function DashboardSupportersPage() {
         <EmptyState
           icon={<PeopleIcon width={22} height={22} />}
           title="No supporters yet"
-          body="When someone tips you, they'll show up here. Share your page to get the first one in."
+          body="When someone tips you or buys from your shop, they'll show up here. Share your page to get the first one in."
         />
       ) : (
         <SupportersTable supporters={supporters} />

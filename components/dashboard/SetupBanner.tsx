@@ -17,7 +17,7 @@ export default function SetupBanner({
   const hasBalance = availablePaisa > 0;
   const description = hasBalance
     ? "Your earnings are building up. Link bKash, Nagad, or a bank account to withdraw."
-    : "Add bKash, Nagad, Rocket, or a bank account so you can withdraw the moment your first tip lands.";
+    : "Add bKash, Nagad, Rocket, or a bank account so you can withdraw after your first tip or shop sale.";
 
   return (
     <div className="rounded-2xl bg-[#fff7e0] border border-[#f5d989] px-5 py-4 flex items-center gap-4 flex-wrap">

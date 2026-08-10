@@ -43,8 +43,8 @@ export default async function PayoutsSettingsPage() {
           sub="Requested + processing"
         />
         <BalanceTile
-          label="Lifetime raised"
-          value={formatTaka(balance.totalRaisedPaisa)}
+          label="Lifetime earnings"
+          value={formatTaka(balance.lifetimeEarningsPaisa)}
         />
       </div>
 

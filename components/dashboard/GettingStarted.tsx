@@ -9,7 +9,7 @@ interface GettingStartedProps {
   hasBio: boolean;
   hasAvatar: boolean;
   hasPayoutMethod: boolean;
-  hasFirstTip: boolean;
+  hasFirstSupport: boolean;
 }
 
 interface Step {
@@ -25,7 +25,7 @@ export default function GettingStarted({
   hasBio,
   hasAvatar,
   hasPayoutMethod,
-  hasFirstTip,
+  hasFirstSupport,
 }: GettingStartedProps) {
   const steps: Step[] = [
     {
@@ -59,8 +59,8 @@ export default function GettingStarted({
     {
       title: "Share your page",
       body: "Post your link on Instagram, X, or send it to your group chat.",
-      done: hasFirstTip,
-      cta: hasFirstTip ? "Done" : "Share",
+      done: hasFirstSupport,
+      cta: hasFirstSupport ? "Done" : "Share",
       href: "/dashboard/settings/page",
     },
   ];

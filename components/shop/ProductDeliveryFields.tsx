@@ -83,7 +83,8 @@ export default function ProductDeliveryFields({
           id="category-help"
           className="mt-2 text-[13px] leading-[1.5] text-warm-dark"
         >
-          BanglaPay supports e-books, audio, and design or image packs.
+          BanglaPay supports e-books, audio, design packs, and MCP developer
+          tools.
         </p>
       </div>
 

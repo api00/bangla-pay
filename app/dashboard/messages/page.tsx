@@ -8,6 +8,7 @@ import {
   countUnreadMessages,
   listMessagesForCreator,
 } from "@/db/queries/messages";
+import { getFanMessageState } from "@/db/queries/fan-insights";
 import { requireCreator } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
@@ -16,8 +17,9 @@ export const metadata = { title: "Messages · BanglaPay" };
 export default async function DashboardMessagesPage() {
   const { creator } = await requireCreator();
 
-  const [messages, unreadCount, awaitingReply] = await Promise.all([
+  const [messages, messageState, unreadCount, awaitingReply] = await Promise.all([
     listMessagesForCreator(creator.id, { limit: 100 }),
+    getFanMessageState(creator.id),
     countUnreadMessages(creator.id),
     countAwaitingReply(creator.id),
   ]);
@@ -31,7 +33,7 @@ export default async function DashboardMessagesPage() {
       />
 
       <dl className="grid grid-cols-3 gap-3 sm:gap-4">
-        <Stat label="Total" value={String(messages.length)} />
+        <Stat label="Total" value={String(messageState.total)} />
         <Stat label="Unread" value={String(unreadCount)} highlight={unreadCount > 0} />
         <Stat label="Awaiting reply" value={String(awaitingReply)} />
       </dl>

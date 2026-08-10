@@ -30,7 +30,7 @@ export default function RecentActivity({ tips }: RecentActivityProps) {
     <div className="rounded-[28px] bg-white border border-[rgba(14,15,12,0.06)] p-6 md:p-7 shadow-[0_1px_0_0_rgba(14,15,12,0.03)]">
       <div className="flex items-center justify-between mb-5">
         <h2 className="text-[17px] font-bold tracking-tight text-near-black">
-          Recent activity
+          Recent tips
         </h2>
         <Link
           href="/dashboard/tips"

@@ -50,6 +50,7 @@ export const productCategory = pgEnum("product_category", [
   "ebook",
   "audio",
   "design_asset",
+  "developer_tool",
 ]);
 
 export const deliveryMode = pgEnum("delivery_mode", [
@@ -71,8 +72,8 @@ export const accessEventKind = pgEnum("access_event_kind", [
 ]);
 
 // Outcome of reading an uploaded file to pre-fill a product listing.
-// `unreadable` is a real answer, not a failure: audio and archives carry no
-// text or imagery a model can read, and a blank scan carries nothing either.
+// `unreadable` is a real answer, not a failure: audio, opaque archives, and
+// blank scans may carry nothing the analysis layer can safely describe.
 export const aiSuggestionStatus = pgEnum("ai_suggestion_status", [
   "ok",
   "unreadable",

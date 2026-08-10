@@ -38,7 +38,7 @@ export default async function DashboardShopPage({ searchParams }: PageProps) {
           </h1>
           <p className="mt-1 max-w-[620px] text-[14px] leading-[1.55] text-warm-dark">
             Sell original files delivered online after purchase: e-books,
-            audio, or design and image packs.
+            audio, design packs, or MCP developer tools.
           </p>
         </div>
         <Link
@@ -55,8 +55,8 @@ export default async function DashboardShopPage({ searchParams }: PageProps) {
             No products yet.
           </p>
           <p className="mx-auto mt-1 max-w-[400px] text-[14px] leading-[1.55] text-warm-dark">
-            Add an e-book, audio product, or design pack and deliver it
-            securely after purchase.
+            Add an e-book, audio product, design pack, or MCP tool and deliver
+            it securely after purchase.
           </p>
           <Link
             href="/dashboard/shop/new"

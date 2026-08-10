@@ -1,8 +1,9 @@
 import "server-only";
 
-import { and, countDistinct, desc, eq, isNotNull, sql } from "drizzle-orm";
+import { and, desc, eq, isNotNull } from "drizzle-orm";
 
 import { db } from "@/db";
+import { getCreatorSupporterStats } from "@/db/queries/dashboard-supporters";
 import {
   creatorPages,
   creators,
@@ -64,7 +65,7 @@ export async function getPublicProfile(
   const creator = creatorRows[0];
   if (!creator) return null;
 
-  const [pageRows, presetRows, walletRows, aggregateRows] = await Promise.all([
+  const [pageRows, presetRows, walletRows, supporterStats] = await Promise.all([
     db
       .select()
       .from(creatorPages)
@@ -94,24 +95,11 @@ export async function getPublicProfile(
       )
       .orderBy(desc(tips.createdAt))
       .limit(SUPPORTER_WALL_LIMIT),
-    db
-      .select({
-        totalRaisedPaisa: sql<number>`COALESCE(SUM(${tips.amountPaisa}), 0)::int`,
-        supporterCount: countDistinct(tips.supporterEmail),
-      })
-      .from(tips)
-      .where(
-        and(eq(tips.creatorId, creator.id), eq(tips.status, "succeeded")),
-      ),
+    getCreatorSupporterStats(creator.id),
   ]);
 
   const supporters: PublicProfileSupporter[] = walletRows
     .filter((row): row is typeof row & { message: string } => row.message !== null);
-
-  const aggregate = aggregateRows[0] ?? {
-    totalRaisedPaisa: 0,
-    supporterCount: 0,
-  };
 
   const page: CreatorPage = pageRows[0] ?? {
     creatorId: creator.id,
@@ -124,7 +112,7 @@ export async function getPublicProfile(
     page,
     presets: presetRows,
     supporters,
-    totalRaisedPaisa: Number(aggregate.totalRaisedPaisa) || 0,
-    supporterCount: Number(aggregate.supporterCount) || 0,
+    totalRaisedPaisa: supporterStats.totalContributedPaisa,
+    supporterCount: supporterStats.supporterCount,
   };
 }
