@@ -28,11 +28,7 @@ interface StepBasicsProps {
   onChange: (patch: Partial<BasicsValues>) => void;
   /** Null until a draft exists — the dropzone shows only before that. */
   productId: string | null;
-  /** Filename the current values were derived from, when there was one. */
-  quickStartFilename: string | null;
   autofilled: readonly AutofilledField[];
-  /** The file's contents are still being read for a better title/description. */
-  reading: boolean;
   onQuickStart: (result: QuickStartResult) => void;
 }
 
@@ -81,9 +77,7 @@ export default function StepBasics({
   errorField,
   onChange,
   productId,
-  quickStartFilename,
   autofilled,
-  reading,
   onQuickStart,
 }: StepBasicsProps) {
   const filled = (field: AutofilledField) => autofilled.includes(field);
@@ -92,31 +86,6 @@ export default function StepBasics({
     <div className="space-y-6">
       {!productId && (
         <QuickStartDropzone onReady={onQuickStart} />
-      )}
-
-      {quickStartFilename && (
-        <p
-          role="status"
-          className="rounded-card bg-mint-surface px-4 py-3 text-[13px] leading-[1.55] text-warm-dark"
-        >
-          {reading ? (
-            <>
-              Reading{" "}
-              <span className="font-semibold text-near-black">
-                {quickStartFilename}
-              </span>
-              … you can keep typing; anything you change is kept.
-            </>
-          ) : (
-            <>
-              Filled in from{" "}
-              <span className="font-semibold text-near-black">
-                {quickStartFilename}
-              </span>
-              . Check everything below and change anything that looks wrong.
-            </>
-          )}
-        </p>
       )}
 
       <div>

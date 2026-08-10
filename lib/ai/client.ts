@@ -50,7 +50,13 @@ interface ResponsesBody {
   error?: { message?: string } | null;
   status?: string;
   incomplete_details?: { reason?: string };
-  output?: { content?: { type?: string; text?: string }[] | null }[];
+  output?: {
+    content?: {
+      type?: string;
+      text?: string;
+      refusal?: string;
+    }[] | null;
+  }[];
   usage?: { input_tokens?: number; output_tokens?: number };
 }
 
@@ -125,6 +131,15 @@ export async function requestStructured(input: {
   if (body.status === "incomplete") {
     throw new AiRequestError(
       `Response cut short (${body.incomplete_details?.reason ?? "unknown"}).`,
+    );
+  }
+
+  const refusal = (body.output ?? [])
+    .flatMap((item) => item.content ?? [])
+    .find((part) => part?.type === "refusal");
+  if (refusal) {
+    throw new AiRequestError(
+      `Model refused the file${refusal.refusal ? `: ${refusal.refusal}` : "."}`,
     );
   }
 

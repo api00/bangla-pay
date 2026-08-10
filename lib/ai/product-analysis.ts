@@ -79,8 +79,8 @@ const RESPONSE_SCHEMA = {
 // strings and overlong values are shape-valid but useless.
 const suggestionSchema = z.object({
   title: z.string().trim().min(1).max(PRODUCT_TITLE_MAX * 2),
-  subtitle: z.string().trim().max(PRODUCT_SUBTITLE_MAX * 2),
-  description: z.string().trim().max(PRODUCT_DESCRIPTION_MAX * 2),
+  subtitle: z.string().trim().min(1).max(PRODUCT_SUBTITLE_MAX * 2),
+  description: z.string().trim().min(1).max(PRODUCT_DESCRIPTION_MAX * 2),
   // Length is not capped here: an extra tag is a formatting overrun, not a
   // reason to discard the whole read. normaliseTags trims and de-duplicates.
   tags: z.array(z.string()),

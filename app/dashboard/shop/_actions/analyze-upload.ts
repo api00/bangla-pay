@@ -1,12 +1,15 @@
 "use server";
 
+import { and, eq, isNull, or, sql } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+
 import { db } from "@/db";
 import {
   countRecentAnalyses,
   getCachedSuggestion,
 } from "@/db/queries/ai-suggestions";
 import { getProductById, getProductFiles } from "@/db/queries/products";
-import { productAiSuggestions } from "@/db/schema";
+import { productAiSuggestions, products } from "@/db/schema";
 import { getAiModel, isAiConfigured } from "@/lib/ai/client";
 import {
   analyseProductFile,
@@ -19,9 +22,8 @@ import { requireCreator } from "./_helpers";
 
 // Read an uploaded file into draft listing fields.
 //
-// This never writes to `products`. It returns a suggestion; the creator edits
-// it in the form and the existing wizard actions do the saving, with all their
-// validation intact. That keeps one write path and adds no new trust boundary.
+// A successful suggestion is returned to the form and also copied into empty
+// product fields as draft recovery. Creator-written fields are never replaced.
 
 /** Per creator, per hour. Generous for real use, bounded for a runaway loop. */
 const ANALYSES_PER_HOUR = 30;
@@ -40,9 +42,15 @@ export interface AnalyzeUploadResult {
    * Set when the attempt ended without a suggestion for an expected reason.
    * Shown to the creator as a quiet note, never as an error.
    */
-  skipped?: "unsupported" | "unreadable" | "disabled" | "rate_limited";
+  skipped?: AnalysisSkipReason;
   error?: string;
 }
+
+export type AnalysisSkipReason =
+  | "unsupported"
+  | "unreadable"
+  | "disabled"
+  | "rate_limited";
 
 /** Operator-facing log line. Never leaks provider wording to the creator. */
 function logFailure(context: Record<string, unknown>, error: unknown) {
@@ -50,6 +58,107 @@ function logFailure(context: Record<string, unknown>, error: unknown) {
     ...context,
     error: error instanceof Error ? error.message : String(error),
   });
+}
+
+/**
+ * Keep a successful draft even if the creator refreshes or leaves the wizard.
+ *
+ * Each field is updated independently and only while it is empty, so an AI
+ * result can never replace text the creator has already saved. The client
+ * still receives the suggestion immediately for the controlled form fields.
+ */
+async function persistSuggestionToEmptyFields(input: {
+  creatorId: string;
+  productId: string;
+  suggestion: ProductSuggestion;
+}): Promise<void> {
+  const scope = and(
+    eq(products.id, input.productId),
+    eq(products.creatorId, input.creatorId),
+  );
+
+  try {
+    if (input.suggestion.subtitle) {
+      await db
+        .update(products)
+        .set({
+          subtitle: input.suggestion.subtitle,
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            scope,
+            or(isNull(products.subtitle), eq(products.subtitle, "")),
+          ),
+        );
+    }
+
+    if (input.suggestion.description) {
+      await db
+        .update(products)
+        .set({
+          descriptionMd: input.suggestion.description,
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            scope,
+            or(
+              isNull(products.descriptionMd),
+              eq(products.descriptionMd, ""),
+            ),
+          ),
+        );
+    }
+
+    if (input.suggestion.tags.length > 0) {
+      await db
+        .update(products)
+        .set({
+          tags: input.suggestion.tags,
+          updatedAt: new Date(),
+        })
+        .where(and(scope, sql`cardinality(${products.tags}) = 0`));
+    }
+
+    revalidatePath(`/dashboard/shop/${input.productId}/edit`);
+  } catch (error) {
+    // The suggestion is still useful in the current form. Persistence is a
+    // recovery layer, so a database hiccup must not discard the AI result.
+    logFailure(
+      { productId: input.productId, stage: "persist-suggestion" },
+      error,
+    );
+  }
+}
+
+function storedSuggestion(value: unknown): ProductSuggestion | null {
+  if (!value || typeof value !== "object") return null;
+  const stored = value as Partial<ProductSuggestion>;
+  const language = ["en", "bn", "mixed", "unknown"].includes(
+    String(stored.language),
+  )
+    ? (stored.language as ProductSuggestion["language"])
+    : "unknown";
+  const suggestion = {
+    title: typeof stored.title === "string" ? stored.title.trim() : "",
+    subtitle:
+      typeof stored.subtitle === "string" ? stored.subtitle.trim() : "",
+    description:
+      typeof stored.description === "string"
+        ? stored.description.trim()
+        : "",
+    tags: Array.isArray(stored.tags)
+      ? stored.tags.filter((tag): tag is string => typeof tag === "string")
+      : [],
+    language,
+  };
+
+  // Old/incomplete cache rows must not permanently poison this file. The
+  // product listing needs all three written fields to count as a cache hit.
+  return suggestion.title && suggestion.subtitle && suggestion.description
+    ? suggestion
+    : null;
 }
 
 export async function analyzeProductUpload(
@@ -69,7 +178,13 @@ export async function analyzeProductUpload(
   const file = files.find((candidate) => candidate.id === input.fileId);
   if (!file) return { ok: false, error: "File not found." };
 
-  if (!isAiConfigured()) return { ok: true, skipped: "disabled" };
+  if (!isAiConfigured()) {
+    logFailure(
+      { productId: product.id, fileId: file.id, stage: "config" },
+      new Error("OPENAI_API_KEY is not configured in this runtime."),
+    );
+    return { ok: true, skipped: "disabled" };
+  }
 
   if (!isAnalysableFile({ mimeType: file.mimeType, sizeBytes: file.sizeBytes })) {
     return { ok: true, skipped: "unsupported" };
@@ -78,19 +193,16 @@ export async function analyzeProductUpload(
   // Cache before spending: the wizard can be stepped back through, and the
   // same file must not be billed twice.
   const cached = await getCachedSuggestion(file.id);
-  if (cached?.suggestion) {
-    // Rows written before a field existed simply lack it. Fill the gap here
-    // rather than letting `undefined` reach a caller that expects an array.
-    const stored = cached.suggestion as Partial<ProductSuggestion>;
+  const cachedSuggestion = storedSuggestion(cached?.suggestion);
+  if (cachedSuggestion) {
+    await persistSuggestionToEmptyFields({
+      creatorId: creator.id,
+      productId: product.id,
+      suggestion: cachedSuggestion,
+    });
     return {
       ok: true,
-      suggestion: {
-        title: stored.title ?? "",
-        subtitle: stored.subtitle ?? "",
-        description: stored.description ?? "",
-        tags: Array.isArray(stored.tags) ? stored.tags : [],
-        language: stored.language ?? "unknown",
-      },
+      suggestion: cachedSuggestion,
     };
   }
 
@@ -108,7 +220,10 @@ export async function analyzeProductUpload(
   try {
     bytes = await downloadProductFile(file.storagePath);
   } catch (error) {
-    logFailure({ productId: product.id, fileId: file.id, stage: "download" }, error);
+    logFailure(
+      { productId: product.id, fileId: file.id, stage: "download" },
+      error,
+    );
     await recordAttempt({
       productId: product.id,
       fileId: file.id,
@@ -116,7 +231,11 @@ export async function analyzeProductUpload(
       status: "failed",
       failureReason: "storage download failed",
     });
-    return { ok: true, skipped: "unreadable" };
+    return {
+      ok: false,
+      error:
+        "We couldn't download that file for automatic writing. Try again or continue manually.",
+    };
   }
 
   try {
@@ -149,6 +268,11 @@ export async function analyzeProductUpload(
       inputTokens: outcome.inputTokens,
       outputTokens: outcome.outputTokens,
     });
+    await persistSuggestionToEmptyFields({
+      creatorId: creator.id,
+      productId: product.id,
+      suggestion: outcome.suggestion,
+    });
     return { ok: true, suggestion: outcome.suggestion };
   } catch (error) {
     logFailure({ productId: product.id, fileId: file.id, stage: "analyse" }, error);
@@ -160,8 +284,10 @@ export async function analyzeProductUpload(
       failureReason:
         error instanceof Error ? error.message.slice(0, 500) : "unknown",
     });
-    // Not an error the creator needs to act on — the form still works.
-    return { ok: true, skipped: "unreadable" };
+    return {
+      ok: false,
+      error: "Automatic writing failed. Try again or continue manually.",
+    };
   }
 }
 

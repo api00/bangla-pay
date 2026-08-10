@@ -24,6 +24,7 @@ interface StepContentProps {
   /** Tags came from the file read and haven't been edited yet. */
   tagsSuggested: boolean;
   onChange: (patch: Partial<ContentValues>) => void;
+  onFileAdded: (file: ProductFile) => void;
 }
 
 const labelClass =
@@ -37,6 +38,7 @@ export default function StepContent({
   values,
   tagsSuggested,
   onChange,
+  onFileAdded,
 }: StepContentProps) {
   return (
     <div className="space-y-8">
@@ -52,7 +54,12 @@ export default function StepContent({
           files={files}
           productCategory={category}
           deliveryMode={deliveryMode}
+          onFileAdded={onFileAdded}
         />
+        <p className="mt-3 text-[13px] leading-[1.55] text-warm-dark">
+          Adding a PDF or image up to 12 MB can automatically draft the
+          tagline, description, and search tags below.
+        </p>
       </section>
 
       <hr className="border-[rgba(14,15,12,0.06)]" />

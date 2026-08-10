@@ -25,6 +25,8 @@ interface FileUploaderProps {
   files: ProductFile[];
   productCategory: ProductCategory | null;
   deliveryMode: DeliveryMode;
+  /** Lets the new-product wizard draft listing copy from a newly added file. */
+  onFileAdded?: (file: ProductFile) => void;
 }
 
 function formatBytes(bytes: number): string {
@@ -40,6 +42,7 @@ export default function FileUploader({
   files: initialFiles,
   productCategory,
   deliveryMode,
+  onFileAdded,
 }: FileUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const toast = useToast();
@@ -118,7 +121,10 @@ export default function FileUploader({
         sizeBytes: file.size,
       });
       if (!result.ok) throw new Error(result.error ?? "Couldn't save file.");
-      if (result.file) setAdded((prev) => [...prev, result.file as ProductFile]);
+      if (result.file) {
+        setAdded((prev) => [...prev, result.file as ProductFile]);
+        onFileAdded?.(result.file);
+      }
       toast.success(`${file.name} added`);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Upload failed.";
